@@ -1,0 +1,292 @@
+<html>
+ <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Pick them all</title>
+
+    <script src="resources/js/jquery.js"></script>
+    <script src="resources/js/jquery-csv.js"></script>
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
+	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
+<style>
+
+header { width:900px; margin-left:auto; margin-right:auto; padding-top:20px;}
+.clr { clear:both; font-size: 1px; padding:0; margin:0; background:none; }
+#holder { border: 10px dashed #ccc; width: 500px; height: 320px; margin: 20px auto;}
+#holder.hover { border: 10px dashed #333; }
+</style>
+	
+	<script>
+
+	$(function() {
+var holder = document.getElementById('holder');
+
+
+if (typeof window.FileReader === 'undefined') {
+  console.log('File reader API failed');
+} else {
+  console.log('success File API & FileReader available');
+}
+
+$('#qrcode').click(function() {
+	
+	if($(this).is(':checked')){
+		$('#qrCodeSelect').show();
+		$('#qrCodeSelect').find('select').attr("required","required");
+		} 
+	else {
+		$('#qrCodeSelect').hide();
+		$('#qrCodeSelect').find('select').removeAttr("required");
+	}
+});
+
+ 
+holder.ondragover = function () { this.className = 'hover'; return false; };
+holder.ondragend = function () { this.className = ''; return false; };
+holder.ondrop = function (e) {
+  this.className = '';
+  e.preventDefault();
+
+  var file = e.dataTransfer.files[0],
+      reader = new FileReader();
+  reader.onload = function (event) {
+    console.log(event.target);
+    localStorage["event-template"] = event.target.result;
+	
+	$('#badgepreview').attr('src', event.target.result);
+			
+	var img = $("#badgepreview"); 
+	$("<img/>") // Make in memory copy of image to avoid css issues
+		.attr("src", $(img).attr("src"))
+		.load(function() {
+	$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
+	$("#pixelheight").val(this.height); // work for in memory images.
+	});
+  };
+  console.log(file);
+  reader.readAsDataURL(file);
+ 
+  return false;
+};
+
+});
+
+function readFileAsDataURL(file, imageName) {
+	alert("adding image");
+    var reader = new FileReader();
+    
+    reader.onload = function(event) {
+		localStorage[imageName] = 
+			event.target.result;
+			$('#badgepreview').attr('src', event.target.result);
+			
+			var img = $("#badgepreview"); 
+			$("<img/>") // Make in memory copy of image to avoid css issues
+			.attr("src", $(img).attr("src"))
+			.load(function() {
+			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
+			$("#pixelheight").val(this.height); // work for in memory images.
+			});
+    		
+    };
+	reader.readAsDataURL(file);
+}
+
+function getAsText(fileToRead, localName)
+{
+       var reader = new FileReader();
+       reader.readAsText(fileToRead);
+       reader.onload = function(event){                        
+            localStorage[localName] = event.target.result;
+			alert("csv added");
+	     createMultipleSelect(event.target.result, 'csvColumnsSelect', 'colselect', 'selected-cols');
+		 
+		 createMultipleSelect(event.target.result, 'qrCodeSelect', 'qrselect', 'qr-cols');
+		 $('#qrCodeSelect').hide();
+       };
+       reader.onerror = function(event){
+            alert("The Error is"+event.target.error.name);
+       };
+}
+
+function createMultipleSelect(fileString, placeid, colselectid, localStorageName)
+{
+	alert("csv called");
+	alert(placeid);
+	csv_text = $.csv2Array(fileString);
+	$("#"+placeid).html("<select id="+ colselectid +" multiple='multiple'></select>");
+	var i = 0;
+	while(i<csv_text[0].length)
+	{
+		$("#"+colselectid).append('<option value='+i+'>'+csv_text[0][i++]+'</option>');
+	}
+	$("#"+colselectid).change(function(){        
+		localStorage[localStorageName]=$("#"+colselectid).val() || [];;
+		});
+}
+
+
+function clear() {
+	$("#badgepreview").val("");
+	$("#form1").find(':input').each(function() {
+        switch(this.type) {
+            case 'password':
+            case 'select-multiple':
+            case 'select-one':
+            case 'text':
+            case 'textarea':
+                $(this).val('');
+                break;
+            case 'checkbox':
+            case 'radio':
+                this.checked = false;
+        }
+    });
+};
+
+function move() {
+	
+	
+	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val();
+	
+}
+
+
+
+</script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33912617-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  </head>
+  <body>
+ 
+
+
+
+
+<header>
+<h1 style="float:left;font-size:54px"> Event Candy </h1>	
+<div style="float:right;">
+  <ul class="nav nav-pills">
+  <li class="active">
+	<a href="#">Home</a>
+  </li>
+  <li>	<a href="#">About</a></li>
+  <li>	<a href="#">Demo</a></li>
+  <li><a href="#">Help</a></li>
+</ul>
+</div>
+<div class="clr">
+</header>
+
+<hr>
+<div class="row">
+
+<div class="span-8" style="width:50%">
+
+<article>
+<div id="holder">
+	<img id="badgepreview"/>
+  </div>  
+</article>
+</div>
+<div clas="span-4">
+<form class="form-horizontal" style="margin-top:5%" id="form1" action="./create.html">
+<fieldset>
+<div class="control-group">
+	<label class="control-label" for="templateChooser"> Template </label>
+	<div class="controls">	
+		<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0],'event-template');"></input> 
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="csvChooser"> CSV File  </label>
+	<div class="controls">	
+		<input type="file" class="input-file" id="csvChooser" required="required" onchange="getAsText(this.files[0], 'event-csv');"> </input>
+		<div id="csvColumnsSelect"></div>
+	</div>
+</div>
+
+<div class="control-group">
+	<label class="control-label" for="dpiSelection"> DPI  </label>
+	<div class="controls">	
+		<select id="dpi" class="input-small" onchange="$('#inchwidth').val($('#pixelwidth').val()/this.value);$('#inchheight').val($('#pixelheight').val()/this.value);">
+			<option>72</option>
+			<option>96</option>
+			<option>150</option>
+			<option>300</option>
+			<option>2540</option>
+			<option>4000</option>
+		</select>
+	</div>
+</div>
+
+<label class="control-label" for="inchwidth"> <h4> Inches </h4>  </label>
+<br><br>
+<div class="control-group">
+	<label class="control-label" for="inchwidth"> Width  </label>
+	<div class="controls">	
+		<input style="height:25px;"type="text" class="input-small" id="inchwidth" placeholder="inches" required onkeyup="$('#pixelwidth').val($('#dpi').val()*this.value)"> </input>
+	</div>
+</div>
+
+<div class="control-group">
+	<label class="control-label" for="inchheight"> Height  </label>
+	<div class="controls">	
+		<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="$('#pixelheight').val($('#dpi').val()*this.value)"> </input>
+	</div>
+</div>
+
+<label class="control-label" for="inchwidth"> <h4> Pixels </h4>  </label>
+<br><br>
+<div class="control-group">
+	<label class="control-label" for="pixelwidth"> Width  </label>
+	<div class="controls">	
+		<input type="text" class="input-small" id="pixelwidth" placeholder="pixels" onchange="$('#inchwidth').val(this.value/$('#dpi').val()")> </input>
+	</div>
+</div>
+
+<div class="control-group">
+	<label class="control-label" for="pixelheight"> Height  </label>
+	<div class="controls">	
+		<input type="text" class="input-small" id="pixelheight" placeholder="pixels" onchange="$('#inchheight').val(this.value/$('#dpi').val())"> </input>
+		<div style="margin-top:10px" id="container"> </div>
+	</div>
+</div>
+
+<div class="control-group">
+	<label class="control-label" for="pixelheight"> QR Code  </label>
+	<div class="controls">	
+		<input type="checkbox" id="qrcode" name="qrcode" value="Yes" />
+		<div id="qrCodeSelect"></div>
+		<div style="margin-top:10px" id="container"> </div>
+	</div>
+</div>
+
+
+<div class="form-actions">
+<button class="btn btn-primary" type="submit" onclick="move()"> Submit </button>
+<button class="btn" onclick="clear()"> Reset </button>
+</div>
+</fieldset>
+</form>
+</div>
+</div>
+</div>
+  </body>
+</html>
+
+	

@@ -1,0 +1,28 @@
+<html>
+	<style>
+		img {
+			padding: 5px;
+			border: 1px dashed black;
+		}
+	</style>
+	<script src="resources/js/jquery.js"></script>
+	<script>
+	$(document).ready(function () {
+		//Image Dimensions
+		var dimensions = localStorage['dimensions'].split(",");
+		for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; } 
+		function printsheet(i){
+			var url = 'filesystem:http://madhuvishy.in/temporary/badges/badge'+i+'.png';
+			$("div").append("<img src ='"+url+"' height='"+dimensions[1]+"' width='"+dimensions[0]+"'/>");
+  			if(++i < localStorage['numentries'])
+				printsheet(i);	
+		}
+		printsheet(1);
+	});
+	</script>
+	
+	<body>
+		<div id="print"></div>
+	</body>
+</html>
+
