@@ -79,6 +79,7 @@ $(document).ready(function () {
 		  });
 		
 		canvas.add(labellayer[i]);
+		canvas.setActiveObject(labellayer[0]);
 		alignDetails = new Object();
 		alignDetails.index = i;
 		alignDetails.layer = labellayer[i];
@@ -92,6 +93,17 @@ $(document).ready(function () {
 	
 	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelaligntext, labelbounds, labelboundsave, labellayer, fontsize)
 	{
+		canvas.observe('object:selected',function(e){
+			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
+			{
+				if(canvas.getActiveObject()===labellayer)
+				{
+					$(".component").hide();
+					$("#label"+alignobj.index+"div").show();
+					$("#comp-select").val(alignobj.index);
+				}
+			}
+		});
 		canvas.observe('object:modified', function(e) {
   			var activeObject = e.target;
 			if(typeof activeObject.get === 'function'){
@@ -271,6 +283,7 @@ $(document).ready(function () {
 	$('#comp-select').on('change',function() {
 		$(".component").hide();
 		$("#label"+this.value+"div").show();
+		canvas.setActiveObject(labellayer[this.value])
 	});
 	
 	$("div#ziplink").hide();
@@ -304,7 +317,9 @@ $(document).ready(function () {
 	var testfileentry=new Array();
 
 	function save()
-	{	
+	{
+		canvas.deactivateAll();
+		canvas.renderAll(true);	
 		index_i=1;
 		$("span#genimages > progress#gen").attr('max',data.length);
 		$("span#genimages > progress#gen").show();
