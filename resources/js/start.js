@@ -47,7 +47,7 @@ holder.ondrop = function (e) {
 	$("#holderCaption").hide();
 	$('#holder').css('border','0px');
 	$('#holder').css('background-color','white');
-	
+	$('#templateChooser').removeAttr("required");
   };
   console.log(file);
   reader.readAsDataURL(file);
