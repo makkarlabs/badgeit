@@ -13,9 +13,13 @@
 		.canvas-container { margin-left:auto; margin-right:auto; }
 		.font-dropdown { width: 150px}
 		.colorbox { width:20px} 
+		.positionbox { width:150px; }
+		#customize input,#customize .btn-group,#customize select,#customize a,#customize button { margin-left:4px;margin-right:4px; }
+		
 		
 	</style>
 		  <script src="resources/js/jquery.js"></script>
+		  <script src="bootstrap/js/bootstrap.js"></script>
 		  <script src="resources/js/jquery.qrcode.js"></script>
 		  <script src="resources/js/qrcode.js"></script>
 		  <script src="resources/js/fabric.js"></script>
@@ -57,32 +61,33 @@
 	
 	<div class="container">
 	
-	<div id="canvasholder">
+	<div class="canvasnbox">
+	<div id="canvasholder" style="margin-top:30px; margin-bottom:30px;">
 		<canvas id='canvas' width='canvasWidth()' height='canvasHeight()'></canvas>
 		<div class="clr"></div>
 	</div>
 	<div class="clr"></div>
-	<div class="clr"></div>
+	<div id="toolbox">
+	<div class="well form-inline">
 	
-	<div class="toolbox">
-		<select id="comp-select">
-		</select>
-		<form id="customize" class="well form-inline">
-		</form>
+		<select id="comp-select" style="width:150px; margin-bottom:10px;margin-left:5px;"></select>
+		<div id="customize">
+		</div>
+		<span id="genimages">	
+			<button style="width:70px; margin-top:10px; margin-left:5px;" class="btn btn-primary" id="save" onclick="save()">Next</button>
+		</span>
+		<button class="btn btn-primary" style="margin-left:5px;display:none;" hidden="hidden" id="zip">Zip Files</button>
+		<progress id="zipprogress" hidden='true'></progress>
+		<div hidden="true" style="margin-left:5px;"  id="ziplink"><a class="btn btn-primary" id='download'>Download Zip</a></div>
+		<br><br>
+		<button id="print" class="btn btn-primary" hidden="hidden" style="display:none; margin-left:5px;" onclick="window.location='./print.html'">View all in Sheet</button>    
+		
+	</div>
 	</div>
 	
-	<span id="genimages">	
-		<button id="save" onclick="save()">Save as Image</button>
-		<progress id="gen" value="1" hidden='true' ></progress>
-	</span>
-        <div id="badges"></div>
+    <div id="badges"></div>
 	<br>
-	<button id="zip">Zip Files</button>
-	<progress id="zipprogress" hidden='true'></progress>
-	<div id="ziplink"><button id='download'>Download Zip</button></div>
-	<br><br>
-	<button id="print" onclick="window.location='./print.html'">View all in Sheet</button>    
-	<div id='qrcode' hidden='false'></div>
-	
+	<div id='qrcode' hidden='true'></div>
+	</div>
 	</div>
   </body>

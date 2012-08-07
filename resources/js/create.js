@@ -66,7 +66,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text'/> Font Size<input id='label"+i+"size' type='range'/> <select class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a> <label id='label"+i+"aligntext'>center, top Coordinates:</label> <input id='label"+i+"pos' value='"+xpos+" , "+ypos+"' type='text' readonly='readonly'/><button id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -87,11 +87,11 @@ $(document).ready(function () {
 		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
 		alignDetails.alignment = 'center';
 
-		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'aligntext', '#label'+i+'bounds', '#label'+i+'boundsave', labellayer[i], fontsize);
+		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'bounds', '#label'+i+'boundsave', labellayer[i], fontsize);
 		ypos += 40;
 	}
 	
-	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelaligntext, labelbounds, labelboundsave, labellayer, fontsize)
+	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelbounds, labelboundsave, labellayer, fontsize)
 	{
 		canvas.observe('object:selected',function(e){
 			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
@@ -113,7 +113,7 @@ $(document).ready(function () {
 					alignobj.actualright = labellayer.left + labellayer.getWidth()/2;
 					actualleft[alignobj.index] = alignobj.actualleft;
 					actualright[alignobj.index] = alignobj.actualright;
-					$(labelaligntext).trigger('setpos');
+					setpos();
 				}
 			}
 		});
@@ -131,7 +131,7 @@ $(document).ready(function () {
 		});
 		$(labelsize).on('change', function() {
 			labellayer.setFontsize($(labelsize).val());
-			$(labelaligntext).trigger('setleft');
+			setleft();
 		});
 		
 		for(k=1;k<fonts.length;k++)
@@ -223,11 +223,11 @@ $(document).ready(function () {
 			actualleft[alignobj.index] = alignobj.actualleft;
 			actualright[alignobj.index] = alignobj.actualright;
 			alignment[alignobj.index] = alignobj.alignment;	
-			$(labelaligntext).trigger('setpos');	
+			setpos();
 		}
-		$(labelaligntext).on('setpos', function(){
+		function setpos(){
 			var x,y;
-			$(labelaligntext).html(alignobj.alignment+', top Coordinates');
+			
 			if(alignobj.alignment==='left')
 			{	
 				x = labellayer.left - labellayer.getWidth()/2;
@@ -241,16 +241,17 @@ $(document).ready(function () {
 				x = labellayer.left;
 			}
 			y = labellayer.top;
-			$(labelpos).val(x+' , '+y);
-		});
-		$(labelaligntext).on('setleft',function(){
+			$(labelpos).val(alignobj.alignment+":"+x+' , top:'+y);
+		}
+		
+		function setleft(){
 			
 			if(alignobj.alignment==='left')
 				labellayer.set('left',alignobj.actualleft+labellayer.getWidth()/2);
 			else if(alignobj.alignment==='right')
 				labellayer.set('left',alignobj.actualright-labellayer.getWidth()/2);
 			canvas.renderAll(true);
-		});
+		}
 
 		$(labelbounds).on('click',function(){
 			$(labelboundsave).show();
@@ -330,7 +331,7 @@ $(document).ready(function () {
 		}, errorHandler);
   
 		window.requestFileSystem(window.TEMPORARY, 10*1024*1024, saveImages, errorHandler);
-
+		
 	};
 	
 	function saveImages(fs)
@@ -403,7 +404,14 @@ $(document).ready(function () {
 				}
 				else{
 					$("span#genimages > progress#gen").attr('value',data.length);
-					$("span#genimages > progress#gen").hide();}						
+					$("span#genimages > progress#gen").hide();
+					$("#comp-select").hide();
+					$("#customize").hide();
+					$("#genimages").hide();
+					$("#zip").show();
+					$('#zipprogress').show();
+					$("#print").show();
+				}						
 			});
 		});
 	};
