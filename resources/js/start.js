@@ -1,7 +1,7 @@
 $(function() {
 var holder = document.getElementById('holder');
 
-
+localStorage["qrcode"] = "false";
 if (typeof window.FileReader === 'undefined') {
   console.log('File reader API failed');
 } else {
@@ -12,10 +12,12 @@ $('#qrcode').click(function() {
 	
 	if($(this).is(':checked')){
 		$('#qrCodeSelect').show();
+		localStorage["qrcode"] = "true";
 		$('#qrCodeSelect').find('select').attr("required","required");
 		} 
 	else {
 		$('#qrCodeSelect').hide();
+		localStorage["qrcode"] = "false";
 		$('#qrCodeSelect').find('select').removeAttr("required");
 	}
 });
@@ -44,7 +46,7 @@ holder.ondrop = function (e) {
 	});
 	$("#holderCaption").hide();
 	$('#holder').css('border','0px');
-	$('#holder').css('background-color','white-smoke');
+	
   };
   console.log(file);
   reader.readAsDataURL(file);
@@ -73,7 +75,7 @@ function readFileAsDataURL(file, imageName) {
 			});
 			$("#holderCaption").hide();
 			$('#holder').css('border','0px');
-			$('#holder').css('background-color','whitesmoke');
+			
     		
     };
 	reader.readAsDataURL(file);
@@ -131,7 +133,6 @@ function clear() {
 };
 
 function move() {
-	
 	
 	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val();
 	
