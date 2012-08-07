@@ -1,7 +1,7 @@
 <html>
 	<style>
 		img {
-			padding: 5px;
+			padding: 4px;
 			border: 1px dashed black;
 		}
 	</style>
@@ -12,7 +12,7 @@
 		var dimensions = localStorage['dimensions'].split(",");
 		for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; } 
 		function printsheet(i){
-			var url = 'filesystem:http://madhuvishy.in/temporary/badges/badge'+i+'.png';
+			var url = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+i+'.png';
 			$("div").append("<img src ='"+url+"' height='"+dimensions[1]+"' width='"+dimensions[0]+"'/>");
   			if(++i < localStorage['numentries'])
 				printsheet(i);	
