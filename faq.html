@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<title>FAQ</title>
+	</head>
+	<body>
+		<div id="questions">
+			<a href="#what">What is badgeIt?</a><br/>
+			<a href="#how">How do I use it?</a><br/>
+			<a href="#imgsize">DPI, Pixels, Inches - What are they?</a><br/>
+			<a href="#sizereco">What are the recommended sizes for badges?</a><br/>
+			<a href="#csv">What is a CSV file?</a><br/>
+			<a href="#qr">Why do I need a QR code on my badge?</a><br/> 
+			<a href="create">How does the badge generation work?</a><br/>
+			<a href="chrome">Why does it work only in Google Chrome?</a><br/>
+			<a href="#other">What are the other uses of this app?</a><br/>
+		</div>
+		
+		<div id="answers">
+			<div id="what">
+				<h3>What is badgeIt?</h3>
+				<p>BadgeIt is a web application that helps you generate customized badges for attendees of your conference or event. It is built using HTML5 and Javascript and works completely on the client side. It takes in the template of your badge, and the details of attendees in csv format. You can choose which fields from the CSV file are to appear in your badge, and optionally add infographics to your badge. It then creates a canvas using your inputs, and gives you a smart toolbox to customize your badge, the text, positions, and QR codes. You can then generate badges for all the attendees listed in your csv, and download them all as a zip file, or view them in a tiled layout, and print to PDF.</p>
+			</div>
+
+			<div id="how">
+				<h3>How do I use it?</h3>
+				<p>Check out our badgeIt <a href="">tutorial</a>. We also have a screencast of the demo <a href="">here</a>.</p>
+			</div>
+
+			<div id="imgsize">
+				<h3>DPI, Pixels, Inches - What are they?</h3>
+				<p>These are the three properties that will determine the resolution of your badge. There is a very good explanation on the subject <a href="http://www.pptxtreme.com/help/psdimport/ResolutionExplainedPixelsDPIInches.html">here</a>. In badgeIt, once you upload your image, the pixels are automaticaly loaded, you can then set your DPI and inches to suit the resolution of your badges. </p>
+			</div>
+
+			<div id="sizereco">
+				<h3>What are the recommended sizes for badges?</h3>
+				<p></p>
+			</div>
+
+			<div id="csv">
+				<h3>What is a CSV file</h3>
+				<p>A Comma Separated Values file stores tabular data in plain text form. If your database in a Google Spreadsheet, doing File-&gt;Download As-&gt;CSV, will download the CSV file in your computer. If you have the data in Microsoft Excel or other spreadsheet tools, you can save your sheets in CSV format. If you have a custom SQL database, you can export your data to CSV from your admin interface.</p>
+				<p>Once you submit the CSV file, badgeIt parses the file, and fetches the various fields of your database from the first row, so we recommend that your first row only contains the column headings. You will now have a multiple select box that lets you choose which fields you would like to appear on the badge.</p>
+			</div>
+
+			<div id="qr">
+				<h3>Why do I need a QR code on my badge?</h3>
+				<p>Infographics such as QR codes are graphical ways of communicating information. Smart phones can now scan QR codes, so adding a QR code that encodes the attendees' Name and Email could be a smart way to exchange business cards between them, by scanning each other's badges! Now you can make your badge much more than a mere name tag.</p>
+			  	<p>If you choose to add QR codes to your badges, a multiple select box similar to the previous one comes up, and you can choose the fields to be encoded into the QR code here.</p>
+			</div>
+			
+			<div id="create">
+				<h3>How does the badge generation work?</h3>
+				<p>Once the template image, CSV, and QR code options are set, badgeIt creates a HTML5 canvas with the template, and the column headings loaded at arbitrary positions on the canvas. The text rendering is handled using a nifty framework, <a href="http://fabricjs.com">Fabric JS</a>. You can now use the toolbox to choose between the different texts on the canvas, and customize the positions, fonts, sizes, styles and colors. You can also drag text around in the canvas. To prevent long text values from overflowing, there is an option to Set bounds for each of your texts. This ensures that the long values are scaled to suit your settings.</p>
+				<p>After you are done customizing the template, you can save all your badges. This generates the badges for all the rows in your CSV file. The generated images are not uploaded anywhere, but are stored in your own file system, using the HTML5 FileSystem API. This ensures that your bandwidth is not wasted, and the application is fast.</p>
+				<p>The template image, the csv, generated badges, zipping the files, are all handled on the client side, using HTML5 and localStorage, so there is no threat to your data.</p>
+			</div>
+
+			<div id="chrome">
+				<h3>Why does it work only in Google Chrome?</h3>
+				<p>Chrome is the only browser that currently supports the Filesystem API. We will extend support for other browsers once they implement the Filesystem API.</p>
+			</div>
+			<div id="other">
+				<h3>What are the other uses of this app?</h3>
+				<p>Apart from badges, you can use badgeIt to generate business cards for event organizers in a common template. You could also generate attendee certificates which you can email them post the event. You can find your own creative uses for this tool too!</p>
+			</div>
+		</div>
+	</body>
+</html>
