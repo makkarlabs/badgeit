@@ -73,6 +73,13 @@ img { max-width:500px;}
 		<form class="form-horizontal" style="margin-top:5%" id="form1" action="./create.html">
 		<fieldset>
 		<div class="control-group">
+			<label class="control-label" for="projectNmae"> Project Name </label>
+			<div class="controls">	
+				<input type="text" style="height:25px" class="input" id="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
+			</div>
+		</div>
+		
+		<div class="control-group">
 			<label class="control-label" for="templateChooser"> Template </label>
 			<div class="controls">	
 				<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0],'event-template');"></input> 
@@ -121,15 +128,15 @@ img { max-width:500px;}
 		<div class="control-group">
 			<label class="control-label" for="pixelwidth"> Width  </label>
 			<div class="controls">	
-				<input type="text" class="input-small" id="pixelwidth" placeholder="pixels" onchange="$('#inchwidth').val(this.value/$('#dpi').val()"> </input>
+				<input type="text" style="height:25px;"class="input-small" id="pixelwidth" placeholder="pixels" onchange="$('#inchwidth').val(this.value/$('#dpi').val()"> </input>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="pixelheight"> Height  </label>
 			<div class="controls">	
-				<input type="text" class="input-small" id="pixelheight" placeholder="pixels" onchange="$('#inchheight').val(this.value/$('#dpi').val())"> </input>
-				<div style="margin-top:10px" id="container"> </div>
+				<input type="text" style="height:25px" class="input-small" id="pixelheight" placeholder="pixels" onchange="$('#inchheight').val(this.value/$('#dpi').val())"> </input>
+				<div style="height:25px;" style="margin-top:10px" id="container"> </div>
 			</div>
 		</div>
 

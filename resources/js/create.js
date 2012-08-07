@@ -293,9 +293,9 @@ $(document).ready(function () {
 				$("#zipprogress").max = 0; $("#zipprogress").show(); },function(current, total){$("#zipprogress").value = current;
 				},function(){$("#zipprogress").hide(); $("div#ziplink").show();});
 	});
-	$("div#ziplink > button").on('click', function(){
+	$("div#ziplink > a").on('click', function(){
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
-			location.href = blobURL;
+			$("div#ziplink > a").attr('download': 'Badges.zip','href':blobURL);
 		});
 	});
 	
@@ -409,7 +409,6 @@ $(document).ready(function () {
 					$("#customize").hide();
 					$("#genimages").hide();
 					$("#zip").show();
-					$('#zipprogress').show();
 					$("#print").show();
 				}						
 			});
