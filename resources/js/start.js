@@ -42,6 +42,9 @@ holder.ondrop = function (e) {
 	$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
 	$("#pixelheight").val(this.height); // work for in memory images.
 	});
+	$("#holderCaption").hide();
+	$('#holder').css('border','0px');
+	$('#holder').css('background-color','white-smoke');
   };
   console.log(file);
   reader.readAsDataURL(file);
@@ -59,8 +62,8 @@ function readFileAsDataURL(file, imageName) {
 		localStorage[imageName] = 
 			event.target.result;
 			$('#badgepreview').attr('src', event.target.result);
-			$('#holder').css('height',$('#badgepreview').css('height'));
-			$('#holder').css('width',$('#badgepreview').css('width'));
+			
+			
 			var img = $("#badgepreview"); 
 			$("<img/>") // Make in memory copy of image to avoid css issues
 			.attr("src", $(img).attr("src"))
@@ -68,6 +71,9 @@ function readFileAsDataURL(file, imageName) {
 			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
 			$("#pixelheight").val(this.height); // work for in memory images.
 			});
+			$("#holderCaption").hide();
+			$('#holder').css('border','0px');
+			$('#holder').css('background-color','whitesmoke');
     		
     };
 	reader.readAsDataURL(file);
