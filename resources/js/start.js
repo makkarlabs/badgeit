@@ -1,7 +1,7 @@
 $(function() {
 var holder = document.getElementById('holder');
 
-
+localStorage["qrcode"] = "false";
 if (typeof window.FileReader === 'undefined') {
   console.log('File reader API failed');
 } else {
@@ -12,10 +12,12 @@ $('#qrcode').click(function() {
 	
 	if($(this).is(':checked')){
 		$('#qrCodeSelect').show();
+		localStorage["qrcode"] = "true";
 		$('#qrCodeSelect').find('select').attr("required","required");
 		} 
 	else {
 		$('#qrCodeSelect').hide();
+		localStorage["qrcode"] = "false";
 		$('#qrCodeSelect').find('select').removeAttr("required");
 	}
 });
@@ -42,6 +44,9 @@ holder.ondrop = function (e) {
 	$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
 	$("#pixelheight").val(this.height); // work for in memory images.
 	});
+	$("#holderCaption").hide();
+	$('#holder').css('border','0px');
+	
   };
   console.log(file);
   reader.readAsDataURL(file);
@@ -59,8 +64,8 @@ function readFileAsDataURL(file, imageName) {
 		localStorage[imageName] = 
 			event.target.result;
 			$('#badgepreview').attr('src', event.target.result);
-			$('#holder').css('height',$('#badgepreview').css('height'));
-			$('#holder').css('width',$('#badgepreview').css('width'));
+			
+			
 			var img = $("#badgepreview"); 
 			$("<img/>") // Make in memory copy of image to avoid css issues
 			.attr("src", $(img).attr("src"))
@@ -68,6 +73,9 @@ function readFileAsDataURL(file, imageName) {
 			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
 			$("#pixelheight").val(this.height); // work for in memory images.
 			});
+			$("#holderCaption").hide();
+			$('#holder').css('border','0px');
+			
     		
     };
 	reader.readAsDataURL(file);
@@ -125,7 +133,6 @@ function clear() {
 };
 
 function move() {
-	
 	
 	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val();
 	
