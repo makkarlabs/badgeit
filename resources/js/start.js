@@ -46,6 +46,7 @@ holder.ondrop = function (e) {
 	});
 	$("#holderCaption").hide();
 	$('#holder').css('border','0px');
+	$('#holder').css('background-color','white');
 	
   };
   console.log(file);
@@ -75,7 +76,7 @@ function readFileAsDataURL(file, imageName) {
 			});
 			$("#holderCaption").hide();
 			$('#holder').css('border','0px');
-			
+			$('#holder').css('background-color','white');
     		
     };
 	reader.readAsDataURL(file);
