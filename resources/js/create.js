@@ -295,7 +295,7 @@ $(document).ready(function () {
 	});
 	$("div#ziplink > a").on('click', function(){
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
-			$("div#ziplink > a").attr('download': 'Badges.zip','href':blobURL);
+			$("div#ziplink > a").attr({'download': localStorage['projectname']+'.zip','href':blobURL});
 		});
 	});
 	
