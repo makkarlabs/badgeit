@@ -6,14 +6,14 @@
 	for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; }
 	
 	//Fabric js initialisations
-    var canvas; 
+        var canvas; 
 	var labellayer = new Array();
 	var alignment = new Array();
 	var actualleft = new Array();
 	var actualright = new Array();	
 	var boundRect = new Array();
 	var maxwidth = new Array();
-	var qrlayer, qrdataurl, qrdata='';
+	var isqrcode = localStorage['qrcode'], qrlayer, qrdataurl, qrdata='';
 
 	//CSV file related
 	var indexes = localStorage['selected-cols'].split(",");
@@ -23,10 +23,11 @@
 	localStorage['numentries']=data.length;
 
 	//Infographics
-	//localStorage['qr-cols']="0,1";
+	if(isqrcode==='true')
+	{
 	var qr_indexes = localStorage['qr-cols'].split(",");
 	for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
-	
+	}
 
 $(document).ready(function () {
 
@@ -42,22 +43,23 @@ $(document).ready(function () {
 	canvas.setWidth(dimensions[0]);
 	
 	canvas.HOVER_CURSOR = 'pointer';
-	for(var k = 0; k < qr_indexes.length; k++)
+	if(isqrcode === 'true')
 	{
-		qrdata+=data[0][qr_indexes[k]]+"\n";
+		for(var k = 0; k < qr_indexes.length; k++)
+		{
+			qrdata+=data[0][qr_indexes[k]]+"\n";
+		}
+		$('#qrcode').qrcode({width: 64,height: 64,text: qrdata});
+		qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png'); 
+		fabric.Image.fromURL(qrdataurl, function(qr) {
+        		qr.set({
+        			left: canvas.getWidth()-90,
+            			top: canvas.getHeight()-70,
+            		});
+          	canvas.add(qr);
+	  	qrlayer = qr;
+        	});
 	}
-	//alert(qrdata);
-	$('#qrcode').qrcode({width: 64,height: 64,text: qrdata});
-	qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png'); 
-	fabric.Image.fromURL(qrdataurl, function(qr) {
-        	qr.set({
-        		left: canvas.getWidth()-90,
-            		top: canvas.getHeight()-70,
-            	});
-          canvas.add(qr);
-	  qrlayer = qr;
-        });
-	
    	var fontsize = 25, xpos = canvas.getWidth()/2, ypos = canvas.getHeight()/4;
 	for(i=0; i<indexes.length; i++)
 	{
@@ -324,17 +326,19 @@ $(document).ready(function () {
 			labellayer[index_j].scaleY = 1;			
 			labellayer[index_j].set('text', data[index_i][value_j]);
 			canvas.renderAll(true);
-			var qrdata="";
-			for(var k = 0; k < qr_indexes.length; k++)
+			if(isqrcode==='true')
 			{
-				qrdata+=data[index_i][qr_indexes[k]]+"\n";
+				var qrdata="";
+				for(var k = 0; k < qr_indexes.length; k++)
+				{
+					qrdata+=data[index_i][qr_indexes[k]]+"\n";
+				}
+				$('#qrcode > canvas').remove();
+				$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata});
+				qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
+				qrlayer.getElement().src = qrdataurl;				
+				canvas.renderAll(true);	
 			}
-			$('#qrcode > canvas').remove();
-			$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata});
-			qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
-			qrlayer.getElement().src = qrdataurl;				
-			canvas.renderAll(true);	
-			
 			if( typeof boundRect[index_j] === 'object')
 			{
 				if(labellayer[index_j].getWidth() > boundRect[index_j].getWidth())			
