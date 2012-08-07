@@ -64,7 +64,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text'/> Font Size<input id='label"+i+"size' type='range'/> <select class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> Font Style <a href='#' class='btn btn-warning'><i class='icon-bold'></i></a> <a href='#' class='btn'><i class='icon-italic'></i></a> <select id='label"+i+"style'><option></option></select> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> Alignment <a class='btn' id='leftalign"+i+"'><i class='icon-align-left'></i></a> <a class='btn' id='centeralign"+i+"'><i class='icon-align-center'></i></a> <a class='btn' id='rightalign"+i+"'><i class='icon-align-right'></i></a> <select id='label"+i+"align'><option value='center'>Center</option><option value='left'>Left</option><option value='right'>Right</option></select> <label id='label"+i+"aligntext'>center, top Coordinates:</label> <input id='label"+i+"pos' value='"+xpos+" , "+ypos+"' type='text' readonly='readonly'/><button id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text'/> Font Size<input id='label"+i+"size' type='range'/> <select class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a> <label id='label"+i+"aligntext'>center, top Coordinates:</label> <input id='label"+i+"pos' value='"+xpos+" , "+ypos+"' type='text' readonly='readonly'/><button id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -84,14 +84,11 @@ $(document).ready(function () {
 		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
 		alignDetails.alignment = 'center';
 
-		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'style', '#label'+i+'color', '#label'+i+'align', '#label'+i+'pos', '#label'+i+'aligntext', '#label'+i+'bounds', '#label'+i+'boundsave', labellayer[i], fontsize);
-
+		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'aligntext', '#label'+i+'bounds', '#label'+i+'boundsave', labellayer[i], fontsize);
 		ypos += 40;
-		
-
 	}
 	
-	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelstyle, labelcolor, labelalign, labelpos, labelaligntext, labelbounds, labelboundsave, labellayer, fontsize)
+	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelaligntext, labelbounds, labelboundsave, labellayer, fontsize)
 	{
 		canvas.observe('object:modified', function(e) {
   			var activeObject = e.target;
@@ -132,35 +129,91 @@ $(document).ready(function () {
 			labellayer.set('fontFamily',$(labelfamily).val());
 			canvas.renderAll(true);
 		});
-		for(k=0;k<fontstyle.length;k++)
-		{
-			val_style = fontstyle[k].toLowerCase();
-			$(labelstyle).append("<option value='"+val_style+"'>"+fontstyle[k]+"</option>");
-		}
-		$(labelstyle).change(function(){ 
-			if($(labelstyle).val()=='bold')
-				labellayer.set('fontWeight',$(labelstyle).val());
+		$(labelbold).click(function(event){
+			event.preventDefault();
+			if($(labelbold).attr('title') === 'unselect')
+			{
+				labellayer.set('fontWeight', 'bold');
+				$(labelbold).attr({'title':'select', 'class':'btn btn-warning'});	
+			}
 			else
-				labellayer.set('fontStyle',$(labelstyle).val());							
+			{
+                                labellayer.set('fontWeight', 'normal');
+                                $(labelbold).attr({'title':'unselect', 'class':'btn'});
+			}
 			canvas.renderAll(true);
 		});
+		$(labelitalic).click(function(event){
+                        event.preventDefault();
+                        if($(labelitalic).attr('title') === 'unselect')
+                        {
+                                labellayer.set('fontStyle', 'italic');
+                                $(labelitalic).attr({'title':'select', 'class':'btn btn-warning'});
+                        }
+                        else
+                        {
+                                labellayer.set('fontStyle', 'normal');
+                                $(labelitalic).attr({'title':'unselect', 'class':'btn'});
+                        }
+			canvas.renderAll(true);
+                });
 		$(labelcolor).change(function(){ 
 			labellayer.setColor($(labelcolor).val());
 			canvas.renderAll(true);
 		});
-		$(labelalign).on('change',function(){
+		$(labelleft).on('click',function(event){
+			if($(labelleft).attr('title') === 'unselect')
+			{
+				align('left');
+				$(labelleft).attr({'title':'select', 'class':'btn btn-warning'});
+				$(labelcenter).attr({'title':'unselect', 'class':'btn'});
+				$(labelright).attr({'title':'unselect', 'class':'btn'});
+			}
+			else
+			{
+				align('center');
+				$(labelcenter).attr({'title':'select', 'class':'btn btn-warning'});
+                                $(labelleft).attr({'title':'unselect', 'class':'btn'});
+
+			}	
+		});
+		$(labelright).on('click',function(event){
+                        if($(labelright).attr('title') === 'unselect')
+                        {
+                                align('right');
+                                $(labelright).attr({'title':'select', 'class':'btn btn-warning'});
+                                $(labelcenter).attr({'title':'unselect', 'class':'btn'});
+                                $(labelleft).attr({'title':'unselect', 'class':'btn'});
+                        }
+                        else
+                        {
+                                align('center');
+                                $(labelcenter).attr({'title':'select', 'class':'btn btn-warning'});
+                                $(labelright).attr({'title':'unselect', 'class':'btn'});
+                        }
+                });
+		$(labelcenter).on('click', function(event){
+			if($(labelcenter).attr('title')==='unselect')
+			{
+				align('center');
+                                $(labelcenter).attr({'title':'select', 'class':'btn btn-warning'});
+                                $(labelright).attr({'title':'unselect', 'class':'btn'});
+                                $(labelleft).attr({'title':'unselect', 'class':'btn'});
+			}
+		});
+		function align(alignment){
 			
 			alignobj.actualleft = labellayer.left - labellayer.getWidth()/2;
 			alignobj.actualright = labellayer.left + labellayer.getWidth()/2;	
-			alignobj.alignment = $(labelalign).val();	
+			alignobj.alignment = alignment;	
 			actualleft[alignobj.index] = alignobj.actualleft;
 			actualright[alignobj.index] = alignobj.actualright;
 			alignment[alignobj.index] = alignobj.alignment;	
 			$(labelaligntext).trigger('setpos');	
-		});
+		}
 		$(labelaligntext).on('setpos', function(){
 			var x,y;
-			$(labelaligntext).html($(labelalign).val()+', top Coordinates');
+			$(labelaligntext).html(alignobj.alignment+', top Coordinates');
 			if(alignobj.alignment==='left')
 			{	
 				x = labellayer.left - labellayer.getWidth()/2;
