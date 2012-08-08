@@ -12,5 +12,17 @@ var fonts = new Array(
 	'Times New Roman,Times,serif',
 	'Trebuchet MS,Helvetica,sans-serif',
 	'Verdana,Geneva,sans-serif',
-	'Calibri' );
-var fontstyle = new Array('Normal','Bold','Italic');	
+	'Calibri',
+	'Capriola',
+	'Italiana',
+	'Marmelad',
+	'Michroma',
+	'Miniver',
+	'Nunito',
+	'OverlockSC',
+	'OvertheRainbow',
+	'Quando',
+	'Rochester',
+	'Rancho'
+	'Sail,');
+

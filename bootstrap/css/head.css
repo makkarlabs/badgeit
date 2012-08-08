@@ -1,5 +1,12 @@
-header { width:1100px; margin-left:auto; margin-right:auto; padding-top:40px; padding-bottom:20px;}
-#headerContainer { background-color:whitesmoke; }
+@font-face {
+  font-family: 'Rancho';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rancho Regular'), local('Rancho-Regular'), url(fonts/Rancho-Regular.ttf) format('truetype');
+}
+header { font-family: 'Rancho'; font-size:20px; width:1100px; margin-left:auto; margin-right:auto; padding-top:40px; padding-bottom:20px;}
+#title-large { float:left;font-size:70px; }
+#headerContainer { background-color:whitesmoke; border-bottom:2px solid gray; }
 .clr { clear:both; font-size: 1px; padding:0; margin:0; background:none; }
 body {
 	      margin: 0px;

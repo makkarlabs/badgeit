@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'Capriola';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Capriola Regular'), local('Capriola-Regular'), url(fonts/Capriola-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Italiana';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Italiana Regular'), local('Italiana-Regular'), url(fonts/Italiana-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Marmelad';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Marmelad Regular'), local('Marmelad-Regular'), url(fonts/Marmelad-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Michroma';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Michroma'), url(fonts/Michroma.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Miniver';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Miniver Regular'), local('Miniver-Regular'), url(fonts/Miniver-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nunito Regular'), local('Nunito-Regular'), url(fonts/Nunito-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'OverlockSC';
+  font-style: normal;
+  font-weight: 400;
+  src: local('OverlockSC Regular'), local('OverlockSC-Regular'), url(fonts/OverlockSC-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'OvertheRainbow';
+  font-style: normal;
+  font-weight: 400;
+  src: local('OvertheRainbow'), url(fonts/OvertheRainbow.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Quando';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Quando Regular'), local('Quando-Regular'), url(fonts/Quando-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Rochester';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rochester Regular'), local('Rochester-Regular'), url(fonts/Rochester-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Sail';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Sail Regular'), local('Sail-Regular'), url(fonts/Sail-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Rancho';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rancho Regular'), local('Rancho-Regular'), url(fonts/Rancho-Regular.ttf) format('truetype');
+}

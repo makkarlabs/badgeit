@@ -66,7 +66,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -312,8 +312,6 @@ $(document).ready(function () {
 
 	var index_i=1;
 	var current_dataurl;
-	csv_file = localStorage["event-csv"];
-	data = $.csv2Array(csv_file);
 	var img = new Array();
 	var testfileentry=new Array();
 
@@ -338,44 +336,45 @@ $(document).ready(function () {
 	{
 		$.each(indexes,function(index_j,value_j)
 		{		
-			labellayer[index_j].scaleX = 1;
-			labellayer[index_j].scaleY = 1;			
-			labellayer[index_j].set('text', data[index_i][value_j]);
-			canvas.renderAll(true);
-			if(isqrcode==='true')
-			{
-				var qrdata="";
-				for(var k = 0; k < qr_indexes.length; k++)
+				labellayer[index_j].scaleX = 1;
+				labellayer[index_j].scaleY = 1;			
+				labellayer[index_j].set('text', data[index_i][value_j]);
+				canvas.renderAll(true);
+				if(isqrcode==='true')
 				{
-					qrdata+=data[index_i][qr_indexes[k]]+"\n";
-				}
-				$('#qrcode > canvas').remove();
-				$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata});
-				qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
-				qrlayer.getElement().src = qrdataurl;				
-				canvas.renderAll(true);	
-			}
-			if( typeof boundRect[index_j] === 'object')
-			{
-				if(labellayer[index_j].getWidth() > boundRect[index_j].getWidth())			
-				{
-					labellayer[index_j].scaleToWidth(maxwidth[index_j]);
+					var qrdata="";
+					for(var k = 0; k < qr_indexes.length; k++)
+					{
+						qrdata+=data[index_i][qr_indexes[k]]+"\n";
+					}
+					$('#qrcode > canvas').remove();
+					$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata});
+					qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
+					qrlayer.getElement().src = qrdataurl;				
 					canvas.renderAll(true);	
 				}
-			}		
-			if(alignment[index_j]==='left')
-			{
-				labellayer[index_j].set('left',actualleft[index_j]+labellayer[index_j].getWidth()/2);
+				if( typeof boundRect[index_j] === 'object')
+				{
+					if(labellayer[index_j].getWidth() > boundRect[index_j].getWidth())			
+					{
+						labellayer[index_j].scaleToWidth(maxwidth[index_j]);
+						canvas.renderAll(true);	
+					}
+				}		
+				if(alignment[index_j]==='left')
+				{
+					labellayer[index_j].set('left',actualleft[index_j]+labellayer[index_j].getWidth()/2);
+					
+				}
+				else if(alignment[index_j]==='right')
+				{
+					labellayer[index_j].set('left', actualright[index_j]-labellayer[index_j].getWidth()/2);
 				
-			}
-			else if(alignment[index_j]==='right')
-			{
-				labellayer[index_j].set('left', actualright[index_j]-labellayer[index_j].getWidth()/2);
+				}
+				canvas.renderAll(true);
 			
-			}
-			canvas.renderAll(true);
 		});
-
+	
 		writefile(fs);
 	};
 
@@ -400,7 +399,10 @@ $(document).ready(function () {
 				if(++index_i<data.length)
 				{
 					$("span#genimages > progress#gen").attr('value',index_i);
-					saveImages(fs);
+					if(data[index_i].length == 0) {
+						 console.log("Empty row in the CSV file"); }
+					else {
+						saveImages(fs);	}
 				}
 				else{
 					$("span#genimages > progress#gen").attr('value',data.length);
