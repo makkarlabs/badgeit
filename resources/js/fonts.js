@@ -23,6 +23,6 @@ var fonts = new Array(
 	'OvertheRainbow',
 	'Quando',
 	'Rochester',
-	'Rancho'
-	'Sail,');
+	'Rancho',
+	'Sail');
 

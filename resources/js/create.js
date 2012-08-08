@@ -412,6 +412,7 @@ $(document).ready(function () {
 					$("#genimages").hide();
 					$("#zip").show();
 					$("#print").show();
+					$("#back").show();
 				}						
 			});
 		});
@@ -498,3 +499,19 @@ $(document).ready(function () {
 			}
 		};
 	})(this);
+
+	function showToolbox(){
+		for(var i=0;i<indexes.length;i++)
+                {
+                        labellayer[i].set('text',data[0][indexes[i]]);
+                }
+                canvas.renderAll(true);
+
+		$("#comp-select").show();
+                $("#customize").show();
+                $("#zip").hide();
+                $("#print").hide();
+                $("#back").hide();
+		$("#genimages").show();
+		$("#ziplink").hide();
+	}
