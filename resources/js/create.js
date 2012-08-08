@@ -334,6 +334,10 @@ $(document).ready(function () {
 	
 	function saveImages(fs)
 	{
+		if(data[index_i].length == 0) {
+			 console.log("Empty row in the CSV file"); }
+		else {
+		
 		$.each(indexes,function(index_j,value_j)
 		{		
 				labellayer[index_j].scaleX = 1;
@@ -374,7 +378,7 @@ $(document).ready(function () {
 				canvas.renderAll(true);
 			
 		});
-	
+	}
 		writefile(fs);
 	};
 
@@ -399,10 +403,7 @@ $(document).ready(function () {
 				if(++index_i<data.length)
 				{
 					$("span#genimages > progress#gen").attr('value',index_i);
-					if(data[index_i].length == 0) {
-						 console.log("Empty row in the CSV file"); }
-					else {
-						saveImages(fs);	}
+						saveImages(fs);	
 				}
 				else{
 					$("span#genimages > progress#gen").attr('value',data.length);
