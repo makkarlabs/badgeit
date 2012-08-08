@@ -277,6 +277,19 @@ $(document).ready(function () {
 
 	};
 	
+	//handler to generate badges/stop generation
+	$("span#genimages > button#save").on('click',function(){
+		if($("span#genimages > button#save").html()=='Next')
+		{
+			save();
+			$("span#genimages > button#save").html('Stop');
+			$("span#genimages > button#save").attr('title','Click to stop badge creation');
+		}
+		else
+		{
+			isStopSave = true;
+		}
+	});
 	
 	$(".component").hide();
 	$("#label0div").show();
@@ -400,6 +413,15 @@ $(document).ready(function () {
 			testfileentry[index_i] = fileEntry;
   			fileEntry.createWriter(function(fileWriter) {
 				fileWriter.write(current_blob);
+				if(isStopSave === true)
+				{
+					$("span#genimages > button#save").html('Next');
+					$("span#genimages > button#save").attr('title','Click to create all badges');
+					$("span#genimages > button#save").hide();
+					index_i = 1;
+					isStopSave = false;
+					break;
+				}	
 				if(++index_i<data.length)
 				{
 					$("span#genimages > progress#gen").attr('value',index_i);
