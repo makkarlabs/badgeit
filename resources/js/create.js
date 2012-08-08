@@ -28,7 +28,9 @@
 	var qr_indexes = localStorage['qr-cols'].split(",");
 	for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
 	}
-
+	
+	//Stop Badge gen
+	var isStopSave = false;
 $(document).ready(function () {
 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
@@ -417,7 +419,7 @@ $(document).ready(function () {
 				{
 					$("span#genimages > button#save").html('Next');
 					$("span#genimages > button#save").attr('title','Click to create all badges');
-					$("span#genimages > button#save").hide();
+					$("span#genimages > progress#gen").hide();
 					index_i = 1;
 					isStopSave = false;
 					return;
@@ -535,6 +537,8 @@ $(document).ready(function () {
                 $("#zip").hide();
                 $("#print").hide();
                 $("#back").hide();
+		$("span#genimages > button#save").html('Next');
+		$("span#genimages > button#save").attr('title','Click to create all badges');
 		$("#genimages").show();
 		$("#ziplink").hide();
 	}
