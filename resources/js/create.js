@@ -420,7 +420,7 @@ $(document).ready(function () {
 					$("span#genimages > button#save").hide();
 					index_i = 1;
 					isStopSave = false;
-					break;
+					return;
 				}	
 				if(++index_i<data.length)
 				{
