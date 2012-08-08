@@ -4,6 +4,7 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
+	<link rel="stylesheet" href="bootstrap/css/createfonts.css" type="text/css">
 	<style>
 	    canvas {
 	       border: 1px solid #9C9898;
@@ -45,14 +46,14 @@
   <body>
 	<div id="headerContainer">
 	  <header>
-		<h1 style="float:left;font-size:54px"> Badge it!</h1>	
+		<h1 id="title-large">Badge it</h1>	
 		<div style="float:right;">
 		<ul class="nav nav-pills">
 			<li><a href="home.html">Home</a></li>
 			<li class="active"><a href="#">Create</a></li>
 			<li><a href="faq.html">FAQ</a></li>
-			<li><a href="#">About</a></li>
-			<li><a href="#">Contact Us</a></li>
+			<li><a href="http://makkarlabs.in/about">About</a></li>
+			<li><a href="http://makkarlabs.in/contact">Contact Us</a></li>
 		</ul>
 		</div>
 		<div class="clr">
@@ -79,7 +80,7 @@
 		</span>
 		<button class="btn btn-primary" style="margin-left:5px;display:none;" hidden="hidden" id="zip">Zip Files</button>
 		<progress id="zipprogress" hidden='true'></progress>
-		<div hidden="true" style="margin-left:5px;"  id="ziplink"><a class="btn btn-primary" id='download'>Download Zip</a></div>
+		<div hidden="true" style="margin-top:10px;margin-left:5px;"  id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
 		<br><br>
 		<button id="print" class="btn btn-primary" hidden="hidden" style="display:none; margin-left:5px;" onclick="window.location='./print.html'">View all in Sheet</button>    
 		
