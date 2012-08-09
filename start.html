@@ -23,19 +23,7 @@ img { max-width:500px;}
 	
 
 
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-33912617-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+<script src="resources/js/analytics.js"></script>
 
 
   </head>
@@ -70,7 +58,7 @@ img { max-width:500px;}
 		</article>
 		</div>
 		<div clas="span6">
-		<form class="form-horizontal" style="margin-top:5%" id="form1" action="./create.html">
+		<form class="form-horizontal" style="margin-top:5%" onsubmit="move()" id="form1" action="./create.html">
 		<fieldset>
 		<div class="control-group">
 			<label class="control-label" for="projectNmae"> Project Name </label>
@@ -151,14 +139,14 @@ img { max-width:500px;}
 
 
 			<div class="form-actions">
-				<button class="btn btn-primary" type="submit" onclick="move()"> Submit </button>
+				<button class="btn btn-primary" type="submit"> Submit </button>
 				<button class="btn" onclick="clear()"> Reset </button>
 			</div>
 		</fieldset>
 		</form>
 		</div>
 		</div>
-		</div>
+	</div>
 </div>
   </body>
 </html>
