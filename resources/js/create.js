@@ -316,6 +316,7 @@ $(document).ready(function () {
 	
 	//cleanup filesystem on window close
 	$(window).unload(function() {
+	  localStorage.clear();
 	  window.requestFileSystem(window.TEMPORARY, 1024*1024, function(fs) {
   		fs.root.getDirectory('/badges', {}, function(dirEntry) {
 			dirEntry.removeRecursively(function() {
