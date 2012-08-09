@@ -366,12 +366,18 @@ $(document).ready(function () {
 	var index_i=1;
 	var current_dataurl;
 	var img = new Array();
-	var testfileentry=new Array();
-
+	var testfileentry = new Array();
+	var xfactor = new Array();
+	var yfactor = new Array();
+	
 	function save()
 	{
 		canvas.deactivateAll();
 		canvas.renderAll(true);	
+		$.each(indexes,function(index_j,value_j) {
+			xfactor[index_j] = labellayer[index_j].scaleX;
+			yfactor[index_j] = labellayer[index_j].scaleY;
+		});
 		index_i=1;
 		$("span#genimages > progress#gen").attr('max',data.length);
 		$("span#genimages > progress#gen").show();
@@ -387,14 +393,17 @@ $(document).ready(function () {
 	
 	function saveImages(fs)
 	{
+		var x,y;
 		if(data[index_i].length == 0) {
 			 console.log("Empty row in the CSV file"); }
 		else {
 		
 		$.each(indexes,function(index_j,value_j)
 		{		
-				labellayer[index_j].scaleX = 1;
-				labellayer[index_j].scaleY = 1;			
+				labellayer[index_j].scaleX = xfactor[index_j];
+				labellayer[index_j].scaleY = yfactor[index_j];
+				//labellayer[index_j].scaleX = 1;
+				//labellayer[index_j].scaleY = 1;			
 				labellayer[index_j].set('text', data[index_i][value_j]);
 				canvas.renderAll(true);
 				if(isqrcode==='true')
@@ -414,6 +423,7 @@ $(document).ready(function () {
 				{
 					if(labellayer[index_j].getWidth() > boundRect[index_j].getWidth())			
 					{
+						
 						labellayer[index_j].scaleToWidth(maxwidth[index_j]);
 						canvas.renderAll(true);	
 					}
@@ -429,6 +439,8 @@ $(document).ready(function () {
 				
 				}
 				canvas.renderAll(true);
+				
+
 			
 		});
 	}
