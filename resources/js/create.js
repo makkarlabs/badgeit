@@ -539,7 +539,7 @@ $(document).ready(function () {
 				} 
 			},
 			getBlobURL : function(callback) {
-				if(typeof zipWriter.close === 'function')
+				if(zipWriter!=null)
 				{
 					zipWriter.close(function(blob) {
 						var blobURL = URL.createObjectURL(blob);
