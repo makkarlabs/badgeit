@@ -346,7 +346,7 @@ $(document).ready(function () {
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
 			console.log('Zip revoked');
 		});
-		$("#finish").attr('margin-top','-30px');
+		$("#finish").css('margin-top','-30px');
 	});
 
 	//cleanup filesystem on window close
@@ -477,7 +477,7 @@ $(document).ready(function () {
 					$("#zip").show();
 					$("#print").show();
 					$("#back").show();
-					$("#finish").attr('margin-top','10px');
+					$("#finish").css('margin-top','10px');
 				}						
 			});
 		});
