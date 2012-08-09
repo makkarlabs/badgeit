@@ -68,7 +68,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button> <div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button><button id='label"+i+"boundcancel' hidden='true'>Cancel</button> <div class='clr'></div></div>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -89,11 +89,11 @@ $(document).ready(function () {
 		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
 		alignDetails.alignment = 'center';
 
-		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'bounds', '#label'+i+'boundsave', labellayer[i], fontsize);
+		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'bounds', '#label'+i+'boundsave', '#label'+i+'boundcancel', labellayer[i], fontsize);
 		ypos += 40;
 	}
 	
-	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelbounds, labelboundsave, labellayer, fontsize)
+	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelbounds, labelboundsave, labelboundcancel, labellayer, fontsize)
 	{
 		canvas.observe('object:selected',function(e){
 			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
@@ -257,6 +257,7 @@ $(document).ready(function () {
 
 		$(labelbounds).on('click',function(){
 			$(labelboundsave).show();
+			$(labelboundcancel).show();
 			$(labelbounds).attr('disabled', true);
 			labellayer.lockMovementX = true;
 			labellayer.lockMovementY = true;			
@@ -268,11 +269,21 @@ $(document).ready(function () {
 		$(labelboundsave).on('click', function(){
 			$(labelbounds).attr('disabled', false);
 			$(labelboundsave).hide();
+			$(labelboundcancel).hide();
 			labellayer.hasControls = true;
 			labellayer.lockMovementX = false;
 			labellayer.lockMovementY = false;
 			boundRect[alignobj.index] = alignobj.boundingRect;
 			maxwidth[alignobj.index] = alignobj.boundingRect.getWidth();
+			canvas.remove(alignobj.boundingRect);
+		});
+		$(labelboundcancel).on('click', function(){
+			$(labelbounds).attr('disabled', false);
+			$(labelboundcancel).hide();
+			$(labelboundsave).hide();
+			labellayer.hasControls = true;
+			labellayer.lockMovementX = false;
+			labellayer.lockMovementY = false;
 			canvas.remove(alignobj.boundingRect);
 		});
 		labellayer.lockRotation = true;
@@ -335,6 +346,7 @@ $(document).ready(function () {
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
 			console.log('Zip revoked');
 		});
+		$("#finish").attr('margin-top','-30px');
 	});
 
 	//cleanup filesystem on window close
@@ -465,6 +477,7 @@ $(document).ready(function () {
 					$("#zip").show();
 					$("#print").show();
 					$("#back").show();
+					$("#finish").attr('margin-top','10px');
 				}						
 			});
 		});
