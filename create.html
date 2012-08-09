@@ -50,7 +50,7 @@
 	
 	<div class="container">
 	
-	<div class="canvasnbox">
+	<div id="canvasnbox">
 	<div id="canvasholder" style="margin-top:30px; margin-bottom:30px;">
 		<canvas id='canvas' width='canvasWidth()' height='canvasHeight()'></canvas>
 		<div class="clr"></div>
@@ -66,6 +66,7 @@
 			<button style="width:70px; margin-top:10px; margin-left:5px;" class="btn btn-primary" id="save" title="Click to create all badges">Next</button>
 			<progress id="gen" value="1" hidden='true' ></progress>
 		</span>
+		<button class="btn btn-success" style="float:right; margin-top:10px;" id ="finish">Finish</button>
 		<button class="btn btn-primary" style="margin-left:530px;display:none;" hidden="hidden" id="zip">Zip Files</button>
 		<progress id="zipprogress" hidden='true'></progress>
 		<div hidden="true" style="margin-top:10px;margin-left:520px;"  id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
@@ -80,7 +81,11 @@
 	<div id='qrcode' hidden='true'></div>
 	</div>
 	</div>
-	
+	<div id="thanks" hidden="" style="display: block; ">
+		<h2 style="font-family: OvertheRainbow; font-size: 48px; margin-top: 350px; margin-left: 490px; color: #08C;">
+			You are awesome! Thanks for using BadgeIt :D
+		</h2>
+	</div>
 	<span id="fontloaderfix" style="">
     		<span style="font-family: Capriola;transparency: white; opacity:0">M</span>
    		<span style="font-family: Italiana;opacity: 0;">a</span>

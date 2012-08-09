@@ -217,11 +217,11 @@ $(document).ready(function () {
                                 $(labelleft).attr({'title':'unselect', 'class':'btn'});
 			}
 		});
-		function align(alignment){
+		function align(alignval){
 			
 			alignobj.actualleft = labellayer.left - labellayer.getWidth()/2;
 			alignobj.actualright = labellayer.left + labellayer.getWidth()/2;	
-			alignobj.alignment = alignment;	
+			alignobj.alignment = alignval;	
 			actualleft[alignobj.index] = alignobj.actualleft;
 			actualright[alignobj.index] = alignobj.actualright;
 			alignment[alignobj.index] = alignobj.alignment;	
@@ -314,9 +314,34 @@ $(document).ready(function () {
 		});
 	});
 	
+	$("#back").on('click', function(){
+		for(var i=0;i<indexes.length;i++)
+                {
+                        labellayer[i].set('text',data[0][indexes[i]]);
+                }
+                canvas.renderAll(true);
+
+		$("#comp-select").show();
+                $("#customize").show();
+
+                $("#zip").hide();
+                $("#print").hide();
+                $("#back").hide();
+		$("span#genimages > button#save").html('Next');
+		$("span#genimages > button#save").attr('title','Click to create all badges');
+		$("#genimages").show();
+		$("#ziplink").hide();
+		$("#zipprogress").hide();
+		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
+			console.log('Zip revoked');
+		});
+	});
+
 	//cleanup filesystem on window close
-	$(window).unload(function() {
+	$("#finish").on('click',function() {
 	  localStorage.clear();
+	  $("#canvasnbox").hide();
+	  $("#thanks").show();
 	  window.requestFileSystem(window.TEMPORARY, 1024*1024, function(fs) {
   		fs.root.getDirectory('/badges', {}, function(dirEntry) {
 			dirEntry.removeRecursively(function() {
@@ -484,10 +509,8 @@ $(document).ready(function () {
 
 				function nextFile() {
 
-					var filename = 'badge'+addIndex+'.png';
-					var url = 'filesystem:http://madhuvishy.in/temporary/badges/badge'+addIndex+'.png';
 					//window.webkitResolveLocalFileSystemURL(url, function(fileEntry) {
-
+						var filename = 'badge'+addIndex+'.png';
 						testfileentry[addIndex].file(function(file){
 							onadd(file);
 							zipWriter.add(filename, new zip.BlobReader(file), function() {
@@ -516,31 +539,16 @@ $(document).ready(function () {
 				} 
 			},
 			getBlobURL : function(callback) {
-				zipWriter.close(function(blob) {
-					var blobURL = URL.createObjectURL(blob);
-					callback(blobURL, function() {
-						URL.revokeObjectURL(blobURL);
-					});
+				if(typeof zipWriter.close === 'function')
+				{
+					zipWriter.close(function(blob) {
+						var blobURL = URL.createObjectURL(blob);
+						callback(blobURL, function() {
+							URL.revokeObjectURL(blobURL);
+						});
 					zipWriter = null;
-				});
+					});
+				}
 			}
 		};
 	})(this);
-
-	function showToolbox(){
-		for(var i=0;i<indexes.length;i++)
-                {
-                        labellayer[i].set('text',data[0][indexes[i]]);
-                }
-                canvas.renderAll(true);
-
-		$("#comp-select").show();
-                $("#customize").show();
-                $("#zip").hide();
-                $("#print").hide();
-                $("#back").hide();
-		$("span#genimages > button#save").html('Next');
-		$("span#genimages > button#save").attr('title','Click to create all badges');
-		$("#genimages").show();
-		$("#ziplink").hide();
-	}
