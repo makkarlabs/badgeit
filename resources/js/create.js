@@ -433,6 +433,7 @@ $(document).ready(function () {
 				else{
 					$("span#genimages > progress#gen").attr('value',data.length);
 					$("span#genimages > progress#gen").hide();
+					_gaq.push(['_trackEvent', 'Badge', 'Created', localStorage["projectname"], data.length]);
 					$("#comp-select").hide();
 					$("#customize").hide();
 					$("#genimages").hide();
