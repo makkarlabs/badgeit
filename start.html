@@ -116,14 +116,14 @@ img { max-width:500px;}
 		<div class="control-group">
 			<label class="control-label" for="pixelwidth"> Width  </label>
 			<div class="controls">	
-				<input type="text" style="height:25px;"class="input-small" id="pixelwidth" placeholder="pixels" onchange="$('#inchwidth').val(this.value/$('#dpi').val()"> </input>
+				<input type="text" style="height:25px;"class="input-small" id="pixelwidth" placeholder="pixels" onkeyup="$('#inchwidth').val(this.value/$('#dpi').val())"> </input>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="pixelheight"> Height  </label>
 			<div class="controls">	
-				<input type="text" style="height:25px" class="input-small" id="pixelheight" placeholder="pixels" onchange="$('#inchheight').val(this.value/$('#dpi').val())"> </input>
+				<input type="text" style="height:25px" class="input-small" id="pixelheight" placeholder="pixels" onkeyup="$('#inchheight').val(this.value/$('#dpi').val())"> </input>
 				<div style="height:25px;" style="margin-top:10px" id="container"> </div>
 			</div>
 		</div>
