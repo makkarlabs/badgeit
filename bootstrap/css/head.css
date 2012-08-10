@@ -6,7 +6,7 @@
 }
 header { font-family: 'Rancho'; font-size:20px; width:1100px; margin-left:auto; margin-right:auto; padding-top:40px; padding-bottom:20px;}
 #title-large { float:left;font-size:70px; }
-#headerContainer { background-color:whitesmoke; border-bottom:2px solid #E5E5E5; }
+#headerContainer { background-color:whitesmoke; border-bottom:2px solid #E5E5E5; margin-bottom:30px; }
 .clr { clear:both; font-size: 1px; padding:0; margin:0; background:none; }
 body {
 	      margin: 0px;
@@ -15,4 +15,11 @@ body {
 }
 html{
 	height:100%;
+}
+.footer {
+color: gray;
+margin-top: 45px;
+padding: 15px 0 10px;
+background-color:whitesmoke;
+border-top: 1px solid #E5E5E5;
 }
