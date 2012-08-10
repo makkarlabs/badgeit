@@ -304,6 +304,19 @@ $(document).ready(function () {
 		}
 	});
 	
+	$("#minimizetoolbox").on("click",function(event) {
+		event.preventDefault();
+		$("#toolbox").hide();
+		$("#minimizedtoolbox").show();
+	});
+	
+	$("#maximizetoolbox").on("click",function(event) {
+		event.preventDefault();
+		$("#minimizedtoolbox").hide();
+		$("#toolbox").show();
+		
+	});
+	
 	$(".component").hide();
 	$("#label0div").show();
 	

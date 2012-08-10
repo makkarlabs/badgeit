@@ -16,10 +16,14 @@ body {
 html{
 	height:100%;
 }
+
+
 .footer {
+
 color: gray;
 margin-top: 45px;
 padding: 15px 0 10px;
+margin-bottom:0px;
 background-color:whitesmoke;
 border-top: 1px solid #E5E5E5;
 }
