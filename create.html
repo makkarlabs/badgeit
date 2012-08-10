@@ -16,11 +16,12 @@
 		.colorbox { width:20px} 
 		.positionbox { width:150px; }
 		#customize input,#customize .btn-group,#customize select,#customize a,#customize button { margin-left:4px;margin-right:4px; }
+		#toolbox { width:1170px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0; }
 		
-		
+		#minimizedtoolbox { background-color:whitesmoke; height:30px; margin-bottom:5px; right:0; margin-right:10px; width:50px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0;}
 	</style>
 		  <script src="resources/js/jquery.js"></script>
-		  <script src="bootstrap/js/bootstrap.js"></script>
+		  <script src="bootstrap/js	/bootstrap.js"></script>
 		  <script src="resources/js/jquery.qrcode.js"></script>
 		  <script src="resources/js/qrcode.js"></script>
 		  <script src="resources/js/fabric.js"></script>
@@ -40,7 +41,7 @@
 			<li><a href="home.html">Home</a></li>
 			<li class="active"><a href="#">Create</a></li>
 			<li><a href="faq.html">FAQ</a></li>
-			<li><a href="http://makkarlabs.in/about">About</a></li>
+			<li><a href="about.html">About</a></li>
 			<li><a href="http://makkarlabs.in/contact">Contact Us</a></li>
 		</ul>
 		</div>
@@ -51,32 +52,38 @@
 	<div class="container">
 	
 	<div id="canvasnbox">
-	<div id="canvasholder" style="margin-top:30px; margin-bottom:30px;">
+	<div id="canvasholder" style="margin-top:30px; margin-bottom:100px;">
 		<canvas id='canvas' width='canvasWidth()' height='canvasHeight()'></canvas>
 		<div class="clr"></div>
 	</div>
 	<div class="clr"></div>
-	<div id="toolbox">
-	<div class="well form-inline">
+	<div id="minimizedtoolbox" hidden="hidden">
+		<a href="" style="margin-left:20px;" id ="maximizetoolbox"><i class="icon-chevron-up"></i></a>		
+	</div>
 	
-		<select id="comp-select" style="width:150px; margin-bottom:10px;margin-left:5px;"></select>
-		<div id="customize">
-		</div>
-		<span id="genimages">	
-			<button style="width:70px; margin-top:10px; margin-left:5px;" class="btn btn-primary" id="save" title="Click to create all badges">Next</button>
-			<progress id="gen" value="1" hidden='true' ></progress>
-		</span>
+	<div id="toolbox" class="well">
+		<div class="form-inline">
+		
+			<select id="comp-select" style="width:150px; margin-bottom:10px;margin-left:5px;"></select>
+			<a href="" style="float:right; margin-top:-15px;" id ="minimizetoolbox"><i class="icon-chevron-down"></i></a>		
+			<div id="customize">
+			</div>
+			<span id="genimages">	
+				<button style="width:70px; margin-top:10px; margin-left:5px;" class="btn btn-primary" id="save" title="Click to create all badges">Next</button>
+				<progress id="gen" value="1" hidden='true' ></progress>
+			</span>
 
-		<button class="btn btn-primary" style="margin-left:530px;display:none;" hidden="hidden" id="zip">Zip Files</button>
-		<progress id="zipprogress" hidden='true'></progress>
-		<div hidden="true" style="margin-top:10px;margin-left:520px;"  id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
-		<br>
-		<button id="print" class="btn btn-primary" hidden="hidden" style="display:none; margin-left:455px; margin-top:10px" onclick="window.open('./print.html')">View all in Sheet</button>    
-		<button id="back" class="btn btn-primary" hidden="hidden" style="margin-left: 5px; margin-top:10px; float: left; display:none">Back</button>
-		<button class="btn btn-success" style="float:right; margin-top:-30px;" id ="finish">Finish</button>		
+			<button class="btn btn-primary" style="margin-left:530px;display:none;" hidden="hidden" id="zip">Zip Files</button>
+			<progress id="zipprogress" hidden='true'></progress>
+			<div hidden="true" style="margin-top:10px;margin-left:520px;"  id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
+			<br>
+			<button id="print" class="btn btn-primary" hidden="hidden" style="display:none; margin-left:455px; margin-top:10px" onclick="window.open('./print.html')">View all in Sheet</button>    
+			<button id="back" class="btn btn-primary" hidden="hidden" style="margin-left: 5px; margin-top:10px; float: left; display:none">Back</button>
+			<button class="btn btn-success" style="float:right; margin-top:-30px;" id ="finish">Finish</button>		
+			<div class="clr"></div>
+		</div>
 	</div>
-	</div>
-	
+	<div class="clr"></div>
     <div id="badges"></div>
 	<br>
 	<div id='qrcode' hidden='true'></div>
