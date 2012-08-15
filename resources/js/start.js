@@ -1,3 +1,7 @@
+var picker;
+google.setOnLoadCallback(createPicker);
+google.load('picker',1);
+
 $(function() {
 var holder = document.getElementById('holder');
 
@@ -55,6 +59,16 @@ holder.ondrop = function (e) {
   return false;
 };
 
+$('#template_fs').on('click',function(){
+	var eventtemplate = 'event-template';
+	$('#template_chooser').html('<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0], eventtemplate);"></input>');
+});
+$('#template_gd').on('click',function(){
+	$('#template_chooser').html('<input readonly="readonly" placeholder="Google Drive Image" id="google_image" />');
+	picker.setVisible(true);
+	
+});
+
 });
 
 function readFileAsDataURL(file, imageName) {
@@ -62,23 +76,21 @@ function readFileAsDataURL(file, imageName) {
     var reader = new FileReader();
     
     reader.onload = function(event) {
-		localStorage[imageName] = 
-			event.target.result;
-			$('#badgepreview').attr('src', event.target.result);
-			
-			
-			var img = $("#badgepreview"); 
-			$("<img/>") // Make in memory copy of image to avoid css issues
+	localStorage[imageName] = 
+		event.target.result;
+		$('#badgepreview').attr('src', event.target.result);
+		var img = $("#badgepreview"); 
+		$("<img/>") // Make in memory copy of image to avoid css issues
 			.attr("src", $(img).attr("src"))
 			.load(function() {
-			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
-			$("#pixelheight").val(this.height); // work for in memory images.
+				$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
+				$("#pixelheight").val(this.height); // work for in memory images.
 			});
-			$("#holderCaption").hide();
-			$('#holder').css('border','0px');
-			$('#holder').css('background-color','white');
+		$("#holderCaption").hide();
+		$('#holder').css('border','0px');
+		$('#holder').css('background-color','white');
     		
-    };
+    	};
 	reader.readAsDataURL(file);
 }
 
@@ -139,3 +151,26 @@ function move() {
 	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val();
 	
 }
+
+
+function createPicker() {
+       picker = new google.picker.PickerBuilder().
+            addView(google.picker.ViewId.DOCS_IMAGES).
+            setCallback(pickerCallback).
+            build();
+       picker.setVisible(false);
+}
+
+function pickerCallback(data) {
+      var url = 'nothing';
+      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+        var doc = data[google.picker.Response.DOCUMENTS][0];
+        url = doc[google.picker.Document.URL];
+      }
+
+      $('#google_image').html(url);
+      //google.picker.setVisible(false);
+
+}
+
+
