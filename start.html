@@ -5,8 +5,8 @@
 
     <script src="resources/js/jquery.js"></script>
     <script src="resources/js/jquery-csv.js"></script>
-	<script src="resources/js/start.js"></script>
-
+    <script src="http://www.google.com/jsapi?key=AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8"></script>
+    <script src="resources/js/start.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
@@ -61,7 +61,7 @@ img { max-width:500px;}
 		<form class="form-horizontal" style="margin-top:5%" onsubmit="move()" id="form1" action="./create.html">
 		<fieldset>
 		<div class="control-group">
-			<label class="control-label" for="projectNmae"> Project Name </label>
+			<label class="control-label" for="projectName"> Project Name </label>
 			<div class="controls">	
 				<input type="text" style="height:25px" class="input" id="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
 			</div>
@@ -69,8 +69,10 @@ img { max-width:500px;}
 		
 		<div class="control-group">
 			<label class="control-label" for="templateChooser"> Template </label>
-			<div class="controls">	
-				<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0],'event-template');"></input> 
+			<div class="controls" id="template_chooser">
+				<button class='btn' id='template_fs'>File System</button>
+				<button class='btn btn-danger' id='template_gd'>Google Drive</button>	
+				<!--<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0],'event-template');"></input> -->
 			</div>
 		</div>
 		<div class="control-group">
@@ -143,6 +145,7 @@ img { max-width:500px;}
 			<div class="form-actions">
 				<button class="btn btn-primary" type="submit"> Submit </button>
 				<button class="btn" onclick="clear()"> Reset </button>
+
 			</div>
 		</fieldset>
 		</form>
