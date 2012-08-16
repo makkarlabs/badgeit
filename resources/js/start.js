@@ -172,11 +172,25 @@ function pickerCallback(data) {
       }
 
       $('#google_image').val(fileid);
-      $.ajax({'url':'https://www.googleapis.com/drive/v2/files/'+fileid
-	}).done(function(data){
-		alert(data);
-	});
+      gapi.client.request({'path':'/drive/v2/files/'+fileid,'callback':handleDriveImage});
 
 }
-
+function handleDriveImage(response) {
+	
+	var BlobBuilder = window.WebKitBlobBuilder || window.BlobBuilder;
+	var oReq = new XMLHttpRequest();
+	oReq.open("GET", response.downloadUrl+'&access_token=' + encodeURIComponent(localStorage['accesstoken']), true);
+	oReq.responseType = "arraybuffer";
+ 
+	oReq.onload = function(oEvent) {
+	  var blobBuilder = new BlobBuilder();
+	  blobBuilder.append(oReq.response);
+	  var blob = blobBuilder.getBlob("image/png");
+	  var rdr = new FileReader();
+	  rdr.onload = function(event){localStorage['event-template'] = event.target.result;};
+	  rdr.readAsDataURL(blob);
+	};
+ 
+	oReq.send();
+}
 
