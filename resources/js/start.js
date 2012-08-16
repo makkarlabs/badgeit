@@ -166,17 +166,29 @@ function createPicker() {
 
 function pickerCallback(data) {
       var fileid = 'nothing';
-      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) 
+      {
         var doc = data[google.picker.Response.DOCUMENTS][0];
         fileid = doc[google.picker.Document.ID];
-      }
+	$('#google_image').val(fileid);
 
-      $('#google_image').val(fileid);
-      gapi.client.request({'path':'/drive/v2/files/'+fileid,'callback':handleDriveImage});
-
+	 var config = {
+          'client_id': '434888942442.apps.googleusercontent.com',
+          'scope': 'https://www.googleapis.com/auth/drive',
+	  'immediate':'false'
+        };
+        //gapi.auth.authorize(config, function() {
+	//gapi.client.load('drive', 'v2', function() {
+		//gapi.client.setApiKey('AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8');
+		gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':localStorage['accesstoken']},'callback':handleDriveImage});
+	//});
+    }
 }
+
+
 function handleDriveImage(response) {
 	
+	console.log(response);
 	var BlobBuilder = window.WebKitBlobBuilder || window.BlobBuilder;
 	var oReq = new XMLHttpRequest();
 	oReq.open("GET", response.downloadUrl+'&access_token=' + encodeURIComponent(localStorage['accesstoken']), true);
