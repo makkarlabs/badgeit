@@ -159,6 +159,7 @@ function createPicker() {
        picker = new google.picker.PickerBuilder().
             addView(google.picker.ViewId.DOCS_IMAGES).
             setCallback(pickerCallback).
+	    setAppId('434888942442.apps.googleusercontent.com').
             build();
        picker.setVisible(false);
 }
