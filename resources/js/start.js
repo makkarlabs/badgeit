@@ -59,11 +59,13 @@ holder.ondrop = function (e) {
   return false;
 };
 
-$('#template_fs').on('click',function(){
+$('#template_fs').on('click',function(e){
+	e.preventDefault();
 	var eventtemplate = 'event-template';
 	$('#template_chooser').html('<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0], eventtemplate);"></input>');
 });
-$('#template_gd').on('click',function(){
+$('#template_gd').on('click',function(e){
+	e.preventDefault();
 	$('#template_chooser').html('<input readonly="readonly" placeholder="Google Drive Image" id="google_image" />');
 	picker.setVisible(true);
 	
@@ -157,19 +159,23 @@ function createPicker() {
        picker = new google.picker.PickerBuilder().
             addView(google.picker.ViewId.DOCS_IMAGES).
             setCallback(pickerCallback).
+	    setAppId('434888942442.apps.googleusercontent.com').
             build();
        picker.setVisible(false);
 }
 
 function pickerCallback(data) {
-      var url = 'nothing';
+      var fileid = 'nothing';
       if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
         var doc = data[google.picker.Response.DOCUMENTS][0];
-        url = doc[google.picker.Document.URL];
+        fileid = doc[google.picker.Document.ID];
       }
 
-      $('#google_image').html(url);
-      //google.picker.setVisible(false);
+      $('#google_image').val(fileid);
+      $.ajax({'url':'https://www.googleapis.com/drive/v2/files/'+fileid
+	}).done(function(data){
+		alert(data);
+	});
 
 }
 
