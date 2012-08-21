@@ -6,7 +6,7 @@
 	for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; }
 	
 	//Fabric js initialisations
-        var canvas; 
+       var canvas; 
 	var labellayer = new Array();
 	var alignment = new Array();
 	var actualleft = new Array();
@@ -15,6 +15,13 @@
 	var maxwidth = new Array();
 	var isqrcode = localStorage['qrcode'], qrlayer, qrdataurl, qrdata='';
 
+	fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
+		return {
+			left: object.left + this._offset.left,
+			top: object.top + this._offset.top
+		};
+	}
+	
 	//CSV file related
 	var indexes = localStorage['selected-cols'].split(",");
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
@@ -34,13 +41,6 @@
 $(document).ready(function () {
 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
-	/*var wtoh = dimensions[1]/dimensions[0]*1.0;
-	var htow = dimensions[0]/dimensions[1]*1.0;
-	var h,w;
-	h = dimensions[1]; w = dimensions[0]; 
-	if (dimensions[0] > 600 ) { w = 600; canvas.setWidth(w); h = w*wtoh; canvas.setHeight(h); }
-	else if (dimensions[1] > 800 ) { h = 600; canvas.setHeight(h); w = h*htow; canvas.setWidth(w);}
-	else { canvas.setHeight(h); canvas.setHeight(w); }*/
 	canvas.setHeight(dimensions[1]);
 	canvas.setWidth(dimensions[0]);
 	
@@ -68,7 +68,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds'>Set Bounds</button><button id='label"+i+"boundsave' hidden='true'>Save</button><button id='label"+i+"boundcancel' hidden='true'>Cancel</button> <div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><span id='boundspan"+i+"' hidden='true'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a><a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span> <div class='clr'></div></div>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -89,11 +89,11 @@ $(document).ready(function () {
 		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
 		alignDetails.alignment = 'center';
 
-		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'bounds', '#label'+i+'boundsave', '#label'+i+'boundcancel', labellayer[i], fontsize);
+		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'bounds', '#boundspan'+i, '#label'+i+'boundsave', '#label'+i+'boundcancel', labellayer[i], fontsize);
 		ypos += 40;
 	}
 	
-	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelbounds, labelboundsave, labelboundcancel, labellayer, fontsize)
+	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelbounds, boundspan, labelboundsave, labelboundcancel, labellayer, fontsize)
 	{
 		canvas.observe('object:selected',function(e){
 			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
@@ -104,18 +104,23 @@ $(document).ready(function () {
 					$("#label"+alignobj.index+"div").show();
 					$("#comp-select").val(alignobj.index);
 				}
+				
 			}
 		});
 		canvas.observe('object:modified', function(e) {
   			var activeObject = e.target;
 			if(typeof activeObject.get === 'function'){
-  				if(activeObject.get('left') === labellayer.get('left'))
+  				if(activeObject === labellayer)
 				{
 					alignobj.actualleft = labellayer.left - labellayer.getWidth()/2;
 					alignobj.actualright = labellayer.left + labellayer.getWidth()/2;
 					actualleft[alignobj.index] = alignobj.actualleft;
 					actualright[alignobj.index] = alignobj.actualright;
 					setpos();
+				}
+				if(activeObject ===alignobj.boundingRect)
+				{
+					positionBoundSpan(alignobj.boundingRect,boundspan);
 				}
 			}
 		});
@@ -256,20 +261,27 @@ $(document).ready(function () {
 		}
 
 		$(labelbounds).on('click',function(){
-			$(labelboundsave).show();
-			$(labelboundcancel).show();
+			
 			$(labelbounds).attr('disabled', true);
 			labellayer.lockMovementX = true;
 			labellayer.lockMovementY = true;			
 			labellayer.hasControls = false;
 			alignobj.boundingRect = new fabric.Rect({ left: labellayer.left-10, top: labellayer.top-10, width: labellayer.getWidth()+10, height: labellayer.getHeight()+10, opacity:0.3 });
-			
 			canvas.add(alignobj.boundingRect);
+			positionBoundSpan(alignobj.boundingRect,boundspan);
+			$(boundspan).show();
 		});
+		function positionBoundSpan(rect,boundspan)
+		{
+			var absCoords = canvas.getAbsoluteCoords(rect);
+			$(boundspan).css('position','fixed');
+			$(boundspan).css('left',(absCoords.left + rect.width) + 'px');
+			$(boundspan).css('top',(absCoords.top) + 'px');
+			
+		}
 		$(labelboundsave).on('click', function(){
 			$(labelbounds).attr('disabled', false);
-			$(labelboundsave).hide();
-			$(labelboundcancel).hide();
+			$(boundspan).hide();
 			labellayer.hasControls = true;
 			labellayer.lockMovementX = false;
 			labellayer.lockMovementY = false;
@@ -279,8 +291,7 @@ $(document).ready(function () {
 		});
 		$(labelboundcancel).on('click', function(){
 			$(labelbounds).attr('disabled', false);
-			$(labelboundcancel).hide();
-			$(labelboundsave).hide();
+			$(boundspan).hide();
 			labellayer.hasControls = true;
 			labellayer.lockMovementX = false;
 			labellayer.lockMovementY = false;
