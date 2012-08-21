@@ -64,7 +64,7 @@ img { max-width:500px;}
 		<div class="control-group">
 			<label class="control-label" for="projectName"> Project Name </label>
 			<div class="controls">	
-				<input type="text" style="height:25px" class="input" id="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
+				<input type="text" style="height:25px" class="input" id="projectName" name="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
 			</div>
 		</div>
 		
@@ -73,13 +73,30 @@ img { max-width:500px;}
 			<div class="controls" id="template_chooser">
 				<button class='btn' id='template_fs'>File System</button>
 				<button class='btn btn-danger' id='template_gd'>Google Drive</button>	
-				<!--<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0],'event-template');"></input> -->
+				<span id="fs_input" style="display:none;">
+					<input type="file" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0],'event-template');"></input>
+					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="change();"></a>
+				</span>
+				<span id="gd_input" style="display:none;">				
+					<input readonly="readonly" placeholder="Google Drive Image" id="google_image" name="google_image" />
+					<a style="cursor:pointer;" class="icon-repeat" onclick="change();" id="return_image1"></a>
+				</span>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="csvChooser"> CSV File  </label>
 			<div class="controls">	
-				<input type="file" class="input-file" id="csvChooser" required="required" onchange="getAsText(this.files[0], 'event-csv');"> </input>
+				<button class='btn' id='list_fs'>File System</button>
+				<button class='btn btn-danger' id='list_gd'>Google Drive</button>	
+				<span id="fs_list" style="display:none;">
+					<input type="file" class="input-file" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0], 'event-csv');"> </input>
+					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="changeCsv();"></a>
+				</span>
+				<span id="gd_list" style="display:none;">				
+					<input readonly="readonly" placeholder="Google Drive Spreadsheet" id="csvGoogle" name="csvGoogle" />
+					<a style="cursor:pointer;" class="icon-repeat" onclick="changeCsv();" id="return_image1"></a>
+				</span>
+
 				<div id="csvColumnsSelect"></div>
 			</div>
 		</div>

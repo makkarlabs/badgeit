@@ -1,4 +1,4 @@
-var picker;
+var picker, picker1i,feed;
 google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
@@ -58,21 +58,63 @@ holder.ondrop = function (e) {
  
   return false;
 };
-
 $('#template_fs').on('click',function(e){
 	e.preventDefault();
-	var eventtemplate = 'event-template';
-	$('#template_chooser').html('<input type="file" class="input-file" id="templateChooser" required="required" onchange="readFileAsDataURL(this.files[0], eventtemplate);"></input>');
+	$('#template_fs').hide();
+	$('#template_gd').hide();
+	$('#fs_input').show();
 });
 $('#template_gd').on('click',function(e){
 	e.preventDefault();
-	$('#template_chooser').html('<input readonly="readonly" placeholder="Google Drive Image" id="google_image" />');
+	$('#template_fs').hide();
+	$('#template_gd').hide();
+	$('#gd_input').show();
 	picker.setVisible(true);
 	
 });
-
+$('#list_fs').on('click',function(e){
+	e.preventDefault();
+	$('#list_fs').hide();
+	$('#list_gd').hide();
+	$('#fs_list').show();
 });
-
+$('#list_gd').on('click',function(e){
+	e.preventDefault();
+	$('#list_fs').hide();
+	$('#list_gd').hide();
+	$('#gd_list').show();
+	picker1.setVisible(true);
+	
+});
+});
+function change()
+{
+	$('#fs_input').hide();
+	$('#gd_input').hide();		
+	$('#template_fs').show();
+	$('#template_gd').show();
+}
+function changeCsv()
+{
+	$('#fs_list').hide();
+	$('#gd_list').hide();		
+	$('#list_fs').show();
+	$('#list_gd').show();
+}
+function loadPreview(image)
+{
+	$('#badgepreview').attr('src', image);
+	var img = $("#badgepreview"); 
+	$("<img/>") // Make in memory copy of image to avoid css issues
+		.attr("src", $(img).attr("src"))
+		.load(function() {
+			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
+			$("#pixelheight").val(this.height); // work for in memory images.
+		});
+	$("#holderCaption").hide();
+	$('#holder').css('border','0px');
+	$('#holder').css('background-color','white');
+}
 function readFileAsDataURL(file, imageName) {
 	
     var reader = new FileReader();
@@ -80,17 +122,7 @@ function readFileAsDataURL(file, imageName) {
     reader.onload = function(event) {
 	localStorage[imageName] = 
 		event.target.result;
-		$('#badgepreview').attr('src', event.target.result);
-		var img = $("#badgepreview"); 
-		$("<img/>") // Make in memory copy of image to avoid css issues
-			.attr("src", $(img).attr("src"))
-			.load(function() {
-				$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
-				$("#pixelheight").val(this.height); // work for in memory images.
-			});
-		$("#holderCaption").hide();
-		$('#holder').css('border','0px');
-		$('#holder').css('background-color','white');
+	loadPreview(event.target.result);	
     		
     	};
 	reader.readAsDataURL(file);
@@ -158,36 +190,44 @@ function move() {
 function createPicker() {
        picker = new google.picker.PickerBuilder().
             addView(google.picker.ViewId.DOCS_IMAGES).
-            setCallback(pickerCallback).
+            setCallback(pickerCallbackImage).
 	    setAppId('434888942442.apps.googleusercontent.com').
             build();
        picker.setVisible(false);
+
+	picker1 = new google.picker.PickerBuilder().
+            addView(google.picker.ViewId.SPREADSHEETS).
+            setCallback(pickerCallbackSheet).
+	    setAppId('434888942442.apps.googleusercontent.com').
+            build();
+       picker1.setVisible(false);
 }
 
-function pickerCallback(data) {
+function pickerCallbackImage(data) {
       var fileid = 'nothing';
       if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) 
       {
         var doc = data[google.picker.Response.DOCUMENTS][0];
         fileid = doc[google.picker.Document.ID];
-	$('#google_image').val(fileid);
+	$('#google_image').val(doc[google.picker.Document.NAME]);
 
-	 var config = {
-          'client_id': '434888942442.apps.googleusercontent.com',
-          'scope': 'https://www.googleapis.com/auth/drive',
-	  'immediate':'false'
-        };
-        //gapi.auth.authorize(config, function() {
-	//gapi.client.load('drive', 'v2', function() {
-		//gapi.client.setApiKey('AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8');
-		gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':localStorage['accesstoken']},'callback':handleDriveImage});
-	//});
+       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':localStorage['accesstoken']},'callback':handleDriveImage});
+    }
+}
+function pickerCallbackSheet(data) {
+      var fileid = 'nothing';
+      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) 
+      {
+        var doc = data[google.picker.Response.DOCUMENTS][0];	
+        fileid = doc[google.picker.Document.ID];
+	$('#csvGoogle').val(doc[google.picker.Document.NAME]);
+       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':localStorage['accesstoken']},'callback':handleDriveSheet});	
     }
 }
 
 
 function handleDriveImage(response) {
-	
+		
 	console.log(response);
 	var BlobBuilder = window.WebKitBlobBuilder || window.BlobBuilder;
 	var oReq = new XMLHttpRequest();
@@ -197,12 +237,24 @@ function handleDriveImage(response) {
 	oReq.onload = function(oEvent) {
 	  var blobBuilder = new BlobBuilder();
 	  blobBuilder.append(oReq.response);
-	  var blob = blobBuilder.getBlob("image/png");
+	  var blob = blobBuilder.getBlob(response.mimeType);
 	  var rdr = new FileReader();
-	  rdr.onload = function(event){localStorage['event-template'] = event.target.result;};
+	  rdr.onload = function(event){localStorage['event-template'] = event.target.result;
+					loadPreview(event.target.result);};
 	  rdr.readAsDataURL(blob);
 	};
  
 	oReq.send();
 }
+function handleDriveSheet(response) {
+	var url = response.exportLinks['application/pdf'].substring(0,response.exportLinks['application/pdf'].length-3)+'csv&access_token='+localStorage['accesstoken'];
+	console.log(url);
+	$.ajax({'url':'http://badgeitrelay.appspot.com/badgeitrelay?link='+ encodeURIComponent(url), 'crossDomain':true}).
+		done(function(data){
+			localStorage['event-csv']=data;
+			 createMultipleSelect(data, 'csvColumnsSelect', 'colselect', 'selected-cols');
+			 createMultipleSelect(data, 'qrCodeSelect', 'qrselect', 'qr-cols');
+			 $('#qrCodeSelect').hide();
+		});
 
+}
