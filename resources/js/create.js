@@ -394,7 +394,7 @@ $(document).ready(function () {
                 $("#print").hide();
                 $("#back").hide();
 		$("span#genimages > button#save").html('Next');
-		$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-success');
+		$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-success'});
 		$("#genimages").show();
 		$("#ziplink").hide();
 		$("#zipprogress").hide();
