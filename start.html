@@ -6,6 +6,7 @@
     <script src="resources/js/jquery.js"></script>
     <script src="https://apis.google.com/js/client.js"></script>
     <script src="resources/js/jquery-csv.js"></script>
+	 <script src="bootstrap/js/bootstrap.js"></script>
     <script src="http://www.google.com/jsapi?key=AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8"></script>
     <script src="resources/js/start.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
@@ -52,11 +53,19 @@ img { max-width:100px;}
 		
 		
 		<div id="vetti">
-		<form class="form-horizontal" style="margin-top:2%;width:600px; margin-left:auto; margin-bottom:5%; margin-right:auto;" onsubmit="move()" id="form1" action="./create.html">
+		<form class="form-horizontal" style="margin-top:2%;width:600px; margin-left:auto; margin-bottom:5%; margin-right:auto;" id="form1" action="./create.html">
 		<fieldset>
 		<div class="control-group">
 			<input type="text" placeholder="Event Name" style="font-family:Rancho;text-align:center;margin-left:150px;border-color:white;  font-size:30px; box-shadow:none; height:42px" class="input" id="projectName" name="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
 		</div>
+		
+		<div id="errorholder" style="width:500px; text-align:center;" class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<div id="alertmessage">
+			<strong>Badge-it!</strong> Makkar Labs made life easier for you!
+			</div>
+		</div>
+		
 		<fieldset>
 		<legend style="font-size:17px;margin-left:25px;margin-bottom:0px;"> <i style="margin-top:2px;" class="icon-picture"></i> Badge Template </legend>
 		<div class="control-group">
@@ -157,6 +166,7 @@ img { max-width:100px;}
 			<div class="form-actions">
 				<button class="btn btn-primary" type="submit"> Submit </button>
 				<a class="btn" onclick="clear()"> Reset </a>
+				<a class="btn btn-info" rel="tooltip" title="Prefills the form with sample image & data, and submits it." onclick="demo()"> Demo </a>
 
 			</div>
 		</fieldset>
