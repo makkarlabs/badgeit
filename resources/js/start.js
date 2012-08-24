@@ -238,9 +238,10 @@ function createMultipleSelect(fileString, placeid, colselectid, localStorageName
 
 	//$("#"+placeid).html("<select id="+ colselectid +" multiple='multiple'></select>");
 	var i = 0;
+	$("#"+placeid).html('');
 	while(i<csv_text[0].length)
 	{
-		$("#"+placeid).html("<label class='checkbox'><input type='checkbox' id='"+ colselectid +"'value='"+i+"'>"+csv_text[0][i++]+" </input></label>");
+		$("#"+placeid).append("<label class='checkbox'><input type='checkbox' id='"+ colselectid +"'value='"+i+"'>"+csv_text[0][i++]+" </input></label>");
 		//$("#"+colselectid).append('<option value='+i+'>'+csv_text[0][i++]+'</option>');
 	}
 	
