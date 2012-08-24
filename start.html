@@ -14,11 +14,11 @@
 <style>
 
 
-#holder { background-color:#FAFAFA; border: 10px dashed #ccc; width: 500px; height: 450px; margin: 20px auto; margin-top:50px; }
-#holderCaption { margin-left:auto; margin-right:auto; width:150px; margin-top:200px;}
-#holder.hover { border: 10px dashed #333; }
+#holder { background-color:#FAFAFA; border: 2px dotted #ccc; width: 100px !important; height: 80px !important; margin: 5px auto; margin-top:5px; }
+#holderCaption { margin-left:auto; margin-right:auto; width:50px; margin-top:5px;}
+#holder.hover { border: 2px dashed #333; }
 fieldset { margin-left:20px; width : 500px; }
-img { max-width:500px;}
+img { max-width:100px;}
 
 </style>
 	
@@ -28,7 +28,7 @@ img { max-width:500px;}
 
 
   </head>
-  <body>
+  <body onload="$('#projectName').focus();">
  
 <div id="headerContainer">
 <header>
@@ -49,32 +49,23 @@ img { max-width:500px;}
 
 <div class="container">
 		
-		<div class="row">
-		<div class="span6">
-		<article>
-		<div id="holder">
-			<div id="holderCaption">Drop your template here!</div>
-			<img id="badgepreview"/>
-		  </div>  
-		</article>
-		</div>
-		<div clas="span6">
-		<form class="form-horizontal" style="margin-top:5%" onsubmit="move()" id="form1" action="./create.html">
+		
+		
+		<div id="vetti">
+		<form class="form-horizontal" style="margin-top:2%;width:600px; margin-left:auto; margin-bottom:5%; margin-right:auto;" onsubmit="move()" id="form1" action="./create.html">
 		<fieldset>
 		<div class="control-group">
-			<label class="control-label" for="projectName"> Project Name </label>
-			<div class="controls">	
-				<input type="text" style="height:25px" class="input" id="projectName" name="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
-			</div>
+			<input type="text" placeholder="Event Name" style="font-family:Rancho;text-align:center;margin-left:150px;border-color:white;  font-size:30px; box-shadow:none; height:42px" class="input" id="projectName" name="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
 		</div>
-		
+		<fieldset>
+		<legend style="font-size:17px;margin-left:25px;margin-bottom:0px;"> <i style="margin-top:2px;" class="icon-picture"></i> Badge Template </legend>
 		<div class="control-group">
-			<label class="control-label" for="templateChooser"> Template </label>
+			<label class="control-label" for="templateChooser"> Image </label>
 			<div class="controls" id="template_chooser">
-				<button class='btn' id='template_fs'>File System</button>
-				<button class='btn btn-danger' id='template_gd'>Google Drive</button>	
+				<button class='btn' id='template_fs'><i class="icon-folder-open"> </i> My Computer</button>
+				<button class='btn btn-warning' id='template_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</button>	
 				<span id="fs_input" style="display:none;">
-					<input type="file" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0],'event-template');"></input>
+					<input type="file" accept="image/*" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0],'event-template');"></input>
 					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="change();"></a>
 				</span>
 				<span id="gd_input" style="display:none;">				
@@ -83,25 +74,9 @@ img { max-width:500px;}
 				</span>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="csvChooser"> CSV File  </label>
-			<div class="controls">	
-				<button class='btn' id='list_fs'>File System</button>
-				<button class='btn btn-danger' id='list_gd'>Google Drive</button>	
-				<span id="fs_list" style="display:none;">
-					<input type="file" class="input-file" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0], 'event-csv');"> </input>
-					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="changeCsv();"></a>
-				</span>
-				<span id="gd_list" style="display:none;">				
-					<input readonly="readonly" placeholder="Google Drive Spreadsheet" id="csvGoogle" name="csvGoogle" />
-					<a style="cursor:pointer;" class="icon-repeat" onclick="changeCsv();" id="return_image1"></a>
-				</span>
-
-				<div id="csvColumnsSelect"></div>
-			</div>
-		</div>
-
-		<div class="control-group">
+		
+			<div style="float:left">
+				<div class="control-group">
 			<label class="control-label" for="dpiSelection"> DPI  </label>
 			<div class="controls">	
 				<select id="dpi" class="input-small" onchange="$('#inchwidth').val(($('#pixelwidth').val()/this.value).toFixed(2));$('#inchheight').val(($('#pixelheight').val()/this.value).toFixed(2));">
@@ -112,11 +87,13 @@ img { max-width:500px;}
 					<option>2540</option>
 					<option>4000</option>
 				</select>
+			
+		  
+
 			</div>
 		</div>
+		
 
-		<label class="control-label" for="inchwidth"> <h4> Inches </h4>  </label>
-		<br><br>
 		<div class="control-group">
 			<label class="control-label" for="inchwidth"> Width  </label>
 			<div class="controls">	
@@ -137,35 +114,45 @@ img { max-width:500px;}
 				<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="setPixelHeight()"> </input>
 			</div>
 		</div>
-
-		<input type="text" id="pixelwidth" style="display:none;"> </input>
-		<input type="text" id="pixelheight" style="display:none;"> </input>
-		<!--<label class="control-label" for="inchwidth"> <h4> Pixels </h4>  </label>
-		<br><br>
+		</div>
+		<div style="float:right; margin-right:100px;">
+				<div id="holder">	<img id="badgepreview"/> </div>
+		</div>
+		
+		</fieldset>
+		<fieldset>
+		<legend style="font-size:17px;margin-left:25px;margin-bottom:0px;"><i style="margin-top:2px;" class="icon-list"></i> Attendee Info </legend>
 		<div class="control-group">
-			<label class="control-label" for="pixelwidth"> Width  </label>
+			<label class="control-label" for="csvChooser"> List  </label>
 			<div class="controls">	
-				<input type="text" style="height:25px;"class="input-small" id="pixelwidth" placeholder="pixels" onkeyup="$('#inchwidth').val(this.value/$('#dpi').val())"> </input>
+				<button class='btn' id='list_fs'><i class="icon-folder-open"> </i> My Computer</button>
+				<button class='btn btn-warning' id='list_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</button>	
+				<span id="fs_list" style="display:none;">
+					<input type="file" class="input-file" accept=".csv" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0], 'event-csv');"> </input>
+					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="changeCsv();"></a>
+				</span>
+				<span id="gd_list" style="display:none;">				
+					<input readonly="readonly" placeholder="Google Drive Spreadsheet" id="csvGoogle" name="csvGoogle" />
+					<a style="cursor:pointer;" class="icon-repeat" onclick="changeCsv();" id="return_image1"></a>
+				</span>
+
+				<div id="csvColumnsSelect"></div>
 			</div>
 		</div>
+		
 
+		<input type="text" id="pixelwidth" value="600" style="display:none;"> </input>
+		<input type="text" id="pixelheight" value="400" style="display:none;"> </input>
+		
 		<div class="control-group">
-			<label class="control-label" for="pixelheight"> Height  </label>
+			<label class="control-label" for="pixelheight"> QR Code  </label>
 			<div class="controls">	
-				<input type="text" style="height:25px" class="input-small" id="pixelheight" placeholder="pixels" onkeyup="$('#inchheight').val(this.value/$('#dpi').val())"> </input>
-				<div style="height:25px;" style="margin-top:10px" id="container"> </div>
-			</div>
-		</div>
-		-->
-		<div class="control-group">
-			<label class="control-label" for="pixelheight"> <h4>QR Code</h4>  </label>
-			<div class="controls">	
-				<input type="checkbox" id="qrcode" name="qrcode" value="Yes" />
+				<input style="margin-top:10px" type="checkbox" id="qrcode" name="qrcode" value="Yes" />
 				<div id="qrCodeSelect"></div>
 				<div style="margin-top:10px" id="container"> </div>
 			</div>
 		</div>
-
+		</fieldset>
 
 			<div class="form-actions">
 				<button class="btn btn-primary" type="submit"> Submit </button>
@@ -176,7 +163,7 @@ img { max-width:500px;}
 		</form>
 		</div>
 		</div>
-	</div>
+	
 </div>
 
 <footer class="footer">
