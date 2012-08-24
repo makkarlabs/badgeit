@@ -474,7 +474,7 @@ $(document).ready(function () {
 					$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata});
 					qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
 					qrlayer.getElement().src = qrdataurl;	
-					setTimeout(200);
+					setTimeout(500);
 					canvas.renderAll(true);	
 				}
 				if( typeof boundRect[index_j] === 'object')
