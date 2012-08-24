@@ -3,6 +3,15 @@ google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
 $(function() {
+
+ var config = {
+          'client_id': '434888942442.apps.googleusercontent.com',
+          'scope': 'https://www.googleapis.com/auth/drive https://docs.google.com/feeds https://spreadsheets.google.com/feeds'
+        };
+        gapi.auth.authorize(config, function() {
+		console.log("Logged into Google Account");
+        });
+	
 var holder = document.getElementById('holder');
 localStorage['selected-cols'] = ''
 localStorage["qrcode"] = "false";
@@ -246,7 +255,7 @@ function pickerCallbackImage(data) {
         fileid = doc[google.picker.Document.ID];
 	$('#google_image').val(doc[google.picker.Document.NAME]);
 
-       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':localStorage['accesstoken']},'callback':handleDriveImage});
+       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':gapi.auth.getToken().access_token},'callback':handleDriveImage});
     }
 }
 function pickerCallbackSheet(data) {
@@ -256,7 +265,7 @@ function pickerCallbackSheet(data) {
         var doc = data[google.picker.Response.DOCUMENTS][0];	
         fileid = doc[google.picker.Document.ID];
 	$('#csvGoogle').val(doc[google.picker.Document.NAME]);
-       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':localStorage['accesstoken']},'callback':handleDriveSheet});	
+       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':gapi.auth.getToken().access_token},'callback':handleDriveSheet});	
     }
 }
 
@@ -266,7 +275,7 @@ function handleDriveImage(response) {
 	console.log(response);
 	var BlobBuilder = window.WebKitBlobBuilder || window.BlobBuilder;
 	var oReq = new XMLHttpRequest();
-	oReq.open("GET", response.downloadUrl+'&access_token=' + encodeURIComponent(localStorage['accesstoken']), true);
+	oReq.open("GET", response.downloadUrl+'&access_token=' + encodeURIComponent(gapi.auth.getToken().access_token), true);
 	oReq.responseType = "arraybuffer";
  
 	oReq.onload = function(oEvent) {
