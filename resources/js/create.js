@@ -69,7 +69,8 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><span id='boundspan"+i+"' hidden='true'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a><a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span> <div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><div class='clr'></div></div>");
+		$("body").append("<span id='boundspan"+i+"' hidden='true'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a> <a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -275,7 +276,7 @@ $(document).ready(function () {
 		function positionBoundSpan(rect,boundspan)
 		{
 			var absCoords = canvas.getAbsoluteCoords(rect);
-			$(boundspan).css('position','fixed');
+			$(boundspan).css('position','absolute');
 			$(boundspan).css('left',(absCoords.left + rect.width) + 'px');
 			$(boundspan).css('top',(absCoords.top) + 'px');
 			
