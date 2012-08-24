@@ -1,4 +1,4 @@
-var picker, picker1i,feed;
+var picker, picker1i,feed, ar=true, aspectRatio;
 google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
@@ -47,6 +47,11 @@ holder.ondrop = function (e) {
 		.load(function() {
 	$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
 	$("#pixelheight").val(this.height); // work for in memory images.
+	aspectRatio = $('#pixelwidth').val() / $('#pixelheight').val(); 
+	$('#inchheight').val(($("#pixelheight").val() / $("#dpi").val()).toFixed(2));;
+	$('#inchwidth').val(($("#pixelwidth").val() / $("#dpi").val()).toFixed(2));;
+	
+	
 	});
 	$("#holderCaption").hide();
 	$('#holder').css('border','0px');
@@ -110,6 +115,9 @@ function loadPreview(image)
 		.load(function() {
 			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
 			$("#pixelheight").val(this.height); // work for in memory images.
+			aspectRatio = $('#pixelwidth').val() / $('#pixelheight').val(); 
+			$('#inchheight').val(($("#pixelheight").val() / $("#dpi").val()).toFixed(2));
+			$('#inchwidth').val(($("#pixelwidth").val() / $("#dpi").val()).toFixed(2));
 		});
 	$("#holderCaption").hide();
 	$('#holder').css('border','0px');
@@ -149,17 +157,29 @@ function createMultipleSelect(fileString, placeid, colselectid, localStorageName
 {
 	
 	csv_text = $.csv2Array(fileString);
-	$("#"+placeid).html("<select id="+ colselectid +" multiple='multiple'></select>");
+
+	//$("#"+placeid).html("<select id="+ colselectid +" multiple='multiple'></select>");
 	var i = 0;
 	while(i<csv_text[0].length)
 	{
-		$("#"+colselectid).append('<option value='+i+'>'+csv_text[0][i++]+'</option>');
+		$("#"+placeid).append("<label class='checkbox'><input type='checkbox' value='"+csv_text[0][i]+"'>"+csv_text[0][i++]+" </input></label>");
+		//$("#"+colselectid).append('<option value='+i+'>'+csv_text[0][i++]+'</option>');
 	}
 	$("#"+colselectid).change(function(){        
 		localStorage[localStorageName]=$("#"+colselectid).val() || [];;
 		});
 }
 
+function lockar() {
+	ar = !(ar);
+	if(ar == true)
+	{
+		$("#lockar").css("opacity","1"); 
+	}
+	else {
+		$("#lockar").css("opacity","0.4");
+	}
+}
 
 function clear() {
 	$("#badgepreview").val("");
@@ -257,4 +277,27 @@ function handleDriveSheet(response) {
 			 $('#qrCodeSelect').hide();
 		});
 
+}
+
+function setPixelWidth() {
+	
+	$('#pixelwidth').val(($('#dpi').val()*$('#inchwidth').val()).toFixed(2));
+	
+	if(ar) {
+		
+		$('#inchheight').val(($('#inchwidth').val() / aspectRatio).toFixed(2));
+		$('#pixelheight').val(($('#dpi').val()*$('#inchheight').val()).toFixed(2));
+	}
+}
+
+
+function setPixelHeight() {
+	
+	$('#pixelheight').val(($('#dpi').val()*$('#inchheight').val()).toFixed(2));
+	
+	if(ar) {
+		
+		$('#inchwidth').val(($('#inchheight').val() * aspectRatio).toFixed(2));
+		$('#pixelwidth').val(($('#dpi').val()*$('#inchwidth').val()).toFixed(2));
+	}
 }

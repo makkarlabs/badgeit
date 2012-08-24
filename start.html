@@ -107,7 +107,7 @@ img { max-width:500px;}
 				<select id="dpi" class="input-small" onchange="$('#inchwidth').val($('#pixelwidth').val()/this.value);$('#inchheight').val($('#pixelheight').val()/this.value);">
 					<option>72</option>
 					<option>96</option>
-					<option>150</option>
+					<option selected="selected">150</option>
 					<option>300</option>
 					<option>2540</option>
 					<option>4000</option>
@@ -120,14 +120,21 @@ img { max-width:500px;}
 		<div class="control-group">
 			<label class="control-label" for="inchwidth"> Width  </label>
 			<div class="controls">	
-				<input style="height:25px;"type="text" class="input-small" id="inchwidth" placeholder="inches" required onkeyup="$('#pixelwidth').val($('#dpi').val()*this.value)"> </input>
+				<input style="height:25px;"type="text" class="input-small" id="inchwidth" placeholder="inches" required onkeyup="setPixelWidth()"> </input>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			
+			<div class="controls">	
+				<a id="lockar" onclick="lockar();" style="cursor:pointer;margin-left:30px;"><i class="icon-lock"></i></a>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="inchheight"> Height  </label>
 			<div class="controls">	
-				<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="$('#pixelheight').val($('#dpi').val()*this.value)"> </input>
+				<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="setPixelHeight())"> </input>
 			</div>
 		</div>
 

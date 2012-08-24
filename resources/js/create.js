@@ -40,6 +40,7 @@
 	var isStopSave = false;
 $(document).ready(function () {
 
+
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
 	canvas.setHeight(dimensions[1]);
 	canvas.setWidth(dimensions[0]);
