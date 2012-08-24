@@ -5,9 +5,10 @@ function auth()
           'scope': 'https://www.googleapis.com/auth/drive https://docs.google.com/feeds https://spreadsheets.google.com/feeds'
         };
         gapi.auth.authorize(config, function() {
+		console.log(gapi.auth.getToken());
           	localStorage['accesstoken'] = gapi.auth.getToken().access_token;
 		alert("authd");
-		location.href="./start.html";
+		//location.href="./start.html";
         });
 
 }

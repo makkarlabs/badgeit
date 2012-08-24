@@ -4,7 +4,7 @@ google.load('picker',1);
 
 $(function() {
 var holder = document.getElementById('holder');
-
+localStorage['selected-cols'] = ''
 localStorage["qrcode"] = "false";
 if (typeof window.FileReader === 'undefined') {
   console.log('File reader API failed');
@@ -162,12 +162,10 @@ function createMultipleSelect(fileString, placeid, colselectid, localStorageName
 	var i = 0;
 	while(i<csv_text[0].length)
 	{
-		$("#"+placeid).append("<label class='checkbox'><input type='checkbox' value='"+csv_text[0][i]+"'>"+csv_text[0][i++]+" </input></label>");
+		$("#"+placeid).append("<label class='checkbox'><input type='checkbox' id='"+ colselectid +"'value='"+i+"'>"+csv_text[0][i++]+" </input></label>");
 		//$("#"+colselectid).append('<option value='+i+'>'+csv_text[0][i++]+'</option>');
 	}
-	$("#"+colselectid).change(function(){        
-		localStorage[localStorageName]=$("#"+colselectid).val() || [];;
-		});
+	
 }
 
 function lockar() {
@@ -183,6 +181,8 @@ function lockar() {
 
 function clear() {
 	$("#badgepreview").val("");
+	$('#qrCodeSelect').empty();
+	$('#csvColumnsSelect').empty();
 	$("#form1").find(':input').each(function() {
         switch(this.type) {
             case 'password':
@@ -201,8 +201,23 @@ function clear() {
 
 function move() {
 	
+	var selectedCols = new Array();
+	var qrSelectedCols = new Array();
+	$('#csvColumnsSelect').find(':input:checkbox:checked').each(function() { 
+		selectedCols.push(this.value);
+	});
+	localStorage['selected-cols'] = selectedCols;
+	
+	if($('#qrcode').is(':checked')){
+		$('#qrCodeSelect').find(':input:checkbox:checked').each(function() { 
+			qrSelectedCols.push(this.value);
+		});
+		localStorage['qr-cols'] = qrSelectedCols;
+	}
+	
 	_gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', localStorage["projectname"]]);
 	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val();
+	return false;
 	
 }
 
@@ -269,7 +284,7 @@ function handleDriveImage(response) {
 function handleDriveSheet(response) {
 	var url = response.exportLinks['application/pdf'].substring(0,response.exportLinks['application/pdf'].length-3)+'csv&access_token='+localStorage['accesstoken'];
 	console.log(url);
-	$.ajax({'url':'http://badgeitrelay.appspot.com/badgeitrelay?link='+ encodeURIComponent(url), 'crossDomain':true}).
+	$.ajax({'url':'https://badgeitrelay.appspot.com/badgeitrelay?link='+ encodeURIComponent(url), 'crossDomain':true}).
 		done(function(data){
 			localStorage['event-csv']=data;
 			 createMultipleSelect(data, 'csvColumnsSelect', 'colselect', 'selected-cols');

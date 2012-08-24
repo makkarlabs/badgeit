@@ -104,7 +104,7 @@ img { max-width:500px;}
 		<div class="control-group">
 			<label class="control-label" for="dpiSelection"> DPI  </label>
 			<div class="controls">	
-				<select id="dpi" class="input-small" onchange="$('#inchwidth').val($('#pixelwidth').val()/this.value);$('#inchheight').val($('#pixelheight').val()/this.value);">
+				<select id="dpi" class="input-small" onchange="$('#inchwidth').val(($('#pixelwidth').val()/this.value).toFixed(2));$('#inchheight').val(($('#pixelheight').val()/this.value).toFixed(2));">
 					<option>72</option>
 					<option>96</option>
 					<option selected="selected">150</option>
@@ -134,7 +134,7 @@ img { max-width:500px;}
 		<div class="control-group">
 			<label class="control-label" for="inchheight"> Height  </label>
 			<div class="controls">	
-				<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="setPixelHeight())"> </input>
+				<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="setPixelHeight()"> </input>
 			</div>
 		</div>
 
@@ -169,7 +169,7 @@ img { max-width:500px;}
 
 			<div class="form-actions">
 				<button class="btn btn-primary" type="submit"> Submit </button>
-				<button class="btn" onclick="clear()"> Reset </button>
+				<a class="btn" onclick="clear()"> Reset </a>
 
 			</div>
 		</fieldset>
