@@ -13,6 +13,15 @@
 	<script>
 		$('#myCarousel').carousel();
 	</script>
+	<style>
+		img {
+			border-color: whitesmoke;
+			-moz-box-shadow:    1px 1px 2px 3px whitesmoke;
+			-webkit-box-shadow: 1px 1px 2px 3px whitesmoke;
+			box-shadow:         1px 1px 5px 4px whitesmoke	;
+		}
+	</style>
+	
 	</head>
 	<body>
 	<div id="headerContainer">
@@ -30,86 +39,25 @@
 		</div>
 		<div class="clr"></div>
 	</header>
-	
-	
-		<div class="container" style="padding-top: 10px;">
-		   <div class="span7 offset2 row">
-			<div id="myCarousel" class="carousel slide">
-            			<div class="carousel-inner">
-              				<div class="item active">
-                				<img src="resources/images/home/badgetoon.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>Why BadgeIt?</h4>
-                				</div>
-              				</div>
-              				<div class="item">
-                				<img src="resources/images/home/template.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 1: Create your badge template.</p>
-                				</div>
-              				</div>
-              				<div class="item">
-                				<img src="resources/images/home/start1.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 2: In the <a href="./start.html">Start</a> page, enter your project name, add your template and the CSV input file. Choose the fields you would like on your badge from the multiple select box that appears. Enter the badge resolution details and submit.</p>
-                				</div>
-              				</div>
-					<div class="item">
-                				<img src="resources/images/home/start2.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 3: Optionally, you can add a QR code to your badges by checking the QR code box in the <a href="./start.html">Start</a> page. Choose the fields you would like encoded in your QR code and proceed.</p>
-                				</div>
-              				</div>
-					<div class="item">
-                				<img src="resources/images/home/create1.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 4: In the Create page that appears, customise your badges by using the toolbox, and scaling or moving the objects on the canvas. Click next to create all badges.</p>
-                				</div>
-              				</div>
-					<div class="item">
-                				<img src="resources/images/home/create2.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 5: The badges are created and the toolbox populates with options to download the images as a zip file or view a tiled HTML page. You may go back by clicking the Back button to make any changes and re-create the badges.</p>
-                				</div>
-              				</div>
-					<div class="item">
-                				<img src="resources/images/home/create3.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 6: The Download zip button appears on clicking Zip files, and the file is downloaded with the Project name you entered.</p>
-                				</div>
-              				</div>
-					<div class="item">
-                				<img src="resources/images/home/print.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 7: All your badges are displayed in a tiled version on clicking View all in Sheet. You can optionally print to PDF from your browser.</p>
-               					</div>
-					</div>
-					<div class="item">
-                				<img src="resources/images/home/thanks.png" alt="">
-                				<div class="carousel-caption">
-                  					<h4>How to BadgeIt?</h4>
-                  					<p>Step 8: Click Finish when you are done creating the badges.</p>
-               					</div>
-              				</div>
-            			</div>
-            			<a class="left carousel-control" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-            			<a class="right carousel-control" href="#myCarousel" data-slide="next">&rsaquo;</a>
-          		   </div>			
-			</div>
-			<div id="buttons-group" style="padding-top:30px; width:600px; margin-left:auto; margin-right:auto;">
-			<div class="clr"></div>
-			<button id="authnstart" onclick="location.href='./start.html';" class="btn btn-primary btn-large" style="margin-left:260px; margin-right:auto;">Start</button>
-			
+	</div>
+		<div class="container">
+		
+		<h1 style="text-align:center;font-family:Rancho;font-size:50px;">The smart way to create badges for your event!</h1>
+		
+		<div class="badges" style="margin-top:40px;">
+		<img style="margin-right:20px; margin-left:20px;" width=300 height=225 src="resources/images/home/bruce_badge_template.png"/> 
+		+ <img style="margin-left:20px;margin-right:20px;" width=300 height=225 src="resources/images/home/devcon.png"/> 
+		= <img  style="margin-left:20px;" width=300 height=225 src="resources/images/home/all_badges.png"/><br/>
+		 <img style="margin-left:370px;margin-top:20px;"width=300 height=225 src="resources/images/home/bruce_badge.png"/> 
+		 </div>
+		 <button id="authnstart" onclick="location.href='./start.html';" class="btn btn-primary btn-large" style="margin-top:20px;margin-left:492px; margin-right:auto;">Start</button>
+		 
+		
+		
 		</div>
-		</div>
-		<footer class="footer">
+
+
+	<footer class="footer">
 			<div class="container">
 				<p> <a target="_blank" href="http://makkarlabs.in">Makkar Labs</a>, 2012</p>
 				<p> Customized for Google Chrome (Version 13.0+)</p>
