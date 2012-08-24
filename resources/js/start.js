@@ -3,7 +3,8 @@ google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
 $(function() {
-
+$("#template_gd").hide();
+$("#list_gd").hide();
  var config = {
           'client_id': '434888942442.apps.googleusercontent.com',
           'scope': 'https://www.googleapis.com/auth/drive https://docs.google.com/feeds https://spreadsheets.google.com/feeds'
@@ -232,6 +233,9 @@ function move() {
 
 
 function createPicker() {
+
+	$("#template_gd").show();
+	$("#list_gd").show();
        picker = new google.picker.PickerBuilder().
             addView(google.picker.ViewId.DOCS_IMAGES).
             setCallback(pickerCallbackImage).
