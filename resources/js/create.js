@@ -401,6 +401,7 @@ $(document).ready(function () {
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
 			console.log('Zip revoked');
 		});
+		$("#finish").hide();
 		$("#finish").css('margin-top','-30px');
 	});
 	//cleanup filesystem on window close
