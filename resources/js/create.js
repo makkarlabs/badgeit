@@ -6,7 +6,7 @@
 	for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; }
 	
 	//Fabric js initialisations
-       var canvas; 
+        var canvas; 
 	var labellayer = new Array();
 	var alignment = new Array();
 	var actualleft = new Array();
@@ -39,8 +39,7 @@
 	//Stop Badge gen
 	var isStopSave = false;
 $(document).ready(function () {
-
-
+	 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
 	canvas.setHeight(dimensions[1]);
 	canvas.setWidth(dimensions[0]);
@@ -69,7 +68,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
-		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' title='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' title='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' title='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' title='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' title='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><div class='clr'></div></div>");
+		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' toggle='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' toggle='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' toggle='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' toggle='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' toggle='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><div class='clr'></div></div>");
 		$("body").append("<span id='boundspan"+i+"' hidden='true'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a> <a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
@@ -127,7 +126,7 @@ $(document).ready(function () {
 			}
 		});
 		$(labelid).attr({
-			placeholder: label,
+			placeholder: 'Try something here',
 		});
 		$(labelid).on('keyup', function() {
   			labellayer.setText($(labelid).val());
@@ -137,6 +136,7 @@ $(document).ready(function () {
 			min: '0',
 			max: '200',
 			value: fontsize,
+			
 		});
 		$(labelsize).on('change', function() {
 			labellayer.setFontsize($(labelsize).val());
@@ -152,31 +152,60 @@ $(document).ready(function () {
 			labellayer.set('fontFamily',$(labelfamily).val());
 			canvas.renderAll(true);
 		});
+		$(labelbold).attr({
+			rel: 'tooltip',
+			title: 'Set Font weight Bold'
+		});
+		$(labelitalic).attr({
+			rel: 'tooltip',
+			title: 'Set Font style as Italic'
+		});
+		$(labelcolor).attr({
+			rel: 'tooltip',
+			title: 'Set Font Color'
+		});
+		$(labelleft).attr({
+			rel: 'tooltip',
+			title: 'Left align: Ensures that text for all badges have left position fixed.'
+		});
+		$(labelcenter).attr({
+			rel: 'tooltip',
+			title: 'Center align: Ensures that text for all badges have center position fixed.'
+		});
+		$(labelright).attr({
+			rel: 'tooltip',
+			title: 'Right align: Ensures that text for all badges have right position fixed.'
+		});
+		$(labelbounds).attr({
+			rel: 'tooltip',
+			title: 'Avoid long text exceeding the canvas by setting bounds. Ensures all text is scaled to the specified bound region.'
+		});
+		
 		$(labelbold).click(function(event){
 			event.preventDefault();
-			if($(labelbold).attr('title') === 'unselect')
+			if($(labelbold).attr('toggle') === 'unselect')
 			{
 				labellayer.set('fontWeight', 'bold');
-				$(labelbold).attr({'title':'select', 'class':'btn btn-warning'});	
+				$(labelbold).attr({'toggle':'select', 'class':'btn btn-warning'});	
 			}
 			else
 			{
                                 labellayer.set('fontWeight', 'normal');
-                                $(labelbold).attr({'title':'unselect', 'class':'btn'});
+                                $(labelbold).attr({'toggle':'unselect', 'class':'btn'});
 			}
 			canvas.renderAll(true);
 		});
 		$(labelitalic).click(function(event){
                         event.preventDefault();
-                        if($(labelitalic).attr('title') === 'unselect')
+                        if($(labelitalic).attr('toggle') === 'unselect')
                         {
                                 labellayer.set('fontStyle', 'italic');
-                                $(labelitalic).attr({'title':'select', 'class':'btn btn-warning'});
+                                $(labelitalic).attr({'toggle':'select', 'class':'btn btn-warning'});
                         }
                         else
                         {
                                 labellayer.set('fontStyle', 'normal');
-                                $(labelitalic).attr({'title':'unselect', 'class':'btn'});
+                                $(labelitalic).attr({'toggle':'unselect', 'class':'btn'});
                         }
 			canvas.renderAll(true);
                 });
@@ -185,43 +214,43 @@ $(document).ready(function () {
 			canvas.renderAll(true);
 		});
 		$(labelleft).on('click',function(event){
-			if($(labelleft).attr('title') === 'unselect')
+			if($(labelleft).attr('toggle') === 'unselect')
 			{
 				align('left');
-				$(labelleft).attr({'title':'select', 'class':'btn btn-warning'});
-				$(labelcenter).attr({'title':'unselect', 'class':'btn'});
-				$(labelright).attr({'title':'unselect', 'class':'btn'});
+				$(labelleft).attr({'toggle':'select', 'class':'btn btn-warning'});
+				$(labelcenter).attr({'toggle':'unselect', 'class':'btn'});
+				$(labelright).attr({'toggle':'unselect', 'class':'btn'});
 			}
 			else
 			{
 				align('center');
-				$(labelcenter).attr({'title':'select', 'class':'btn btn-warning'});
-                                $(labelleft).attr({'title':'unselect', 'class':'btn'});
+				$(labelcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
+                                $(labelleft).attr({'toggle':'unselect', 'class':'btn'});
 
 			}	
 		});
 		$(labelright).on('click',function(event){
-                        if($(labelright).attr('title') === 'unselect')
+                        if($(labelright).attr('toggle') === 'unselect')
                         {
                                 align('right');
-                                $(labelright).attr({'title':'select', 'class':'btn btn-warning'});
-                                $(labelcenter).attr({'title':'unselect', 'class':'btn'});
-                                $(labelleft).attr({'title':'unselect', 'class':'btn'});
+                                $(labelright).attr({'toggle':'select', 'class':'btn btn-warning'});
+                                $(labelcenter).attr({'toggle':'unselect', 'class':'btn'});
+                                $(labelleft).attr({'toggle':'unselect', 'class':'btn'});
                         }
                         else
                         {
                                 align('center');
-                                $(labelcenter).attr({'title':'select', 'class':'btn btn-warning'});
-                                $(labelright).attr({'title':'unselect', 'class':'btn'});
+                                $(labelcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
+                                $(labelright).attr({'toggle':'unselect', 'class':'btn'});
                         }
                 });
 		$(labelcenter).on('click', function(event){
-			if($(labelcenter).attr('title')==='unselect')
+			if($(labelcenter).attr('toggle')==='unselect')
 			{
 				align('center');
-                                $(labelcenter).attr({'title':'select', 'class':'btn btn-warning'});
-                                $(labelright).attr({'title':'unselect', 'class':'btn'});
-                                $(labelleft).attr({'title':'unselect', 'class':'btn'});
+                                $(labelcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
+                                $(labelright).attr({'toggle':'unselect', 'class':'btn'});
+                                $(labelleft).attr({'toggle':'unselect', 'class':'btn'});
 			}
 		});
 		function align(alignval){
@@ -309,7 +338,7 @@ $(document).ready(function () {
 		{
 			save();
 			$("span#genimages > button#save").html('Stop');
-			$("span#genimages > button#save").attr('title','Click to stop badge creation');
+			$("span#genimages > button#save").attr({'title':'Click to stop badge creation', 'class':'btn btn-danger'});			
 		}
 		else
 		{
@@ -374,7 +403,6 @@ $(document).ready(function () {
 		});
 		$("#finish").css('margin-top','-30px');
 	});
-
 	//cleanup filesystem on window close
 	$("#finish").on('click',function() {
 	  localStorage.clear();
@@ -387,6 +415,10 @@ $(document).ready(function () {
 		  }, errorHandler);
 	   }, errorHandler);
 	});
+	
+	
+	 //Activating Bootstrap tooltips
+	 $("[rel=tooltip]").tooltip();
 });
 
 	var index_i=1;

@@ -5,7 +5,6 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/createfonts.css" type="text/css">
-	<link rel="stylesheet" href="resources/css/pines.css" type="text/css">
 
 	<style>
 	    canvas {
@@ -18,12 +17,12 @@
 		.colorbox { width:20px} 
 		.positionbox { width:150px; }
 		#customize input,#customize .btn-group,#customize select,#customize a,#customize button { margin-left:4px;margin-right:4px; }
-		#toolbox { width:1170px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0; }
+		#toolbox { width:1000px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0; margin-left:70px; }
 		
 		#minimizedtoolbox { background-color:whitesmoke; height:30px; margin-bottom:5px; right:0; margin-right:10px; width:50px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0;}
 	</style>
 		  <script src="resources/js/jquery.js"></script>
-		  <script src="bootstrap/js	/bootstrap.js"></script>
+		  <script src="bootstrap/js/bootstrap.js"></script>
 		  <script src="resources/js/jquery.qrcode.js"></script>
 		  <script src="resources/js/qrcode.js"></script>
 		  <script src="resources/js/fabric.js"></script>
@@ -31,7 +30,6 @@
 		  <script src="resources/js/fonts.js"></script>
 		  <script src="resources/js/zip.js"></script>
 		  <script src="resources/js/create.js"> </script>
-		  <script src="resources/js/pines.js"> </script>
 		  <script src="resources/js/analytics.js"></script>
    
   </head>
@@ -72,7 +70,7 @@
 			<div id="customize">
 			</div>
 			<span id="genimages">	
-				<button style="width:70px; margin-top:10px; margin-left:5px;" class="btn btn-primary" id="save" title="Click to create all badges">Next</button>
+				<button style="width:70px; margin-top:18px; margin-left:462px; " class="btn btn-success" id="save" title="Click to create all badges">Next</button>
 				<progress id="gen" value="1" hidden='true' ></progress>
 			</span>
 
@@ -82,7 +80,7 @@
 			<br>
 			<button id="print" class="btn btn-primary" hidden="hidden" style="display:none; margin-left:455px; margin-top:10px" onclick="window.open('./print.html')">View all in Sheet</button>    
 			<button id="back" class="btn btn-primary" hidden="hidden" style="margin-left: 5px; margin-top:10px; float: left; display:none">Back</button>
-			<button class="btn btn-success" style="float:right; margin-top:-30px;" id ="finish">Finish</button>		
+			<button class="btn btn-danger" hidden="hidden" style="float:right; margin-top:-30px; display:none;" id ="finish">Exit</button>		
 			<div class="clr"></div>
 		</div>
 	</div>
