@@ -481,7 +481,7 @@ $(document).ready(function () {
 					setTimeout(500);
 					canvas.renderAll(true);	
 				}
-				if( typeof boundRect[index_j] === 'object')
+				if( typeof boundRect[index_j] === 'object' && boundRect[index_j] != null)
 				{
 					if(labellayer[index_j].getWidth() > boundRect[index_j].getWidth())			
 					{
