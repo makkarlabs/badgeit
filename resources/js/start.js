@@ -220,9 +220,9 @@ function getAsText(fileToRead, localName)
        reader.readAsText(fileToRead);
        reader.onload = function(event){                        
             localStorage[localName] = event.target.result;
-			
+	$('#csvColumnsSelect').empty();	
 	     createMultipleSelect(event.target.result, 'csvColumnsSelect', 'colselect', 'selected-cols');
-		 
+	$('#qrCodeSelect').empty();
 		 createMultipleSelect(event.target.result, 'qrCodeSelect', 'qrselect', 'qr-cols');
 		 $('#qrCodeSelect').hide();
        };
@@ -238,7 +238,7 @@ function createMultipleSelect(fileString, placeid, colselectid, localStorageName
 
 	//$("#"+placeid).html("<select id="+ colselectid +" multiple='multiple'></select>");
 	var i = 0;
-	$("#"+placeid).html('');
+	//	$("#"+placeid).html('');
 	while(i<csv_text[0].length)
 	{
 		$("#"+placeid).append("<label class='checkbox'><input type='checkbox' id='"+ colselectid +"'value='"+i+"'>"+csv_text[0][i++]+" </input></label>");

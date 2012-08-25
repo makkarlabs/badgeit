@@ -10,15 +10,15 @@
 	<script src="resources/js/analytics.js"></script>
 	<script src="resources/js/jquery.js"></script>
    	<script src="bootstrap/js/bootstrap-carousel.js"></script>
-	<script>
-		$('#myCarousel').carousel();
-	</script>
 	<style>
 		img {
 			border-color: whitesmoke;
 			-moz-box-shadow:    1px 1px 2px 3px whitesmoke;
 			-webkit-box-shadow: 1px 1px 2px 3px whitesmoke;
 			box-shadow:         1px 1px 5px 4px whitesmoke	;
+		}
+		div .badges {
+			color:gray;
 		}
 	</style>
 	
@@ -42,13 +42,12 @@
 	</div>
 		<div class="container">
 		
-		<h1 style="text-align:center;font-family:Rancho;font-size:50px;">The smart way to create badges for your event!</h1>
+		<h1 style="text-align:center;font-family:Rancho;font-size:40px;color:gray;">The smart way to create badges for your event!</h1>
 		
-		<div class="badges" style="margin-top:40px;">
+		<div class="badges" style="margin-top:50px;padding-bottom:30px;">
 		<img style="margin-right:20px; margin-left:20px;" width=300 height=225 src="resources/images/home/bruce_badge_template.png"/> 
-		+ <img style="margin-left:20px;margin-right:20px;" width=300 height=225 src="resources/images/home/devcon.png"/> 
-		= <img  style="margin-left:20px;" width=300 height=225 src="resources/images/home/all_badges.png"/><br/>
-		 <img style="margin-left:370px;margin-top:20px;"width=300 height=225 src="resources/images/home/bruce_badge.png"/> 
+		<i class="icon-plus"></i> <img style="margin-left:20px;margin-right:20px;" width=300 height=225 src="resources/images/home/devcon.png"/> 
+		<i class="icon-arrow-right"></i> <img  style="margin-left:20px;" width=300 height=225 src="resources/images/home/all_badges.png"/><br/>
 		 </div>
 		 <button id="authnstart" onclick="location.href='./start.html';" class="btn btn-primary btn-large" style="margin-top:20px;margin-left:492px; margin-right:auto;">Start</button>
 		 
@@ -57,7 +56,7 @@
 		</div>
 
 
-	<footer class="footer">
+	<footer class="footer" style="position:absolute; bottom:0; width:100%;">
 			<div class="container">
 				<p> <a target="_blank" href="http://makkarlabs.in">Makkar Labs</a>, 2012</p>
 				<p> Customized for Google Chrome (Version 13.0+)</p>
