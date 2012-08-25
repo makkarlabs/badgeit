@@ -327,6 +327,8 @@ $(document).ready(function () {
 			labellayer.lockMovementX = false;
 			labellayer.lockMovementY = false;
 			canvas.remove(alignobj.boundingRect);
+			boundRect[alignobj.index] = null;
+			maxwidth[alignobj.index] = null;
 		});
 		labellayer.lockRotation = true;
 
@@ -403,6 +405,8 @@ $(document).ready(function () {
 		});
 		$("#finish").hide();
 		$("#finish").css('margin-top','-30px');
+		boundRect = [];
+		maxwidth = [];
 	});
 	//cleanup filesystem on window close
 	$("#finish").on('click',function() {
