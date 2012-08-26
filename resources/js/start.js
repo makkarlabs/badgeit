@@ -160,7 +160,7 @@ $("#form1").submit(function() {
 	}
 	
 	_gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', localStorage["projectname"]]);
-	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val()+','+$('#pixelwidth').val()*$('#dpi').val()/96+','+$('#pixelwidth').val()*$('#dpi').val()/96;
+	localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val()+','+$('#pixelwidth').val()*$('#dpi').val()/96+','+$('#pixelheight').val()*$('#dpi').val()/96;
 	
             
      });
