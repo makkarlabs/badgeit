@@ -530,7 +530,7 @@ $(document).ready(function () {
 				if(isStopSave === true)
 				{
 					$("span#genimages > button#save").html('Next');
-					$("span#genimages > button#save").attr('title','Click to create all badges');
+					$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-primary'});
 					$("span#genimages > progress#gen").hide();
 					index_i = 1;
 					isStopSave = false;
