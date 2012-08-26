@@ -5,8 +5,10 @@
 			margin: 0px;
 			padding: 0px;
 		}
-		#myCanvas {
+		canvas {
 			border: 1px solid #9C9898;
+			position: absolute;
+			margin:2px;
 		}
 		img {
 			padding: 4px;
@@ -39,15 +41,26 @@
 		
 		$('#print').append("<canvas id='canvas"+sheetcounter+"' width='"+sheetXsize+"' height='"+sheetXsize+"'/>");
 		var persheetcounter = 0;
+		var xpos=0, ypos=0, colcounter=0;
 		function printsheet(badgecounter){
 			var canvas = $("#canvas"+sheetcounter)[0];
 			var context = canvas.getContext("2d");
 			var imageObj = new Image();
 			imageObj.onload = function() {
-				context.drawImage(imageObj, badgeXsize, badgeYsize);
+				context.drawImage(imageObj, xpos, ypos);
 			};
+			if(++colcounter % $('#col').val()==0)
+			{
+				xpos = 0;
+				ypos+=badgeYsize;
+				colcounter = 0
+			}
+			else
+			{
+				xpos+=badgeXsize;
+			}
 			imageObj.src = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+badgecounter+'.jpeg';
-			setTimeOut(500);
+			setTimeout(500);
 			if(++persheetcounter == sheets)
 			{
 				persheetcounter = 0;
@@ -74,7 +87,7 @@
 				<form oninput="(+row.value)*(+col.value)">
 					<label>Rows per sheet</label><input id='row' name='row' type='text' placeholder='2' value='2'/>
 					<label>Colums per sheet</label><input id='col' name='col' type='text' placeholder='2' value='2'/>
-					<label>Badges per sheet</label><output id='badgenum' for='row col' type='text' placeholder='4' value='4'/>
+					<label>Badges per sheet</label><input id='badgenum'  type='text' placeholder='4' value='4'/>
 					<label>Page orientation</label>
 					<select id='orient'>
 						<option selected="selected" value="L">Landscape</option>
