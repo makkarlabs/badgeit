@@ -511,7 +511,7 @@ $(document).ready(function () {
 
 	function writefile(fs)
 	{
-		var current_dataurl = canvas.toDataURL('png');
+		var current_dataurl = canvas.toDataURL('jpeg');
 		var byteString = atob(current_dataurl.split(',')[1]);
 	    	var mimeString = current_dataurl.split(',')[0].split(':')[1].split(';')[0];
 	    	var ab = new ArrayBuffer(byteString.length);
@@ -522,7 +522,7 @@ $(document).ready(function () {
 		var bb = new window.WebKitBlobBuilder(); // or just BlobBuilder() if not using Chrome
     		bb.append(ab);
     		current_blob = bb.getBlob(mimeString);
-		fs.root.getFile('/badges/badge'+index_i+'.png', {create: true}, function(fileEntry) {
+		fs.root.getFile('/badges/badge'+index_i+'.jpeg', {create: true}, function(fileEntry) {
 
 			testfileentry[index_i] = fileEntry;
   			fileEntry.createWriter(function(fileWriter) {
@@ -598,7 +598,7 @@ $(document).ready(function () {
 				function nextFile() {
 
 					//window.webkitResolveLocalFileSystemURL(url, function(fileEntry) {
-						var filename = 'badge'+addIndex+'.png';
+						var filename = 'badge'+addIndex+'.jpeg';
 						testfileentry[addIndex].file(function(file){
 							onadd(file);
 							zipWriter.add(filename, new zip.BlobReader(file), function() {
