@@ -1,5 +1,12 @@
 <html>
 	<style>
+	   	body {
+			margin: 0px;
+			padding: 0px;
+		}
+		#myCanvas {
+			border: 1px solid #9C9898;
+		}
 		img {
 			padding: 4px;
 			border: 1px dashed black;
@@ -8,10 +15,20 @@
 	<script src="resources/js/jquery.js"></script>
 	<script>
 	$(document).ready(function () {
+		$('#printModal').modal('show');
 		//Image Dimensions
 		var dimensions = localStorage['dimensions'].split(",");
 		for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; } 
 		function printsheet(i){
+			var canvas = document.getElementById("myCanvas");
+			var context = canvas.getContext("2d");
+			var imageObj = new Image();
+
+			imageObj.onload = function() {
+				context.drawImage(imageObj, 69, 50);
+			};
+			imageObj.src = "http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg";
+			
 			var url = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+i+'.jpeg';
 			$("div").append("<img src ='"+url+"' height='"+dimensions[1]+"' width='"+dimensions[0]+"'/>");
   			if(++i < localStorage['numentries'])
@@ -19,9 +36,35 @@
 		}
 		printsheet(1);
 	});
-	</script>
+	
+        
+    </script>
 	
 	<body>
+		<div class="modal" id="printModal" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h3 id="printModalLabel">Print Settings</h3>
+			</div>
+			<div class="modal-body">
+				<label>Badges per sheet</label><input id='badgenum' type='text' placeholder='4' value='4'/>
+				<label>Page orientation</label>
+				<select id='orient'>
+					<option selected="selected" value="H">Horizontal</option>
+					<option value="V">Vertical</option>
+				</select>
+				<label>Paper size</label>
+				<select id='papersize'>
+					<option selected="selected" value="A4">A4</option>
+					<option value="A3">A3</option>
+				</select>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button class="btn btn-primary">Print</button>
+			</div>
+		</div>
+		
 		<div id="print"></div>
 	</body>
 </html>
