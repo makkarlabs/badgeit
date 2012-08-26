@@ -41,9 +41,9 @@
 $(document).ready(function () {
 	 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
-	canvas.setHeight(dimensions[1]);
-	canvas.setWidth(dimensions[0]);
-	
+	canvas.setHeight(dimensions[5]);
+	canvas.setWidth(dimensions[4]);
+	$('canvas').css({'height':dimensions[5]+'px','width':dimensions[4]+'px'});
 	canvas.HOVER_CURSOR = 'pointer';
 	if(isqrcode === 'true')
 	{
