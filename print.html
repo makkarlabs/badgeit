@@ -20,23 +20,44 @@
 	$(document).ready(function () {
 		$('#printModal').modal('show');
 		//Image Dimensions
-		var dimensions = localStorage['dimensions'].split(",");
-		for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; } 
-		function printsheet(i){
-			var canvas = document.getElementById("myCanvas");
+		var badges = +$('#badgenum').val();
+		var sheets = Math.ceil(localStorage['numentries']/badges);
+		var sheetXsize, sheetYsize, badgeXsize, badgeYsize;
+		var badgecounter=0, sheetcounter=0;
+		if($('#orient').val()=='L')
+		{
+			sheetXsize = 1110;
+			sheetYsize = 780;
+		}
+		else
+		{
+			sheetXsize = 780;
+			sheetYsize = 1100;
+		}
+		badgeXsize = sheetXsize/$('#row').val();
+		badgeYsize = sheetYsize/$('#col').val();
+		
+		$('#print').append("<canvas id='canvas"+sheetcounter+"' width='"+sheetXsize+"' height='"+sheetXsize+"'/>");
+		var persheetcounter = 0;
+		function printsheet(badgecounter){
+			var canvas = $("#canvas"+sheetcounter);
 			var context = canvas.getContext("2d");
 			var imageObj = new Image();
-
 			imageObj.onload = function() {
-				context.drawImage(imageObj, 69, 50);
+				context.drawImage(imageObj, badgeXsize, badgeYsize);
 			};
-			imageObj.src = "http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg";
-			
-			var url = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+i+'.jpeg';
-			$("div").append("<img src ='"+url+"' height='"+dimensions[1]+"' width='"+dimensions[0]+"'/>");
-  			if(++i < localStorage['numentries'])
+			imageObj.src = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+badgecounter+'.jpeg';
+			setTimeOut(500);
+			if(++persheetcounter == sheets)
+			{
+				persheetcounter = 0;
+				sheetcounter++;
+				$('#print').append("<canvas id='canvas"+sheetcounter+"' width='"+sheetXsize+"' height='"+sheetXsize+"'/>");
+			}
+  			if(++badgecounter < localStorage['numentries'])
 				printsheet(i);	
 		}
+		
 		printsheet(1);
 	});
 	
@@ -49,18 +70,22 @@
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 				<h3 id="printModalLabel">Print Settings</h3>
 			</div>
-			<div class="modal-body">
-				<label>Badges per sheet</label><input id='badgenum' type='text' placeholder='4' value='4'/>
-				<label>Page orientation</label>
-				<select id='orient'>
-					<option selected="selected" value="H">Horizontal</option>
-					<option value="V">Vertical</option>
-				</select>
-				<label>Paper size</label>
-				<select id='papersize'>
-					<option selected="selected" value="A4">A4</option>
-					<option value="A3">A3</option>
-				</select>
+			<div class="modal-body" style="margin-left:auto;margin-right:auto;">
+				<form oninput="row.value*col.value">
+					<label>Rows per sheet</label><input id='row' name='row' type='number' placeholder='2' value='2'/>
+					<label>Colums per sheet</label><input id='col' name='col' type='number' placeholder='2' value='2'/>
+					<label>Badges per sheet</label><output id='badgenum' for='row col' type='text' placeholder='4' value='4'/>
+					<label>Page orientation</label>
+					<select id='orient'>
+						<option selected="selected" value="L">Landscape</option>
+						<option value="P">Potrait</option>
+					</select>
+					<label>Paper size</label>
+					<select id='papersize'>
+						<option selected="selected" value="A4">A4</option>
+						<option value="A3">A3</option>
+					</select>
+				</form>
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
