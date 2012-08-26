@@ -40,7 +40,7 @@
 		$('#print').append("<canvas id='canvas"+sheetcounter+"' width='"+sheetXsize+"' height='"+sheetXsize+"'/>");
 		var persheetcounter = 0;
 		function printsheet(badgecounter){
-			var canvas = $("#canvas"+sheetcounter);
+			var canvas = $("#canvas"+sheetcounter)[0];
 			var context = canvas.getContext("2d");
 			var imageObj = new Image();
 			imageObj.onload = function() {
@@ -71,9 +71,9 @@
 				<h3 id="printModalLabel">Print Settings</h3>
 			</div>
 			<div class="modal-body" style="margin-left:auto;margin-right:auto;">
-				<form oninput="row.value*col.value">
-					<label>Rows per sheet</label><input id='row' name='row' type='number' placeholder='2' value='2'/>
-					<label>Colums per sheet</label><input id='col' name='col' type='number' placeholder='2' value='2'/>
+				<form oninput="(+row.value)*(+col.value)">
+					<label>Rows per sheet</label><input id='row' name='row' type='text' placeholder='2' value='2'/>
+					<label>Colums per sheet</label><input id='col' name='col' type='text' placeholder='2' value='2'/>
 					<label>Badges per sheet</label><output id='badgenum' for='row col' type='text' placeholder='4' value='4'/>
 					<label>Page orientation</label>
 					<select id='orient'>
