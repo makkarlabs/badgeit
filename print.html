@@ -48,17 +48,18 @@
 			var imageObj = new Image();
 			imageObj.onload = function() {
 				context.drawImage(imageObj, xpos, ypos);
+				if(++colcounter % $('#col').val()==0)
+				{
+					xpos = 0;
+					ypos+=badgeYsize;
+					colcounter = 0
+				}
+				else
+				{
+					xpos+=badgeXsize;
+				}
 			};
-			if(++colcounter % $('#col').val()==0)
-			{
-				xpos = 0;
-				ypos+=badgeYsize;
-				colcounter = 0
-			}
-			else
-			{
-				xpos+=badgeXsize;
-			}
+			
 			imageObj.src = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+badgecounter+'.jpeg';
 			setTimeout(500);
 			if(++persheetcounter == sheets)
