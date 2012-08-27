@@ -14,14 +14,15 @@
 	var boundRect = new Array();
 	var maxwidth = new Array();
 	var isqrcode = localStorage['qrcode'], qrlayer, qrdataurl, qrdata='';
-
+	var svgArray = new Array();
+	svgArray[0]='';
 	fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
 		return {
 			left: object.left + this._offset.left,
 			top: object.top + this._offset.top
 		};
 	}
-	
+
 	//CSV file related
 	var indexes = localStorage['selected-cols'].split(",");
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
@@ -41,9 +42,12 @@
 $(document).ready(function () {
 	 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
-	canvas.setHeight(dimensions[5]);
-	canvas.setWidth(dimensions[4]);
-	//$('canvas').css({'height':dimensions[1]+'px','width':dimensions[0]+'px'});
+	canvas.setHeight(dimensions[1]);
+	canvas.setWidth(dimensions[0]);
+	scale = 1;
+	if(dimensions[0]/dimensions[2]>96)
+		scale=(dimensions[0]/dimensions[2])/96;
+
 	canvas.renderAll(true);
 	canvas.HOVER_CURSOR = 'pointer';
 	if(isqrcode === 'true')
@@ -420,6 +424,13 @@ $(document).ready(function () {
     			}, errorHandler);
 		  }, errorHandler);
 	   }, errorHandler);
+	window.requestFileSystem(window.TEMPORARY, 1024*1024, function(fs) {
+  		fs.root.getDirectory('/svgs', {}, function(dirEntry) {
+			dirEntry.removeRecursively(function() {
+    			}, errorHandler);
+		  }, errorHandler);
+	   }, errorHandler);
+
 	});
 	
 	
@@ -431,11 +442,14 @@ $(document).ready(function () {
 	var current_dataurl;
 	var img = new Array();
 	var testfileentry = new Array();
+	var zipsvgentry = new Array();
 	var xfactor = new Array();
 	var yfactor = new Array();
+
 	
 	function save()
 	{
+	
 		canvas.deactivateAll();
 		canvas.renderAll(true);	
 		$.each(indexes,function(index_j,value_j) {
@@ -445,12 +459,17 @@ $(document).ready(function () {
 		index_i=1;
 		$("span#genimages > progress#gen").attr('max',data.length);
 		$("span#genimages > progress#gen").show();
-		window.requestFileSystem(window.TEMPORARY, 1024*1024, function(fs) {
+		window.requestFileSystem(window.TEMPORARY, 1024*1024*10, function(fs) {
   			fs.root.getDirectory('badges', {create: true}, function(dirEntry) {
     				
   			}, errorHandler);
 		}, errorHandler);
-  
+  		window.requestFileSystem(window.TEMPORARY, 1024*1024*50, function(fs) {
+  			fs.root.getDirectory('svgs', {create: true}, function(dirEntry) {
+    				
+  			}, errorHandler);
+		}, errorHandler);
+
 		window.requestFileSystem(window.TEMPORARY, 10*1024*1024, saveImages, errorHandler);
 		
 	};
@@ -512,7 +531,16 @@ $(document).ready(function () {
 
 	function writefile(fs)
 	{
-		var current_dataurl = canvas.toDataURL('jpeg');
+		svgArray[index_i] = canvas.toSVG();
+		fs.root.getFile('/svgs/badge_svg'+index_i+'.svg', {create: true}, function(fileEntry) {
+			zipsvgentry[index_i]=fileEntry;
+			fileEntry.createWriter(function(fileWriter) {
+				var blob = new Blob([svgArray[index_i]], {type: 'image/svg+xml'});
+      				fileWriter.write(blob);
+			});
+		});
+
+		var current_dataurl = canvas.toDataURLWithMultiplier('jpeg',scale);
 		var byteString = atob(current_dataurl.split(',')[1]);
 	    	var mimeString = current_dataurl.split(',')[0].split(':')[1].split(';')[0];
 	    	var ab = new ArrayBuffer(byteString.length);
@@ -543,6 +571,7 @@ $(document).ready(function () {
 						saveImages(fs);	
 				}
 				else{
+					//scaleFabCanvas(scale);		
 					$("span#genimages > progress#gen").attr('value',data.length);
 					$("span#genimages > progress#gen").hide();
 					_gaq.push(['_trackEvent', 'Badge', 'Created', localStorage["projectname"], data.length]);
@@ -554,6 +583,7 @@ $(document).ready(function () {
 					$("#back").show();
 					$("#finish").show();
 					$("#finish").css('margin-top','10px');
+					
 				}						
 			});
 		});
@@ -598,7 +628,6 @@ $(document).ready(function () {
 
 				function nextFile() {
 
-					//window.webkitResolveLocalFileSystemURL(url, function(fileEntry) {
 						var filename = 'badge'+addIndex+'.jpeg';
 						testfileentry[addIndex].file(function(file){
 							onadd(file);
@@ -607,11 +636,28 @@ $(document).ready(function () {
 								if (++addIndex < localStorage['numentries'])
 									nextFile();
 								else
+								{
+									addIndex=1;
+									nextSvgFile();
+								}
+							}, onprogress);
+						});
+				}
+				function nextSvgFile() {
+
+						var filename = 'badge_svg'+addIndex+'.svg';
+						zipsvgentry[addIndex].file(function(file){
+							onadd(file);
+							zipWriter.add(filename, new zip.BlobReader(file), function() {
+								
+								if (++addIndex < localStorage['numentries'])
+									nextSvgFile();
+								else
 									onend();
 							}, onprogress);
 						});
-					//});
 				}
+
 				function createZipWriter() {
 					zip.createWriter(writer, function(writer) {
 						zipWriter = writer;

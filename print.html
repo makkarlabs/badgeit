@@ -1,113 +1,35 @@
 <html>
-	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 	<style>
 	   	body {
 			margin: 0px;
 			padding: 0px;
 		}
-		canvas {
-			border: 1px solid #9C9898;
-			position: absolute;
-			margin:2px;
-		}
 		img {
-			padding: 4px;
-			border: 1px dashed black;
+			padding: 1px;
 		}
 	</style>
-	<script src="resources/js/jquery.js"></script>
-	<script src="bootstrap/js/bootstrap.js"></script>
-	
+	<script src='resources/js/jquery.js'></script>
 	<script>
+
 	$(document).ready(function () {
-		$('#printModal').modal('show');
 		//Image Dimensions
-		var badges = +$('#badgenum').val();
-		var sheets = Math.ceil(localStorage['numentries']/badges);
-		var sheetXsize, sheetYsize, badgeXsize, badgeYsize;
-		var badgecounter=0, sheetcounter=0;
-		if($('#orient').val()=='L')
-		{
-			sheetXsize = 1110;
-			sheetYsize = 780;
+		var dimensions = localStorage['dimensions'].split(",");
+		for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; } 
+		function printsheet(i){
+			var url = 'filesystem:http://makkarlabs.in/temporary/svgs/badge_svg'+i+'.svg';
+			$("div").append("<span><img src ='" +url+ "'/></span>");
+  			if(++i < localStorage['numentries'])
+				printsheet(i);	
 		}
-		else
-		{
-			sheetXsize = 780;
-			sheetYsize = 1100;
-		}
-		badgeXsize = sheetXsize/$('#row').val();
-		badgeYsize = sheetYsize/$('#col').val();
-		
-		$('#print').append("<canvas id='canvas"+sheetcounter+"' width='"+sheetXsize+"' height='"+sheetXsize+"'/>");
-		var persheetcounter = 0;
-		var xpos=0, ypos=0, colcounter=0;
-		function printsheet(badgecounter){
-			var canvas = $("#canvas"+sheetcounter)[0];
-			var context = canvas.getContext("2d");
-			var imageObj = new Image();
-			imageObj.onload = function() {
-				context.drawImage(imageObj, xpos, ypos, badgeXsize, badgeYsize);
-				if(++colcounter % $('#col').val()==0)
-				{
-					xpos = 0;
-					ypos+=badgeYsize;
-					colcounter = 0
-				}
-				else
-				{
-					xpos+=badgeXsize;
-				}
-			};
-			
-			imageObj.src = 'filesystem:http://makkarlabs.in/temporary/badges/badge'+badgecounter+'.jpeg';
-			setTimeout(500);
-			if(++persheetcounter == sheets)
-			{
-				persheetcounter = 0;
-				sheetcounter++;
-				$('#print').append("<canvas id='canvas"+sheetcounter+"' width='"+sheetXsize+"' height='"+sheetXsize+"'/>");
-			}
-  			if(++badgecounter < localStorage['numentries'])
-				printsheet(badgecounter);	
-		}
-		
-		
+		printsheet(1);
+		$('img').css({width:dimensions[2]*72+'pt', height:dimensions[3]*72+'pt'});
+		window.print();
+
 	});
-	
-        
+			
     </script>
 	
 	<body>
-		<div class="modal" id="printModal" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h3 id="printModalLabel">Print Settings</h3>
-			</div>
-			<div class="modal-body" style="margin-left:auto;margin-right:auto;">
-				<form oninput="(+row.value)*(+col.value)">
-					<label>Rows per sheet</label><input id='row' name='row' type='text' placeholder='2' value='2'/>
-					<label>Colums per sheet</label><input id='col' name='col' type='text' placeholder='2' value='2'/>
-					<label>Badges per sheet</label><input id='badgenum'  type='text' placeholder='4' value='4'/>
-					<label>Page orientation</label>
-					<select id='orient'>
-						<option selected="selected" value="L">Landscape</option>
-						<option value="P">Potrait</option>
-					</select>
-					<label>Paper size</label>
-					<select id='papersize'>
-						<option selected="selected" value="A4">A4</option>
-						<option value="A3">A3</option>
-					</select>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button class="btn btn-primary" onclick="printsheet(1);">Print</button>
-			</div>
-		</div>
-		
 		<div id="print"></div>
 	</body>
 </html>
-
