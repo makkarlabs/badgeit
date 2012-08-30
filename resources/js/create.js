@@ -13,9 +13,9 @@
 	var actualright = new Array();	
 	var boundRect = new Array();
 	var maxwidth = new Array();
+	var remove = new Array();
 	var isqrcode = localStorage['qrcode'], qrlayer, qrdataurl, qrdata='';
-	var svgArray = new Array();
-	svgArray[0]='';
+
 	fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
 		return {
 			left: object.left + this._offset.left,
@@ -28,6 +28,16 @@
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
 	var csv_file = localStorage['event-csv'];
 	var data = $.csv2Array(csv_file);
+	$.each(data, function(index,ar) { 
+		if(ar.length == 0) { 
+		remove.push(index);
+		} 
+	});
+	$.each(remove, function(no, value) { 
+		remove[no] = value-no;  
+		data.splice(remove[no],1);
+	});
+
 	localStorage['numentries']=data.length;
 
 	//Infographics
@@ -40,6 +50,7 @@
 	//Stop Badge gen
 	var isStopSave = false;
 $(document).ready(function () {
+
 	 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
 	canvas.setHeight(dimensions[1]);
@@ -61,8 +72,8 @@ $(document).ready(function () {
 		fabric.Image.fromURL(qrdataurl, function(qr) {
         		qr.set({
         			left: canvas.getWidth()-90,
-            			top: canvas.getHeight()-70,
-            		});
+            		top: canvas.getHeight()-70,
+            	});
           	canvas.add(qr);
 	  	qrlayer = qr;
         	});
@@ -74,7 +85,7 @@ $(document).ready(function () {
 		current_label = data[0][index];
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
 		$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' toggle='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' toggle='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' toggle='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' toggle='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' toggle='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><div class='clr'></div></div>");
-		$("body").append("<span id='boundspan"+i+"' hidden='true'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a> <a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span>");
+		$("body").append("<span id='boundspan"+i+"' hidden='true'><span class='badge badge-warning'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a></span> <span class='badge badge-warning'><a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span></span>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
@@ -413,6 +424,13 @@ $(document).ready(function () {
 		boundRect = [];
 		maxwidth = [];
 	});
+
+	$('#triggerprint').on('click',function(){
+		$('#downloadpdf').hide();
+		$('#triggerprint').button('loading');
+		printToPdf($('#orient').val(),$('#papersize').val());
+		
+	});
 	//cleanup filesystem on window close
 	$("#finish").on('click',function() {
 	  localStorage.clear();
@@ -424,15 +442,11 @@ $(document).ready(function () {
     			}, errorHandler);
 		  }, errorHandler);
 	   }, errorHandler);
-	window.requestFileSystem(window.TEMPORARY, 1024*1024, function(fs) {
-  		fs.root.getDirectory('/svgs', {}, function(dirEntry) {
-			dirEntry.removeRecursively(function() {
-    			}, errorHandler);
-		  }, errorHandler);
-	   }, errorHandler);
-
 	});
 	
+	$('#printModal').on('hidden', function () {
+		$('#downloadpdf').hide();
+	})
 	
 	 //Activating Bootstrap tooltips
 	 $("[rel=tooltip]").tooltip();
@@ -442,16 +456,15 @@ $(document).ready(function () {
 	var current_dataurl;
 	var img = new Array();
 	var testfileentry = new Array();
-	var zipsvgentry = new Array();
 	var xfactor = new Array();
 	var yfactor = new Array();
 
 	
 	function save()
 	{
-	
 		canvas.deactivateAll();
-		canvas.renderAll(true);	
+		canvas.renderAll(true);
+					
 		$.each(indexes,function(index_j,value_j) {
 			xfactor[index_j] = labellayer[index_j].scaleX;
 			yfactor[index_j] = labellayer[index_j].scaleY;
@@ -464,13 +477,7 @@ $(document).ready(function () {
     				
   			}, errorHandler);
 		}, errorHandler);
-  		window.requestFileSystem(window.TEMPORARY, 1024*1024*50, function(fs) {
-  			fs.root.getDirectory('svgs', {create: true}, function(dirEntry) {
-    				
-  			}, errorHandler);
-		}, errorHandler);
-
-		window.requestFileSystem(window.TEMPORARY, 10*1024*1024, saveImages, errorHandler);
+  		window.requestFileSystem(window.TEMPORARY, 10*1024*1024, saveImages, errorHandler);
 		
 	};
 	
@@ -478,29 +485,15 @@ $(document).ready(function () {
 	{
 		var x,y;
 		if(data[index_i].length == 0) {
-			 console.log("Empty row in the CSV file"); }
-		else {
-		
-		$.each(indexes,function(index_j,value_j)
-		{		
+			 console.log("Empty row in the CSV file"); 
+		}
+		else {	
+			$.each(indexes,function(index_j,value_j)
+			{		
 				labellayer[index_j].scaleX = xfactor[index_j];
 				labellayer[index_j].scaleY = yfactor[index_j];		
 				labellayer[index_j].set('text', data[index_i][value_j]);
 				canvas.renderAll(true);
-				if(isqrcode==='true')
-				{
-					var qrdata="";
-					for(var k = 0; k < qr_indexes.length; k++)
-					{
-						qrdata+=data[index_i][qr_indexes[k]]+"\n";
-					}
-					$('#qrcode > canvas').remove();
-					$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata});
-					qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
-					qrlayer.getElement().src = qrdataurl;	
-					setTimeout(500);
-					canvas.renderAll(true);	
-				}
 				if( typeof boundRect[index_j] === 'object' && boundRect[index_j] != null)
 				{
 					if(labellayer[index_j].getWidth() > boundRect[index_j].getWidth())			
@@ -522,24 +515,36 @@ $(document).ready(function () {
 				}
 				canvas.renderAll(true);
 				
-
-			
-		});
-	}
-		writefile(fs);
+			});
+		}
+		if(isqrcode==='true')
+		{
+			var qrdata="";
+			for(var k = 0; k < qr_indexes.length; k++)
+			{
+				qrdata+=data[index_i][qr_indexes[k]]+"\n";
+			}
+			$('#qrcode > canvas').remove();
+			$.when(
+				$('#qrcode').qrcode({width: qrlayer.getWidth(),height: qrlayer.getHeight(),text: qrdata})
+			).then(function()
+			{	
+				if($('#qrcode > canvas')[0]!=null)
+				{
+				qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
+				qrlayer.getElement().src = qrdataurl;	
+				canvas.renderAll(true);
+				writefile(fs);}
+			});
+		}
+		else
+			writefile(fs);
+		
+		
 	};
 
 	function writefile(fs)
 	{
-		svgArray[index_i] = canvas.toSVG();
-		fs.root.getFile('/svgs/badge_svg'+index_i+'.svg', {create: true}, function(fileEntry) {
-			zipsvgentry[index_i]=fileEntry;
-			fileEntry.createWriter(function(fileWriter) {
-				var blob = new Blob([svgArray[index_i]], {type: 'image/svg+xml'});
-      				fileWriter.write(blob);
-			});
-		});
-
 		var current_dataurl = canvas.toDataURLWithMultiplier('jpeg',scale);
 		var byteString = atob(current_dataurl.split(',')[1]);
 	    	var mimeString = current_dataurl.split(',')[0].split(':')[1].split(';')[0];
@@ -571,7 +576,6 @@ $(document).ready(function () {
 						saveImages(fs);	
 				}
 				else{
-					//scaleFabCanvas(scale);		
 					$("span#genimages > progress#gen").attr('value',data.length);
 					$("span#genimages > progress#gen").hide();
 					_gaq.push(['_trackEvent', 'Badge', 'Created', localStorage["projectname"], data.length]);
@@ -636,29 +640,12 @@ $(document).ready(function () {
 								if (++addIndex < localStorage['numentries'])
 									nextFile();
 								else
-								{
-									addIndex=1;
-									nextSvgFile();
-								}
-							}, onprogress);
-						});
-				}
-				function nextSvgFile() {
-
-						var filename = 'badge_svg'+addIndex+'.svg';
-						zipsvgentry[addIndex].file(function(file){
-							onadd(file);
-							zipWriter.add(filename, new zip.BlobReader(file), function() {
-								
-								if (++addIndex < localStorage['numentries'])
-									nextSvgFile();
-								else
 									onend();
 							}, onprogress);
 						});
-				}
-
+				}				
 				function createZipWriter() {
+				
 					zip.createWriter(writer, function(writer) {
 						zipWriter = writer;
 						oninit();

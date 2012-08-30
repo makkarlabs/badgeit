@@ -9,6 +9,7 @@
 	 <script src="bootstrap/js/bootstrap.js"></script>
     <script src="http://www.google.com/jsapi?key=AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8"></script>
     <script src="resources/js/start.js"></script>
+    <script src="resources/js/demo.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
@@ -20,9 +21,9 @@
 #holder.hover { border: 2px dashed #333; }
 fieldset { margin-left:20px; width : 500px; }
 img { max-width:100px;}
-
+select {width:20px !important; border:none !important; }
+select:focus {border:none !important; box-shadow:none !important; -webkit-box-shadow: none !important; outline:none !important;}
 </style>
-	
 
 
 <script src="resources/js/analytics.js"></script>
@@ -72,8 +73,8 @@ img { max-width:100px;}
 		<div class="control-group">
 			<label class="control-label" for="templateChooser"> Image </label>
 			<div class="controls" id="template_chooser">
-				<button class='btn' id='template_fs'><i class="icon-folder-open"> </i> My Computer</button>
-				<button class='btn btn-warning' id='template_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</button>	
+				<a class='btn' rel='tooltip' title='Select Background image from your local drive.' id='template_fs'><i class="icon-folder-open"> </i> My Computer</a>
+				<a class='btn btn-warning' rel='tooltip' title='Select Background image from Google Drive.' id='template_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
 				<span id="fs_input" style="display:none;">
 					<input type="file" accept="image/*" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0],'event-template');"></input>
 					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="change();"></a>
@@ -85,25 +86,29 @@ img { max-width:100px;}
 			</div>
 		</div>
 		
-			<div style="float:left">
+		
 				<div class="control-group">
 			<label class="control-label" for="dpiSelection"> DPI  </label>
 			<div class="controls">	
-				<select id="dpi" class="input-small" onchange="$('#inchwidth').val(($('#pixelwidth').val()/this.value).toFixed(2));$('#inchheight').val(($('#pixelheight').val()/this.value).toFixed(2));">
+				<input type="text" style="height:25px;" placeholder="150" value="150" type="text" id="dpi" class="input-small" onkeyup="$('#inchwidth').val(($('#pixelwidth').val()/this.value).toFixed(2));$('#inchheight').val(($('#pixelheight').val()/this.value).toFixed(2));">
+				<select id="dpilist" onchange="$('#dpi').val(this.value);$('#dpi').keyup();">
+					<option disabled="disabled">Select &nbsp;</option>
 					<option>72</option>
 					<option>96</option>
-					<option selected="selected">150</option>
+					<option>150</option>
 					<option>300</option>
 					<option>2540</option>
 					<option>4000</option>
-				</select>
+					
 			
+				</select>
+				<a target="_blank" rel="tooltip" title="Dots per Inch. Set original value for optimal print quality." href="faq.html#imgsize">?</a>
 		  
 
 			</div>
 		</div>
 		
-
+		<div style="float:left">
 		<div class="control-group">
 			<label class="control-label" for="inchwidth"> Width  </label>
 			<div class="controls">	
@@ -114,7 +119,7 @@ img { max-width:100px;}
 		<div class="control-group">
 			
 			<div class="controls">	
-				<a id="lockar" onclick="lockar();" style="cursor:pointer;margin-left:30px;"><i class="icon-lock"></i></a>
+				<a id="lockar" rel='tooltip' title='Locks the aspect ratio of the image.' onclick="lockar();" style="cursor:pointer;margin-left:30px;"><i class="icon-lock"></i></a>
 			</div>
 		</div>
 
@@ -135,8 +140,8 @@ img { max-width:100px;}
 		<div class="control-group">
 			<label class="control-label" for="csvChooser"> List  </label>
 			<div class="controls">	
-				<button class='btn' id='list_fs'><i class="icon-folder-open"> </i> My Computer</button>
-				<button class='btn btn-warning' id='list_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</button>	
+				<a class='btn' id='list_fs' rel='tooltip' title='Select a CSV file containing the details of attendees from your local drive.'><i class="icon-folder-open"> </i> My Computer</a>
+				<a class='btn btn-warning' id='list_gd' rel='tooltip' title='Select a Spreadsheet containing the details of attendees from Google Drive.'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
 				<span id="fs_list" style="display:none;">
 					<input type="file" class="input-file" accept=".csv" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0], 'event-csv');"> </input>
 					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="changeCsv();"></a>
@@ -151,8 +156,8 @@ img { max-width:100px;}
 		</div>
 		
 
-		<input type="text" id="pixelwidth" value="600" style="display:none;"> </input>
-		<input type="text" id="pixelheight" value="400" style="display:none;"> </input>
+		<input type="text" id="pixelwidth" value="" style="display:none;"> </input>
+		<input type="text" id="pixelheight" value="" style="display:none;"> </input>
 		
 		<div class="control-group">
 			<label class="control-label" for="pixelheight"> QR Code  </label>
@@ -164,7 +169,7 @@ img { max-width:100px;}
 		</div>
 		</fieldset>
 
-			<div class="form-actions">
+			<div class="form-actions" style="width:400px;">
 				<button class="btn btn-primary" type="submit"> Submit </button>
 				<a class="btn btn-success" style="margin-left:5px;" rel="tooltip" title="Prefills the form with sample image & data, and submits it." onclick="demo()"> Demo </a>
 

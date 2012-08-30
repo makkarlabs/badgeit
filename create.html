@@ -30,6 +30,12 @@
 		  <script src="resources/js/fonts.js"></script>
 		  <script src="resources/js/zip.js"></script>
 		  <script src="resources/js/create.js"> </script>
+		  <script type="text/javascript" src="resources/js/jspdf/jspdf.js"></script>
+		  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.standard_fonts_metrics.js"></script>
+	  	  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.split_text_to_size.js"></script>
+		  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.from_html.js"></script>
+	  	  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.addimage.js"></script>
+		  <script src="resources/js/print.js"> </script>
 		  <script src="resources/js/analytics.js"></script>
 		  <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
   </head>
@@ -79,7 +85,34 @@
 			<progress id="zipprogress" hidden='true'></progress>
 			<div hidden="true" style="margin-top:10px;margin-left:452px;margin-bottom:-15px;" id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
 			<br>
-			<button id="print" class="btn btn-primary" rel="tooltip" title="View all badges tiled, opens in a new tab" hidden="hidden" style="display:none; margin-left:402px; margin-top:10px" onclick="window.open('./print.html')">Tile Badges</button>    
+			<a id="print" class="btn btn-primary" rel="tooltip" title="View all badges tiled, opens in a new tab" hidden="hidden" href="#printModal" style="display:none; margin-left:402px; margin-top:10px" role="button" data-toggle="modal">Print to PDF</a>   
+			<div class="modal hide fade" id="printModal" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 id="printModalLabel">Print to PDF - Settings</h3>
+				</div>
+				<div class="modal-body">
+					<form>
+						<label>Page orientation</label>
+						<select id='orient'>
+							<option selected="selected" value="p">Potrait</option>
+							<option value="l">Landscape</option>
+
+						</select>
+						<br><br>
+						<label>Paper size</label>
+						<select id='papersize'>
+							<option selected="selected" value="a4">A4</option>
+							<option value="a3">A3</option>
+						</select>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-primary" id="triggerprint" data-loading-text="Creating PDF">Print</button>
+					<a class="btn btn-success" id="downloadpdf" style="display:none;">Download PDF</a>
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				</div>
+			</div> 
 			<button id="back" class="btn btn-danger" rel="tooltip" title="Go back to customize the badges" hidden="hidden" style="margin-left: 5px; margin-top:10px; float: left; display:none">Back</button>
 			<button class="btn btn-danger" rel="tooltip" title="Exit the applications. Clears local application data" hidden="hidden" style="float:right; margin-top:-30px; display:none;" id ="finish">Exit</button>		
 			<div class="clr"></div>
