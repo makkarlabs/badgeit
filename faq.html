@@ -1,6 +1,8 @@
 <html>
 	<head>
-		<title>FAQ</title>
+		<title>BadgeIt - Badge Generator for Events, Conferences|FAQ</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="description" content="The smart way to generate badges for your events">
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 		<link rel="stylesheet" href="bootstrap/css/createfonts.css" type="text/css">	
 		<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
@@ -14,6 +16,25 @@
 	<script src="resources/js/analytics.js"></script>
 	</head>
 	<body>
+	
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=316958178400662";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+	</script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+	
+	<div style="padding-left:2px; position:fixed;top:200;left:0; width:50px;background-color:whitesmoke;border-radius:7px;height: 140px;padding: 10px;padding-left: 3px;">
+		<div class="fb-like" style="margin-left: 6px;margin-bottom: 4px;" data-href="http://makkarlabs.in/badgeit" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true" data-font="arial"></div>
+		<a href="https://twitter.com/intent/tweet?hashtags=makkarlabs%2Cbadgeit&original_referer=http%3A%2F%2Fmakkarlabs.in%2Fpreprod%2Fbadgeit%2F&source=tweetbutton&text=I%20just%20created%20badges%20for%20%3CInsert%20event%20name%20here%3E%20using%20Badge%20It!&url=http%3A%2F%2Fmakkarlabs.in%2Fbadgeit"><img src="resources/images/twitter.png"  style="width: 45px;height: 45px;margin-left: 5px;"/></a> 
+		<div style="margin-left:9px; margin-top:3px"><g:plusone href="http://makkarlabs.in/badgeit" size="standard" annotation="none" width=40 height=40></g:plusone></div>
+	</div>
+	
 	<div id="headerContainer">
 	 <header>
 		<h1 id="title-large">Badge it</h1>	
@@ -29,6 +50,7 @@
 		</div>
 		<div class="clr">
 	</header>
+		
 	</div>
 	
 		<div class="container" style="padding-left:50px; padding-right:50px; padding-top:30px;">
@@ -43,28 +65,29 @@
 				<li><a href="#qr">Why do I need a QR code on my badge?</a></li>
 				<li><a href="#create">How does the badge generation work?</a></li>
 				<li><a href="#chrome">Why does it work only in Google Chrome?</a></li>
+				<li><a href="#permissions">Why are you asking for user information while signing in with Google?</a></li>
 				<li><a href="#other">What are the other uses of this app?</a></li>
 			</ul>
 			
 			<div id="answers">
 				<div id="what">
 					<h3>What is BadgeIt?</h3><br/>
-					<p>BadgeIt is a web application that helps you generate customized badges for attendees of your conference or event. It is built using HTML5 and Javascript and works completely on the client side. It takes in the template of your badge, and the details of attendees in csv format. You can choose which fields from the CSV file are to appear in your badge, and optionally add infographics to your badge. It then creates a canvas using your inputs, and gives you a smart toolbox to customize your badge, the text, positions, and QR codes. You can then generate badges for all the attendees listed in your csv, and download them all as a zip file, or view them in a tiled layout, and print to PDF.</p>
+					<p>BadgeIt is a web application that helps you generate customized badges for attendees of your conference or event. It is built using HTML5 and Javascript and works completely on the client side. It takes in the template of your badge - which is the Background image, and the details of attendees in csv format. Optionally you can pull in this information from your Google drive, and add images and spreadsheets from you Drive too! You can choose which fields from the attendee database are to appear in your badge, and optionally add infographics to your badge. It then creates a canvas using your inputs, and gives you a smart toolbox to customize your badge, the text, positions, and QR codes. You can then generate badges for all the attendees listed in your csv, and download them all as a zip file, or print them all to PDF</p>
 				</div>
 				<hr/>
 				<div id="how">
 					<h3>How do I use it?</h3><br/>
-					<p>Check out our BadgeIt <a href="">tutorial</a>. We also have a screencast of the demo <a href="">here</a>.</p>
+					<p>Check out our screencast of the demo <a href="">here</a>. To make it easy for first timers, we've added a Demo button in the Start page, that preloads a template and a CSV file, so you can try the application seamlessly.</p>
 				</div>
 				<hr/>
 				<div id="imgsize">
 					<h3>DPI, Pixels, Inches - What are they?</h3><br/>
-					<p>These are the three properties that will determine the resolution of your badge. There is a very good explanation on the subject <a href="http://www.pptxtreme.com/help/psdimport/ResolutionExplainedPixelsDPIInches.html">here</a>. In BadgeIt, once you upload your image, the pixels are automaticaly loaded, you can then set your DPI and inches to suit the resolution of your badges. To find the DPI of an image (on Windows) you could look at Properties &gt; Details, we expect you to enter the same when asked for. </p>
+					<p>These are the three properties that will determine the resolution of your badge. There is a very good explanation on the subject <a href="https://pub.mtholyoke.edu/journal/DPI/entry/what_s_in_a_name">here</a>. The inches you enter in the app will decide the size of the printed badges. The DPI decides the resolution, hence giving the actual DPI of the image ensures that your printed badges are of optimal quality. You can find the DPI in your Image properties. It is sometimes also called X Resolution/Y Resolution.</p>
 				</div>
 				<hr/>
 				<div id="sizereco">
 					<h3>What are the recommended sizes for badges?</h3><br/>
-					<p>Firstly, you have the option of deciding between Vertical or Horizontal badges. In our experience of generating badges, we have observed that the best dimension is one which gives most number of badges per sheet of Paper(A4). If you choose to print 4 badges per sheet horizontally, you should be looking at sizes around 5.5 X 3.5 inches or smaller ones around 4 X 2.75 inches. Remember to get the best quality, for a larger size you always need higher DPI.</p>
+					<p>Firstly, you have the option of deciding between Vertical or Horizontal badges. If you choose to print 4 badges per sheet horizontally, you should be looking at sizes around 5.5 X 3.5 inches or smaller ones around 4 X 2.75 inches. Remember to get the best quality, for a larger size you always need higher DPI.</p>
 				</div>
 				<hr/>
 				<div id="csv">
@@ -91,6 +114,12 @@
 					<p>Chrome is the only browser that currently supports the Filesystem API. We will extend support for other browsers once they implement the Filesystem API.</p>
 				</div>
 				<hr/>
+				<div id="permissions">
+					<h3>Why are you asking for User Information while Signing in with Google?</h3><br/>
+					<p>We are tracking user information so that we can reach out to you to get sample badges that we can add to the site's Badge portfolio. No, we don't spam.</p>
+				</div>
+				<hr/>
+
 				<div id="other">
 					<h3>What are the other uses of this app?</h3><br/>
 					<p>Apart from badges, you can use BadgeIt to generate business cards for event organizers in a common template. You could also generate attendee certificates which you can email them post the event. You can find your own creative uses for this tool too!</p>

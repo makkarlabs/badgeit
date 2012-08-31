@@ -1,6 +1,9 @@
 <html>
 	<head>
-		<title>Home</title>
+		<title>BadgeIt - Badge Generator for Events, Conferences|Home</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="description" content="The smart way to generate badges for your events">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 		<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 		<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
@@ -10,8 +13,60 @@
 	<script src="resources/js/analytics.js"></script>
 	<script src="resources/js/jquery.js"></script>
    	<script src="bootstrap/js/bootstrap-carousel.js"></script>
-	<style>
-		img {
+	<script>
+
+	$(function() {	
+	var client_id ="434888942442.apps.googleusercontent.com";
+        var scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive";
+        
+	$('#authnstart').on('click',function(){
+			location.href = "https://accounts.google.com/o/oauth2/auth?response_type=token&client_id="+encodeURIComponent(client_id)+"&scope="+encodeURIComponent(scope)+"&redirect_uri="+encodeURIComponent("http://makkarlabs.in/preprod/badgeit/start.html");
+	
+	});
+
+	});
+	/*		 gapi.auth.authorize(config, function(authResult) {
+				if (authResult && !authResult.error) {
+					console.log("Logged into Google Account");
+					localStorage['loginaccesstoken']=gapi.auth.getToken().access_token;
+					$.ajax({url:'https://www.googleapis.com/oauth2/v1/userinfo?access_token='+gapi.auth.getToken().access_token}).
+						done(function(data){
+							$.ajax({url:'http://badgeitrelay.appspot.com/badgeitupdateuser?userjson='+encodeURIComponent(JSON.stringify(data)),type:'POST'}).
+							done(function(){
+								location.href='./start.html';
+							});
+						});
+
+				} 
+				else {
+					localStorage['login']='false	';
+    					$('#authnstart').on('click',function(){handleAuthClick();});
+  				}
+        			});
+	*/
+	
+	/*function handleAuthClick(event) {
+  		gapi.auth.authorize({ 'client_id': '434888942442.apps.googleusercontent.com','scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'}, authorizeUser);
+  		return false;
+	}*/
+
+       
+	</script>
+	<style type="text/css">
+	
+		@media screen and (max-width: 979px) { 
+			footer {
+				position:absolute;
+				bottom:-100;
+			}
+		}
+		
+		footer {
+			width:100%;
+			position:fixed;
+			bottom:0;
+		}
+		.screenshot {
 			border-radius:7px;
 			border-color: whitesmoke;
 			-moz-box-shadow:    1px 1px 2px 3px whitesmoke;
@@ -21,10 +76,50 @@
 		div .badges {
 			color:gray;
 		}
+		
+		.button:hover {
+			border-radius: 15px;
+			border: solid 1px whiteSmoke;
+			-webkit-box-shadow: 1px 1px 11px 4px #E9E9E9;
+			box-shadow: 1px 1px 11px 4px #E9E9E9;
+			cursor: pointer;
+		}
+		
+		.button { 
+		padding: 15px 17px;
+		font-family: Rancho;
+		font-size: 40px;
+		color: #74C211;
+		margin-top:25px;
+		width: 240;
+		text-align: center;
+	}
+		
+		
 	</style>
 	
 	</head>
 	<body>
+	
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=316958178400662";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+	</script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+	
+	<div style="padding-left:2px; position:fixed;top:200;left:0; width:50px;background-color:whitesmoke;border-radius:7px;height: 140px;padding: 10px;padding-left: 3px;">
+		<div class="fb-like" style="margin-left: 6px;margin-bottom: 4px;" data-href="http://makkarlabs.in/badgeit" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true" data-font="arial"></div>
+		<a href="https://twitter.com/intent/tweet?hashtags=makkarlabs%2Cbadgeit&original_referer=http%3A%2F%2Fmakkarlabs.in%2Fpreprod%2Fbadgeit%2F&source=tweetbutton&text=I%20just%20created%20badges%20for%20%3CInsert%20event%20name%20here%3E%20using%20Badge%20It!&url=http%3A%2F%2Fmakkarlabs.in%2Fbadgeit"><img src="resources/images/twitter.png"  style="width: 45px;height: 45px;margin-left: 5px;"/></a> 
+		<div style="margin-left:9px; margin-top:3px"><g:plusone href="http://makkarlabs.in/badgeit" size="standard" annotation="none" width=40 height=40></g:plusone></div>
+	</div>
+	
+	
 	<div id="headerContainer">
 	 <header>
 		<h1 id="title-large"> Badge it</h1>	
@@ -41,23 +136,28 @@
 		<div class="clr"></div>
 	</header>
 	</div>
-		<div class="container">
 		
-		<h1 style="text-align:center;font-family:Rancho;font-size:40px;color:gray;">The smart way to create badges for your event!</h1>
+
+		<div class="container" style="margin-bottom:100px;">
+		
+		<div style="width:1050px;margin-left:auto;margin-right:auto">
+			<h1 style="text-align:center;font-family:Rancho;font-size:40px;color:gray;">The smart way to create badges for your event!</h1>
+		
+		<div id="authnstart" style="margin-left: 390px;" class="button">Sign in with Google</div>
 		
 		<div class="badges" style="margin-top:50px;padding-bottom:30px;">
-		<img style="margin-right:20px; margin-left:20px;" width=300 height=225 src="resources/images/home/template.png"/> 
-		<i class="icon-plus"></i> <img style="margin-left:20px;margin-right:20px;" width=300 height=225 src="resources/images/home/devcon.png"/> 
-		<i class="icon-arrow-right"></i> <img  style="margin-left:20px;" width=300 height=225 src="resources/images/home/outputgrid.png"/><br/>
+		<img class="screenshot" style="margin-right:20px; margin-left:20px;" width=300 height=225 src="resources/images/home/template.png"/> 
+		<i class="icon-plus"></i> <img class="screenshot" style="margin-left:20px;margin-right:20px;" width=300 height=225 src="resources/images/home/devcon.png"/> 
+		<i class="icon-arrow-right"></i> <img class="screenshot"  style="margin-left:20px;" width=300 height=225 src="resources/images/home/outputgrid.png"/><br/>
 		 </div>
-		 <button id="authnstart" onclick="location.href='./start.html';" class="btn btn-primary btn-large" style="margin-top:20px;margin-left:492px; margin-right:auto;">Start</button>
+		</div> 
 		 
 		
 		
 		</div>
 
 
-	<footer class="footer" style="position:absolute; bottom:0; width:100%;">
+	<footer class="footer">
 			<div class="container">
 				<p> <a target="_blank" href="http://makkarlabs.in">Makkar Labs</a>, 2012</p>
 				<p> Customized for Google Chrome (Version 13.0+)</p>

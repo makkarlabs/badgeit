@@ -1,27 +1,37 @@
-	//Filesystem settings
-	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+var dimensions, canvas, labellayer = new Array(), alignment = new Array(), actualleft = new Array(), actualright = new Array(), 
+boundRect = new Array(),maxwidth = new Array(), remove = new Array(), isqrcode, qrlayer, qrdataurl, qrdata='', index_i=1, 
+current_dataurl, img = new Array(), testfileentry = new Array(),xfactor = new Array(), yfactor = new Array();
 
-	//Image Dimensions
-	var dimensions = localStorage['dimensions'].split(",");
+fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
+	return {
+		left: object.left + this._offset.left,
+		top: object.top + this._offset.top
+	};
+}
+
+//CSV file related
+var indexes, csv_file, data;
+//Stop Badge gen
+var isStopSave = false;
+
+//Filesystem settings
+window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+	
+$(document).ready(function () {
+
+	if(localStorage['event-csv'] === undefined || localStorage['event-template'] === undefined)
+	{	
+		
+		$('body').css('background-color','whitesmoke');
+		$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Redirecting you to <a href="./home.html">Home Page</a></p>');
+		location.href='./home.html';
+	}
+
+	dimensions = localStorage['dimensions'].split(",");
 	for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; }
 	
-	//Fabric js initialisations
-        var canvas; 
-	var labellayer = new Array();
-	var alignment = new Array();
-	var actualleft = new Array();
-	var actualright = new Array();	
-	var boundRect = new Array();
-	var maxwidth = new Array();
-	var remove = new Array();
-	var isqrcode = localStorage['qrcode'], qrlayer, qrdataurl, qrdata='';
-
-	fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
-		return {
-			left: object.left + this._offset.left,
-			top: object.top + this._offset.top
-		};
-	}
+	isqrcode = localStorage['qrcode'];
 
 	//CSV file related
 	var indexes = localStorage['selected-cols'].split(",");
@@ -43,15 +53,10 @@
 	//Infographics
 	if(isqrcode==='true')
 	{
-	var qr_indexes = localStorage['qr-cols'].split(",");
-	for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
+		var qr_indexes = localStorage['qr-cols'].split(",");
+		for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
 	}
 	
-	//Stop Badge gen
-	var isStopSave = false;
-$(document).ready(function () {
-
-	 
 	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
 	canvas.setHeight(dimensions[1]);
 	canvas.setWidth(dimensions[0]);
@@ -447,17 +452,10 @@ $(document).ready(function () {
 	$('#printModal').on('hidden', function () {
 		$('#downloadpdf').hide();
 	})
-	
 	 //Activating Bootstrap tooltips
 	 $("[rel=tooltip]").tooltip();
-});
-
-	var index_i=1;
-	var current_dataurl;
-	var img = new Array();
-	var testfileentry = new Array();
-	var xfactor = new Array();
-	var yfactor = new Array();
+	 
+    
 
 	
 	function save()
@@ -593,36 +591,13 @@ $(document).ready(function () {
 		});
 	};
 
-	function errorHandler(err){
-  		var msg = 'An error occured: ';
- 
-  		switch (err.code) { 
-   	 	case FileError.NOT_FOUND_ERR: 
-      			msg += 'File or directory not found'; 
-      			break;
- 
-    		case FileError.NOT_READABLE_ERR: 
-      			msg += 'File or directory not readable'; 
-      			break;
- 
-    		case FileError.PATH_EXISTS_ERR: 
-      			msg += 'File or directory already exists'; 
-      			break;
- 
-    		case FileError.TYPE_MISMATCH_ERR: 
-      			msg += 'Invalid filetype'; 
-      			break;
- 
-    		default:
-      			msg += 'Unknown Error'; 
-      			break;
-  		};
- 
- 		console.log(msg);
-	};
+	
+
+	
+});
 
 
-	var zipthis = (function(obj) {
+var zipthis = (function(obj) {
 		var zipFileEntry, zipWriter, writer, creationMethod, URL = obj.webkitURL || obj.URL;
 
 		return {
@@ -674,3 +649,34 @@ $(document).ready(function () {
 			}
 		};
 	})(this);
+
+	
+
+
+function errorHandler(err){
+  		var msg = 'An error occured: ';
+ 
+  		switch (err.code) { 
+   	 	case FileError.NOT_FOUND_ERR: 
+      			msg += 'File or directory not found'; 
+      			break;
+ 
+    		case FileError.NOT_READABLE_ERR: 
+      			msg += 'File or directory not readable'; 
+      			break;
+ 
+    		case FileError.PATH_EXISTS_ERR: 
+      			msg += 'File or directory already exists'; 
+      			break;
+ 
+    		case FileError.TYPE_MISMATCH_ERR: 
+      			msg += 'Invalid filetype'; 
+      			break;
+ 
+    		default:
+      			msg += 'Unknown Error'; 
+      			break;
+  		};
+ 
+ 		console.log(msg);
+};

@@ -4,18 +4,52 @@ google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
 $(function() {
+// First, parse the query string
+var access_info = {}, queryString = location.hash.substring(1),
+    regex = /([^&=]+)=([^&]*)/g, m;
+while (m = regex.exec(queryString)) {
+  access_info[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+}
+	
 
+var client_id ="434888942442.apps.googleusercontent.com";
+var scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive";
+      
+$.ajax({url:'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='+access_info["access_token"]})
+		.done(function(data){
+		
+		})
+		.fail(function(){
+			$('body').css('background-color','whitesmoke');
+			$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Looks like you are not logged in. Redirecting to Google Accounts Login</p>');
+			location.href = "https://accounts.google.com/o/oauth2/auth?response_type=token&client_id="+encodeURIComponent(client_id)+"&scope="+encodeURIComponent(scope)+"&redirect_uri="+encodeURIComponent("http://makkarlabs.in/preprod/badgeit/start.html");
+	
+		});
 
+		$.ajax({url:'https://www.googleapis.com/oauth2/v1/userinfo?access_token='+access_info["access_token"]})
+						.done(function(data){
+							$.ajax({url:'http://badgeitrelay.appspot.com/badgeitupdateuser?userjson='+encodeURIComponent(JSON.stringify(data)),type:'POST'}).
+							done(function(){
+								console.log("Updated");
+							});
+						});
+
+/*if(localStorage['login']!='true')
+{
+	$('body').css('background-color','whitesmoke');
+	$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Looks like you are not logged in. Redirecting to <a href="./home.html">Home Page</a></p>');
+	location.href='./home.html';
+}*/
 $("#template_gd").hide();
 $("#list_gd").hide();
- var config = {
+
+
+var config = {
           'client_id': '434888942442.apps.googleusercontent.com',
-          'scope': 'https://www.googleapis.com/auth/drive https://docs.google.com/feeds https://spreadsheets.google.com/feeds'
+          'scope': 'https://www.googleapis.com/auth/drive',
+	  'immediate':false
         };
-        gapi.auth.authorize(config, function() {
-		console.log("Logged into Google Account");
-        });
-	
+var isDriveAuth = false;	
 var holder = document.getElementById('holder');
 
 localStorage["qrcode"] = "false";
@@ -24,6 +58,7 @@ if (typeof window.FileReader === 'undefined') {
 } else {
   console.log('success File API & FileReader available');
 }
+
 
 $('#qrcode').click(function() {
 	
@@ -84,12 +119,27 @@ $('#template_fs').on('click',function(e){
 });
 $('#template_gd').on('click',function(e){
 	e.preventDefault();
-	$('#template_fs').hide();
-	$('#template_gd').hide();
-	$('#gd_input').show();
-	picker.setVisible(true);
-	
+	if(!isDriveAuth)
+	{ 
+		gapi.auth.authorize(config, function(authresult) {
+			if(authresult && !authresult.error)
+			{	isDriveAuth = true;
+				$('#template_fs').hide();
+				$('#template_gd').hide();
+				$('#gd_input').show();
+				picker.setVisible(true);
+			}
+		});
+	}
+	else
+	{
+		$('#template_fs').hide();
+		$('#template_gd').hide();
+		$('#gd_input').show();
+		picker.setVisible(true);
+	}
 });
+
 $('#list_fs').on('click',function(e){
 	e.preventDefault();
 	$('#list_fs').hide();
@@ -98,10 +148,25 @@ $('#list_fs').on('click',function(e){
 });
 $('#list_gd').on('click',function(e){
 	e.preventDefault();
-	$('#list_fs').hide();
-	$('#list_gd').hide();
-	$('#gd_list').show();
-	picker1.setVisible(true);
+	if(!isDriveAuth)
+	{ 
+		gapi.auth.authorize(config, function(authresult) {
+			if(authresult && !authresult.error)
+			{	isDriveAuth = true;
+				$('#list_fs').hide();
+				$('#list_gd').hide();
+				$('#gd_list').show();
+				picker1.setVisible(true);
+			}
+		});
+	}
+	else
+	{
+		$('#list_fs').hide();
+		$('#list_gd').hide();
+		$('#gd_list').show();
+		picker1.setVisible(true);
+	}
 	
 });
 
