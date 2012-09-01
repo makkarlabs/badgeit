@@ -21,7 +21,7 @@ $.ajax({url:'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='+acces
 		})
 		.fail(function(){
 			$('body').css('background-color','whitesmoke');
-			$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Looks like you are not logged in. Redirecting to Google Accounts Login</p>');
+			$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Checking Google Login status</p>');
 			location.href = "https://accounts.google.com/o/oauth2/auth?response_type=token&client_id="+encodeURIComponent(client_id)+"&scope="+encodeURIComponent(scope)+"&redirect_uri="+encodeURIComponent("http://makkarlabs.in/preprod/badgeit/start.html");
 	
 		});

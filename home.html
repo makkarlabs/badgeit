@@ -25,30 +25,6 @@
 	});
 
 	});
-	/*		 gapi.auth.authorize(config, function(authResult) {
-				if (authResult && !authResult.error) {
-					console.log("Logged into Google Account");
-					localStorage['loginaccesstoken']=gapi.auth.getToken().access_token;
-					$.ajax({url:'https://www.googleapis.com/oauth2/v1/userinfo?access_token='+gapi.auth.getToken().access_token}).
-						done(function(data){
-							$.ajax({url:'http://badgeitrelay.appspot.com/badgeitupdateuser?userjson='+encodeURIComponent(JSON.stringify(data)),type:'POST'}).
-							done(function(){
-								location.href='./start.html';
-							});
-						});
-
-				} 
-				else {
-					localStorage['login']='false	';
-    					$('#authnstart').on('click',function(){handleAuthClick();});
-  				}
-        			});
-	*/
-	
-	/*function handleAuthClick(event) {
-  		gapi.auth.authorize({ 'client_id': '434888942442.apps.googleusercontent.com','scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'}, authorizeUser);
-  		return false;
-	}*/
 
        
 	</script>
@@ -91,7 +67,7 @@
 		font-size: 40px;
 		color: #74C211;
 		margin-top:25px;
-		width: 240;
+		width: 300px;
 		text-align: center;
 	}
 		
@@ -143,7 +119,7 @@
 		<div style="width:1050px;margin-left:auto;margin-right:auto">
 			<h1 style="text-align:center;font-family:Rancho;font-size:40px;color:gray;">The smart way to create badges for your event!</h1>
 		
-		<div id="authnstart" style="margin-left: 390px;" class="button">Sign in with Google</div>
+		<div id="authnstart" style="margin-left: 360px;" class="button"><img src="bootstrap/img/start.png"/>Sign in with Google</div>
 		
 		<div class="badges" style="margin-top:50px;padding-bottom:30px;">
 		<img class="screenshot" style="margin-right:20px; margin-left:20px;" width=300 height=225 src="resources/images/home/template.png"/> 
