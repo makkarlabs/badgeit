@@ -26,7 +26,7 @@ $.ajax({url:'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='+acces
 	
 		});
 
-		$.ajax({url:'https://www.googleapis.com/oauth2/v1/userinfo?access_token='+access_info["access_token"]})
+$.ajax({url:'https://www.googleapis.com/oauth2/v1/userinfo?access_token='+access_info["access_token"]})
 						.done(function(data){
 							$.ajax({url:'http://badgeitrelay.appspot.com/badgeitupdateuser?userjson='+encodeURIComponent(JSON.stringify(data)),type:'POST'}).
 							done(function(){

@@ -16,3 +16,11 @@ faq.html    - Answers for basic questions about the app.
 FONT RENDERING
 Apart from the basic CSS font, we have also used Google Webfonts served from our own server
 "bootstrap/css/fonts" directory has the necessary .ttf files and "bootstrap/css/fonts.css" has the css which includes the fonts.
+
+.box {margin-bottom:100px;}
+.holder{width:1050px;margin-left:auto;margin-right:auto}
+.tagline{text-align:center;font-family:Rancho;font-size:40px;color:gray;}
+#authnstart{margin-left: 360px;}
+.badges{margin-top:50px;padding-bottom:30px;}
+.screenshot{margin-right:20px; margin-left:20px;}
+.lmargin{margin-left:20px;}

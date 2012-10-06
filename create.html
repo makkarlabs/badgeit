@@ -22,8 +22,19 @@
 		.positionbox { width:150px; }
 		#customize input,#customize .btn-group,#customize select,#customize a,#customize button { margin-left:4px;margin-right:4px; }
 		#toolbox { width:1000px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0; margin-left:70px; }
-		
+		#canvasholder{margin-top:30px; margin-bottom:100px;}
 		#minimizedtoolbox { background-color:whitesmoke; height:30px; margin-bottom:5px; right:0; margin-right:10px; width:50px; border-radius:5px; border:1px solid gray; position:fixed; bottom:0;}
+		#maximizetoolbox{margin-left:20px;}
+		#comp-select {width:150px; margin-bottom:10px;margin-left:5px;}
+		#minimizetoolbox {float:right; margin-top:-15px;}
+		.savebutton{width:70px; margin-top:18px; margin-left:462px;}
+		#zip{margin-left:466px;display:none;}
+		#ziplink{margin-top:10px;margin-left:452px;margin-bottom:-15px;}
+		#print{display:none; margin-left:402px; margin-top:10px;}
+		.invi{display:none;}
+		#back{margin-left: 5px; margin-top:10px; float: left; display:none;}
+		#finish{float:right; margin-top:-30px; display:none;}
+		.thankyou{font-family: OvertheRainbow; font-size: 48px; margin-top: 210px; text-align:center; color: #08C;}
 	</style>
 		  <script src="resources/js/jquery.js"></script>
 		  <script src="bootstrap/js/bootstrap.js"></script>
@@ -45,23 +56,7 @@
   </head>
   <body>
   
-  <div id="fb-root"></div>
-	<script>(function(d, s, id) {
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) return;
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=316958178400662";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-	</script>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-	
-	<div style="padding-left:2px; position:absolute;top:200px;left:0; width:50px;background-color:whitesmoke;border-radius:7px;height: 140px;padding: 10px;padding-left: 3px;">
-		<div class="fb-like" style="margin-left: 6px;margin-bottom: 4px;" data-href="http://makkarlabs.in/badgeit" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true" data-font="arial"></div>
-		<a href="https://twitter.com/intent/tweet?hashtags=makkarlabs%2Cbadgeit&original_referer=http%3A%2F%2Fmakkarlabs.in%2Fpreprod%2Fbadgeit%2F&source=tweetbutton&text=I%20just%20created%20badges%20for%20%3CInsert%20event%20name%20here%3E%20using%20Badge%20It!&url=http%3A%2F%2Fmakkarlabs.in%2Fbadgeit"><img src="resources/images/twitter.png"  style="width: 45px;height: 45px;margin-left: 5px;"/></a> 
-		<div style="margin-left:9px; margin-top:3px"><g:plusone href="https://plus.google.com/113752861544294120495" size="standard" annotation="none" width=40 height=40></g:plusone></div>
-	</div>
+ <div id="social"></div>
   
 	<div id="headerContainer">
 	  <header>
@@ -76,7 +71,7 @@
 			<li><a href="contact.html">Contact Us</a></li>
 		</ul>
 		</div>
-		<div class="clr">
+		<div class="clr"></div>
 	</header>
 	</div>
 	
@@ -84,33 +79,33 @@
 	<div class="container">
 	
 	<div id="canvasnbox">
-	<div id="canvasholder" style="margin-top:30px; margin-bottom:100px;">
+	<div id="canvasholder">
 		<canvas id='canvas' width='canvasWidth()' height='canvasHeight()'></canvas>
 		<div class="clr"></div>
 	</div>
 	<div class="clr"></div>
 	<div id="minimizedtoolbox" hidden="hidden">
-		<a href="" style="margin-left:20px;" id ="maximizetoolbox" ><i class="icon-chevron-up"></i></a>		
+		<a href="" id ="maximizetoolbox" ><i class="icon-chevron-up"></i></a>		
 	</div>
 	
 	<div id="toolbox" class="well">
 		<div class="form-inline">
 		
-			<select id="comp-select" style="width:150px; margin-bottom:10px;margin-left:5px;"></select>
-			<a href="" style="float:right; margin-top:-15px;" id ="minimizetoolbox" rel="tooltip" title="Minimize toolbox"><i class="icon-chevron-down"></i></a>		
+			<select id="comp-select"></select>
+			<a href="" id ="minimizetoolbox" rel="tooltip" title="Minimize toolbox"><i class="icon-chevron-down"></i></a>		
 			<div id="customize">
 			</div>
 			<span id="genimages">	
-				<button style="width:70px; margin-top:18px; margin-left:462px; " class="btn btn-primary" id="save" title="Click to create all badges">Next</button>
+				<button class="btn btn-primary savebutton" id="save" title="Click to create all badges">Next</button>
 				<progress id="gen" value="1" hidden='true' ></progress>
 			</span>
 
-			<button class="btn btn-primary" rel="tooltip" title="Create a Zip compressed file of all badges" style="margin-left:466px;display:none;" hidden="hidden" id="zip">Zip Files</button>
+			<button class="btn btn-primary" rel="tooltip" title="Create a Zip compressed file of all badges" hidden="hidden" id="zip">Zip Files</button>
 			<progress id="zipprogress" hidden='true'></progress>
-			<div hidden="true" style="margin-top:10px;margin-left:452px;margin-bottom:-15px;" id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
+			<div hidden="true" id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
 			<br>
-			<a id="print" class="btn btn-primary" rel="tooltip" title="View all badges tiled, opens in a new tab" hidden="hidden" href="#printModal" style="display:none; margin-left:402px; margin-top:10px" role="button" data-toggle="modal">Print to PDF</a>   
-			<div class="modal hide fade" id="printModal" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
+			<a id="print" class="btn btn-primary" rel="tooltip" title="View all badges tiled, opens in a new tab" hidden="hidden" href="#printModal" role="button" data-toggle="modal">Print to PDF</a>   
+			<div class="modal hide fade" id="printModal" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					<h3 id="printModalLabel">Print to PDF - Settings</h3>
@@ -133,12 +128,12 @@
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-primary" id="triggerprint" data-loading-text="Creating PDF">Print</button>
-					<a class="btn btn-success" id="downloadpdf" style="display:none;">Download PDF</a>
+					<a class="btn btn-success invi" id="downloadpdf">Download PDF</a>
 					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
 				</div>
 			</div> 
-			<button id="back" class="btn btn-danger" rel="tooltip" title="Go back to customize the badges" hidden="hidden" style="margin-left: 5px; margin-top:10px; float: left; display:none">Back</button>
-			<button class="btn btn-danger" rel="tooltip" title="Exit the applications. Clears local application data" hidden="hidden" style="float:right; margin-top:-30px; display:none;" id ="finish">Exit</button>		
+			<button id="back" class="btn btn-danger" rel="tooltip" title="Go back to customize the badges" hidden="hidden">Back</button>
+			<button class="btn btn-danger" rel="tooltip" title="Exit the applications. Clears local application data" hidden="hidden" id ="finish">Exit</button>		
 			<div class="clr"></div>
 		</div>
 	</div>
@@ -148,7 +143,7 @@
 	<div id='qrcode' hidden='true'></div>
 	</div>
 	<div id="thanks" hidden>
-		<h2 style="font-family: OvertheRainbow; font-size: 48px; margin-top: 210px; text-align:center; color: #08C;">
+		<h2 class="thankyou">
 			You are awesome!<br/><br/>Thanks for using BadgeIt :D
 		</h2>
 	</div>
@@ -156,7 +151,7 @@
 	
 	<span id="fontloaderfix" style="">
     		<span style="font-family: Capriola;transparency: white; opacity:0">M</span>
-   		<span style="font-family: Italiana;opacity: 0;">a</span>
+   			<span style="font-family: Italiana;opacity: 0;">a</span>
     		<span style="font-family: Marmelad;opacity:0">k</span>
     		<span style="font-family: Michroma;opacity:0">k</span>
     		<span style="font-family: Miniver;opacity:0">a</span>
