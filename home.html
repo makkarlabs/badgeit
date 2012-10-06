@@ -14,11 +14,9 @@
 		<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">
 
 			
-		<script src="https://apis.google.com/js/client.js"></script>
-    		<script src="resources/js/jquery.js"></script>      
-		
+	<script src="https://apis.google.com/js/client.js"></script>
+    <script src="resources/js/jquery.js"></script>      
 	<script src="resources/js/analytics.js"></script>
-	<script src="resources/js/jquery.js"></script>
    	<script src="bootstrap/js/bootstrap-carousel.js"></script>
 	<script>
 
@@ -55,6 +53,8 @@
 			-moz-box-shadow:    1px 1px 2px 3px whitesmoke;
 			-webkit-box-shadow: 1px 1px 10px 7px #E9E9E9;
 			box-shadow:         1px 1px 10px 7px #E9E9E9;
+			margin-right:20px; 
+			margin-left:20px;
 		}
 		div .badges {
 			color:gray;
@@ -77,31 +77,18 @@
 		width: 300px;
 		text-align: center;
 	}
-		
-		
+		.box {margin-bottom:100px;}
+		.holder{width:1050px;margin-left:auto;margin-right:auto}
+		.tagline{text-align:center;font-family:Rancho;font-size:40px;color:gray;}
+		#authnstart{margin-left: 360px;}
+		.badges{margin-top:50px;padding-bottom:30px;}
+		.lmargin{margin-left:20px; margin-right:0px;}
 	</style>
 	
 	</head>
 	<body>
 	
-	<div id="fb-root"></div>
-	<script>(function(d, s, id) {
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) return;
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=316958178400662";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-	</script>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-	
-	<div style="padding-left:2px; position:fixed;top:200;left:0; width:50px;background-color:whitesmoke;border-radius:7px;height: 140px;padding: 10px;padding-left: 3px;">
-		<div class="fb-like" style="margin-left: 6px;margin-bottom: 4px;" data-href="http://makkarlabs.in/badgeit" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true" data-font="arial"></div>
-		<a href="https://twitter.com/intent/tweet?hashtags=makkarlabs%2Cbadgeit&original_referer=http%3A%2F%2Fmakkarlabs.in%2Fpreprod%2Fbadgeit%2F&source=tweetbutton&text=I%20just%20created%20badges%20for%20%3CInsert%20event%20name%20here%3E%20using%20Badge%20It!&url=http%3A%2F%2Fmakkarlabs.in%2Fbadgeit"><img src="resources/images/twitter.png"  style="width: 45px;height: 45px;margin-left: 5px;"/></a> 
-		<div style="margin-left:9px; margin-top:3px"><g:plusone href="https://plus.google.com/113752861544294120495" size="standard" annotation="none" width=40 height=40></g:plusone></div>
-	</div>
-	
+	<div id="social"></div>
 	
 	<div id="headerContainer">
 	 <header>
@@ -121,22 +108,20 @@
 	</div>
 		
 
-		<div class="container" style="margin-bottom:100px;">
+		<div class="container box">
 		
-		<div style="width:1050px;margin-left:auto;margin-right:auto">
-			<h1 style="text-align:center;font-family:Rancho;font-size:40px;color:gray;">The smart way to create badges for your event!</h1>
+		<div class="holder">
+			<h1 class="tagline">The smart way to create badges for your event!</h1>
 		
-		<div id="authnstart" style="margin-left: 360px;" class="button"><img src="bootstrap/img/start.png"/>Sign in with Google</div>
+		<div id="authnstart" class="button"><img src="bootstrap/img/start.png"/>Sign in with Google</div>
 		
-		<div class="badges" style="margin-top:50px;padding-bottom:30px;">
-		<img class="screenshot" style="margin-right:20px; margin-left:20px;" width=300 height=225 src="resources/images/home/template.png"/> 
-		<i class="icon-plus"></i> <img class="screenshot" style="margin-left:20px;margin-right:20px;" width=300 height=225 src="resources/images/home/devcon.png"/> 
-		<i class="icon-arrow-right"></i> <img class="screenshot"  style="margin-left:20px;" width=300 height=225 src="resources/images/home/outputgrid.png"/><br/>
+		<div class="badges">
+		<img class="screenshot" width=300 height=225 src="resources/images/home/template.png"/> 
+		<i class="icon-plus"></i> <img class="screenshot" width=300 height=225 src="resources/images/home/devcon.png"/> 
+		<i class="icon-arrow-right"></i> <img class="screenshot lmargin" width=300 height=225 src="resources/images/home/outputgrid.png"/><br/>
 		 </div>
 		</div> 
-		 
-		
-		
+
 		</div>
 
 

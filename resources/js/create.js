@@ -361,7 +361,7 @@ $(document).ready(function () {
 		{
 			save();
 			$("span#genimages > button#save").html('Stop');
-			$("span#genimages > button#save").attr({'title':'Click to stop badge creation', 'class':'btn btn-danger'});	
+			$("span#genimages > button#save").attr({'title':'Click to stop badge creation', 'class':'btn btn-danger savebutton'});	
 		}
 		else
 		{
@@ -411,13 +411,13 @@ $(document).ready(function () {
                 canvas.renderAll(true);
 
 		$("#comp-select").show();
-                $("#customize").show();
-
-                $("#zip").hide();
-                $("#print").hide();
-                $("#back").hide();
+                
+		$("#customize").show();
+        $("#zip").hide();
+        $("#print").hide();
+        $("#back").hide();
 		$("span#genimages > button#save").html('Next');
-		$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-primary'});
+		$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-primary savebutton'});
 		$("#genimages").show();
 		$("#ziplink").hide();
 		$("#zipprogress").hide();
@@ -581,7 +581,7 @@ $(document).ready(function () {
 					$("#customize").hide();
 					$("#genimages").hide();
 					$("#zip").show();
-					$("#print").show();
+					$("#print").css('display','inline-block');
 					$("#back").show();
 					$("#finish").show();
 					$("#finish").css('margin-top','10px');
