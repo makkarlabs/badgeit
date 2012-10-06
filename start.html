@@ -14,42 +14,37 @@
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
-<style>
 
-
-#holder { background-color:#FAFAFA; border: 2px dotted #ccc; width: 100px !important; height: 80px !important; margin: 5px auto; margin-top:5px; }
-#holderCaption { margin-left:auto; margin-right:auto; width:50px; margin-top:5px;}
-#holder.hover { border: 2px dashed #333; }
-fieldset { margin-left:20px; width : 500px; }
-img { max-width:100px;}
-select {width:20px !important; border:none !important; }
-select:focus {border:none !important; box-shadow:none !important; -webkit-box-shadow: none !important; outline:none !important;}
-</style>
+	<style>
+	#holder { background-color:#FAFAFA; border: 2px dotted #ccc; width: 100px !important; height: 80px !important; margin: 5px auto; margin-top:5px; }
+	#holderCaption { margin-left:auto; margin-right:auto; width:50px; margin-top:5px;}
+	#holder.hover { border: 2px dashed #333; }
+	fieldset { margin-left:20px; width : 500px; }
+	img { max-width:100px;}
+	select {width:20px !important; border:none !important; }
+	select:focus {border:none !important; box-shadow:none !important; -webkit-box-shadow: none !important; outline:none !important;}
+	#form1 { margin-top:2%;width:600px; margin-left:auto; margin-bottom:5%; margin-right:auto; }
+	legend { font-size:17px;margin-left:25px;margin-bottom:0px;}
+	legend i { margin-top:2px;}
+	#lockar {cursor:pointer;margin-left:30px;}
+	#projectName {font-family:Rancho;text-align:center;margin-left:150px;border-color:white;  font-size:30px; box-shadow:none; height:42px;}
+	#errorholder {width:500px; text-align:center;}
+	.cpointer {cursor:pointer;}
+	.invi {display:none;}
+	.tb_height{height:25px;}
+	.left {float:left;}
+	.right {float:right; margin-right:100px;}
+	.mtop {margin-top:10px}
+	.action-form{width:400px;}
+	.mleft{margin-left:5px;}
+	</style>
 
 
 <script src="resources/js/analytics.js"></script>
-
-
   </head>
   <body onload="$('#projectName').focus();">
   
-  <div id="fb-root"></div>
-	<script>(function(d, s, id) {
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) return;
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=316958178400662";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-	</script>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-	<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-	
-	<div style="padding-left:2px; position:fixed;top:200;left:0; width:50px;background-color:whitesmoke;border-radius:7px;height: 140px;padding: 10px;padding-left: 3px;">
-		<div class="fb-like" style="margin-left: 6px;margin-bottom: 4px;" data-href="http://makkarlabs.in/badgeit" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true" data-font="arial"></div>
-		<a href="https://twitter.com/intent/tweet?hashtags=makkarlabs%2Cbadgeit&original_referer=http%3A%2F%2Fmakkarlabs.in%2Fpreprod%2Fbadgeit%2F&source=tweetbutton&text=I%20just%20created%20badges%20for%20%3CInsert%20event%20name%20here%3E%20using%20Badge%20It!&url=http%3A%2F%2Fmakkarlabs.in%2Fbadgeit"><img src="resources/images/twitter.png"  style="width: 45px;height: 45px;margin-left: 5px;"/></a> 
-		<div style="margin-left:9px; margin-top:3px"><g:plusone href="https://plus.google.com/113752861544294120495" size="standard" annotation="none" width=40 height=40></g:plusone></div>
-	</div>
+<div id="social"></div>
  
 <div id="headerContainer">
 <header>
@@ -64,7 +59,7 @@ select:focus {border:none !important; box-shadow:none !important; -webkit-box-sh
 		<li><a href="contact.html">Contact Us</a></li>
 	</ul>
 	</div>
-	<div class="clr">
+	<div class="clr"></div>
 </header>
 </div>
 
@@ -72,13 +67,13 @@ select:focus {border:none !important; box-shadow:none !important; -webkit-box-sh
 <div class="container">	
 		
 		<div id="vetti">
-		<form class="form-horizontal" style="margin-top:2%;width:600px; margin-left:auto; margin-bottom:5%; margin-right:auto;" id="form1" action="./create.html">
+		<form class="form-horizontal" id="form1" action="./create.html">
 		<fieldset>
 		<div class="control-group">
-			<input type="text" placeholder="Event Name" style="font-family:Rancho;text-align:center;margin-left:150px;border-color:white;  font-size:30px; box-shadow:none; height:42px" class="input" id="projectName" name="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
+			<input type="text" placeholder="Event Name" class="input" id="projectName" name="projectName" required="required" onchange="localStorage['projectname']=this.value;"></input> 
 		</div>
 		
-		<div id="errorholder" style="width:500px; text-align:center;" class="alert alert-success">
+		<div id="errorholder" class="alert alert-success">
 			<!--<button type="button" class="close" data-dismiss="alert">×</button>-->
 			<div id="alertmessage">
 			<strong>Howdy!</strong> First time here? Try clicking the demo button below.
@@ -86,19 +81,19 @@ select:focus {border:none !important; box-shadow:none !important; -webkit-box-sh
 		</div>
 		
 		<fieldset>
-		<legend style="font-size:17px;margin-left:25px;margin-bottom:0px;"> <i style="margin-top:2px;" class="icon-picture"></i> Badge Template </legend>
+		<legend> <i class="icon-picture"></i> Badge Template </legend>
 		<div class="control-group">
 			<label class="control-label" for="templateChooser"> Image </label>
 			<div class="controls" id="template_chooser">
 				<a class='btn' rel='tooltip' title='Select Background image from your local drive.' id='template_fs'><i class="icon-folder-open"> </i> My Computer</a>
 				<a class='btn btn-warning' rel='tooltip' title='Select Background image from Google Drive.' id='template_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
-				<span id="fs_input" style="display:none;">
+				<span id="fs_input" class="invi">
 					<input type="file" accept="image/*" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0],'event-template');"></input>
-					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="change();"></a>
+					<a class="icon-repeat cpointer" id="return_image" onclick="change();"></a>
 				</span>
-				<span id="gd_input" style="display:none;">				
+				<span id="gd_input" class="invi">				
 					<input readonly="readonly" placeholder="Google Drive Image" id="google_image" name="google_image" />
-					<a style="cursor:pointer;" class="icon-repeat" onclick="change();" id="return_image1"></a>
+					<a class="icon-repeat cpointer" onclick="change();" id="return_image1"></a>
 				</span>
 			</div>
 		</div>
@@ -107,7 +102,7 @@ select:focus {border:none !important; box-shadow:none !important; -webkit-box-sh
 				<div class="control-group">
 			<label class="control-label" for="dpiSelection"> DPI  </label>
 			<div class="controls">	
-				<input type="text" style="height:25px;" placeholder="150" value="150" type="text" id="dpi" class="input-small" onkeyup="$('#inchwidth').val(($('#pixelwidth').val()/this.value).toFixed(2));$('#inchheight').val(($('#pixelheight').val()/this.value).toFixed(2));">
+				<input type="text" placeholder="150" value="150" type="text" id="dpi" class="input-small tb_height" onkeyup="$('#inchwidth').val(($('#pixelwidth').val()/this.value).toFixed(2));$('#inchheight').val(($('#pixelheight').val()/this.value).toFixed(2));">
 				<select id="dpilist" onchange="$('#dpi').val(this.value);$('#dpi').keyup();">
 					<option disabled="disabled">Select &nbsp;</option>
 					<option>72</option>
@@ -125,47 +120,47 @@ select:focus {border:none !important; box-shadow:none !important; -webkit-box-sh
 			</div>
 		</div>
 		
-		<div style="float:left">
+		<div class="left">
 		<div class="control-group">
 			<label class="control-label" for="inchwidth"> Width  </label>
 			<div class="controls">	
-				<input style="height:25px;"type="text" class="input-small" id="inchwidth" placeholder="inches" required onkeyup="setPixelWidth()"> </input>
+				<input type="text" class="input-small tb_height" id="inchwidth" placeholder="inches" required onkeyup="setPixelWidth()"> </input>
 			</div>
 		</div>
 		
 		<div class="control-group">
 			
 			<div class="controls">	
-				<a id="lockar" rel='tooltip' title='Locks the aspect ratio of the image.' onclick="lockar();" style="cursor:pointer;margin-left:30px;"><i class="icon-lock"></i></a>
+				<a id="lockar" rel='tooltip' title='Locks the aspect ratio of the image.' onclick="lockar();"><i class="icon-lock"></i></a>
 			</div>
 		</div>
 
 		<div class="control-group">
 			<label class="control-label" for="inchheight"> Height  </label>
 			<div class="controls">	
-				<input style="height:25px;" type="text" class="input-small" id="inchheight" placeholder="inches" required onkeyup="setPixelHeight()"> </input>
+				<input type="text" class="input-small tb_height" id="inchheight" placeholder="inches" required onkeyup="setPixelHeight()"> </input>
 			</div>
 		</div>
 		</div>
-		<div style="float:right; margin-right:100px;">
+		<div class="right">
 				<div id="holder">	<img id="badgepreview"/> </div>
 		</div>
 		
 		</fieldset>
 		<fieldset>
-		<legend style="font-size:17px;margin-left:25px;margin-bottom:0px;"><i style="margin-top:2px;" class="icon-list"></i> Attendee Info </legend>
+		<legend><i class="icon-list"></i> Attendee Info </legend>
 		<div class="control-group">
 			<label class="control-label" for="csvChooser"> List  </label>
 			<div class="controls">	
 				<a class='btn' id='list_fs' rel='tooltip' title='Select a CSV file containing the details of attendees from your local drive.'><i class="icon-folder-open"> </i> My Computer</a>
 				<a class='btn btn-warning' id='list_gd' rel='tooltip' title='Select a Spreadsheet containing the details of attendees from Google Drive.'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
-				<span id="fs_list" style="display:none;">
+				<span id="fs_list" class="invi">
 					<input type="file" class="input-file" accept=".csv" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0], 'event-csv');"> </input>
-					<a style="cursor:pointer;" class="icon-repeat" id="return_image" onclick="changeCsv();"></a>
+					<a class="icon-repeat cpointer" id="return_image" onclick="changeCsv();"></a>
 				</span>
-				<span id="gd_list" style="display:none;">				
+				<span id="gd_list" class="invi">				
 					<input readonly="readonly" placeholder="Google Drive Spreadsheet" id="csvGoogle" name="csvGoogle" />
-					<a style="cursor:pointer;" class="icon-repeat" onclick="changeCsv();" id="return_image1"></a>
+					<a class="icon-repeat cpointer" onclick="changeCsv();" id="return_image1"></a>
 				</span>
 
 				<div id="csvColumnsSelect"></div>
@@ -173,30 +168,29 @@ select:focus {border:none !important; box-shadow:none !important; -webkit-box-sh
 		</div>
 		
 
-		<input type="text" id="pixelwidth" value="" style="display:none;"> </input>
-		<input type="text" id="pixelheight" value="" style="display:none;"> </input>
+		<input type="hidden" id="pixelwidth" value=""> </input>
+		<input type="hidden" id="pixelheight" value=""> </input>
 		
 		<div class="control-group">
 			<label class="control-label" for="pixelheight"> QR Code  </label>
 			<div class="controls">	
-				<input style="margin-top:10px" type="checkbox" id="qrcode" name="qrcode" value="Yes" />
+				<input class="mtop" type="checkbox" id="qrcode" name="qrcode" value="Yes" />
 				<div id="qrCodeSelect"></div>
-				<div style="margin-top:10px" id="container"> </div>
+				<div class="mtop" id="container"> </div>
 			</div>
 		</div>
 		</fieldset>
 
-			<div class="form-actions" style="width:400px;">
+			<div class="form-actions action-form">
 				<button class="btn btn-primary" type="submit"> Submit </button>
-				<a class="btn btn-success" style="margin-left:5px;" rel="tooltip" title="Prefills the form with sample image & data, and submits it." onclick="demo()"> Demo </a>
+				<a class="btn btn-success mleft" rel="tooltip" title="Prefills the form with sample image & data, and submits it." onclick="demo()"> Demo </a>
 
 			</div>
 		</fieldset>
 		</form>
 		</div>
 		</div>
-	
-</div>
+
 
 <footer class="footer">
 	<div class="container">
