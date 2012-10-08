@@ -21,10 +21,12 @@ var isStopSave = false;
 //Filesystem settings
 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
 
-	
+//Local Storage
+var settings = new Store("settings");
+
 $(document).ready(function () {
 
-	if(localStorage['event-csv'] === undefined || localStorage['event-template'] === undefined)
+	if(settings.get('event-csv') === undefined || settings.get('event-template') === undefined)
 	{	
 		
 		$('body').css('background-color','whitesmoke');
@@ -32,15 +34,14 @@ $(document).ready(function () {
 		location.href='./home.html';
 	}
 
-	dimensions = localStorage['dimensions'].split(",");
-	for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; }
+	dimensions = settings.get('dimensions');
 	
-	isqrcode = localStorage['qrcode'];
+	isqrcode = settings.get('qrcode');
 
 	//CSV file related
-	var indexes = localStorage['selected-cols'].split(",");
+	var indexes = settings.get('selected-cols');
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
-	var csv_file = localStorage['event-csv'];
+	var csv_file = settings.get('event-csv');
 	var data = $.csv2Array(csv_file);  
 	$.each(data, function(index,ar) { 
 		if(ar.length == 0) { 
@@ -52,21 +53,21 @@ $(document).ready(function () {
 		data.splice(remove[no],1);
 	});
 
-	localStorage['numentries']=data.length;
+	settings.set('numentries',data.length);
 
 	//Infographics
 	if(isqrcode==='true')
 	{
-		var qr_indexes = localStorage['qr-cols'].split(",");
+		var qr_indexes = settings.get('qr-cols');
 		for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
 	}
 	
-	canvas = new fabric.Canvas('canvas', {backgroundImage:localStorage['event-template']});
-	canvas.setHeight(dimensions[1]);
-	canvas.setWidth(dimensions[0]);
+	canvas = new fabric.Canvas('canvas', {backgroundImage:settings.get('event-template')});
+	canvas.setHeight(+dimensions.pixelheight);
+	canvas.setWidth(+dimensions.pixelwidth);
 	scale = 1;
-	if(dimensions[0]/dimensions[2]>96)
-		scale=(dimensions[0]/dimensions[2])/96;
+	if(+dimensions.pixelwidth/+dimensions.inchwidth>96)
+		scale=(+dimensions.pixelwidth/+dimensions.inchwidth)/96;
 
 	canvas.renderAll(true);
 	canvas.HOVER_CURSOR = 'pointer';
@@ -423,7 +424,7 @@ $(document).ready(function () {
 	});
 	$("div#ziplink > a").on('click', function(){
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
-			$("div#ziplink > a").attr({'download': localStorage['projectname']+'.zip','href':blobURL});
+			$("div#ziplink > a").attr({'download': settings.get('projectName')+'.zip','href':blobURL});
 		});
 	});
 	
@@ -600,7 +601,7 @@ $(document).ready(function () {
 				else{
 					$("span#genimages > progress#gen").attr('value',data.length);
 					$("span#genimages > progress#gen").hide();
-					_gaq.push(['_trackEvent', 'Badge', 'Created', localStorage["projectname"], data.length]);
+					_gaq.push(['_trackEvent', 'Badge', 'Created', settings.get("projectName"), data.length]);
 					$("#comp-select").hide();
 					$("#customize").hide();
 					$("#genimages").hide();
@@ -636,7 +637,7 @@ var zipthis = (function(obj) {
 							onadd(file);
 							zipWriter.add(filename, new zip.BlobReader(file), function() {
 								
-								if (++addIndex < localStorage['numentries'])
+								if (++addIndex < settings.get('numentries'))
 									nextFile();
 								else
 									onend();

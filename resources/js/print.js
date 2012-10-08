@@ -6,7 +6,7 @@ var orient, papersize;
 var counter;
 var URL = this.webkitURL || this.URL;
 window.resolveLocalFileSystemURL = window.resolveLocalFileSystemURL || window.webkitResolveLocalFileSystemURL;
-
+var settings = new Store("settings");
 function printToPdf(orientval,papersizeval)
 {	
 	counter = 1;
@@ -15,10 +15,9 @@ function printToPdf(orientval,papersizeval)
 	doc = new jsPDF(orient,'pt',papersize);
 	xpos = 0;
 	ypos = 0;
-	var dimensions = localStorage['dimensions'].split(",");
-	for(var j=0; j<dimensions.length; j++) { dimensions[j] = +dimensions[j]; } 
-	imgWidth = dimensions[2]*72;
-	imgHeight = dimensions[3]*72;
+	var dimensions = settings.get('dimensions');
+	imgWidth = +dimensions.inchwidth*72;
+	imgHeight = +dimensions.inchheight*72;
 	setRemainingHeight();
 	setRemainingWidth();	
 	getImageFromUrl('filesystem:http://makkarlabs.in/temporary/badges/badge'+1+'.jpeg', createPDF);
@@ -60,17 +59,17 @@ var createPDF = function(imgData) {
 			xpos = ypos = 0;
 			setRemainingHeight();
 			setRemainingWidth();
-			if(counter+1 < localStorage['numentries'])
+			if(counter+1 < setting.get('numentries'))
 				doc.addPage();
 		}
 	}
-	if(++counter < localStorage['numentries'])
+	if(++counter < setting.get('numentries'))
 		getImageFromUrl('filesystem:http://makkarlabs.in/temporary/badges/badge'+counter+'.jpeg', createPDF);
 	else
 	{
 		blob = dataURItoBlob(doc.output('datauristring'));
 		var blobURL = URL.createObjectURL(blob);
-		$('#downloadpdf').attr({'download': localStorage['projectname']+'.pdf','href':blobURL});
+		$('#downloadpdf').attr({'download': setting.get('projectName')+'.pdf','href':blobURL});
 		$('#downloadpdf').show();
 		$('#triggerprint').button('reset');
 	}
