@@ -3,56 +3,8 @@ boundRect = new Array(),maxwidth = new Array(), remove = new Array(), isqrcode, 
 current_dataurl, img = new Array(), testfileentry = new Array(),xfactor = new Array(), yfactor = new Array();
 
 //Dot Templating
-doT.templateSettings = {
-  varname: 'll, bnd',
-  strip: true,
-};
-
-var labellayer_tempfn = doT.template("<div class='component' id='{{=ll.ldiv}}'> 
-                            <input id='{{=ll.label}}' type='text' style='float:left';/> 
-                            <select style='float:left;' class='font-dropdown' id='{{=ll.lfamily}}'>
-                                <option value='Arial'>Arial</option>
-                            </select> 
-                            <div class='btn-group' style='float:left;'> 
-                                <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'>
-                                    <i class='icon-text-height'></i> 
-                                        <span class='caret'></span>
-                                </a>
-                                <ul class='dropdown-menu'>
-                                    <li> 
-                                        <input id='{{=ll.lsize}}' type='range'/>
-                                    </li>
-                                </ul>
-                             </div>  
-                             <a href='#' class='btn' toggle='unselect' id='{{=ll.lbold}}'>
-                                 <i class='icon-bold'></i>
-                             </a> 
-                             <a href='#' class='btn' id='{{=ll.litalic}}' toggle='unselect'>
-                                 <i class='icon-italic'></i>
-                             </a> 
-                             <input class='colorbox' id='{{=ll.lcolor}}' type='color' value='#cc3333'/> 
-                             <a class='btn' id='{{=ll.lleft}}' toggle='unselect'>
-                                 <i class='icon-align-left'></i>
-                             </a> 
-                            <a class='btn btn-warning' id='{{=ll.lcenter}}' toggle='select'>
-                                <i class='icon-align-center'></i>
-                            </a> 
-                            <a class='btn' id='{{=ll.lright}}' toggle='unselect'>
-                                <i class='icon-align-right'></i>
-                            </a>      
-                            <input class='positionbox' id='{{=ll.lpos}}' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/>
-                            <button style='color:#555;' id='{{=ll.lbounds}}' class='btn'>Set Bounds</button>
-                            <div class='clr'></div>
-                        </div>");
-var bounds_tempfn = doT.template("<span id='{{=bnd.bspan}}' hidden='true'>
-                        <span class='badge badge-warning'>
-                            <a id='{{=bnd.bsave}}' class='icon-ok' style='cursor:pointer;'></a>
-                        </span> 
-                        <span class='badge badge-warning'>
-                            <a id='{{=bnd.bcancel}}' class='icon-remove' style='cursor:pointer;'></a>
-                        </span>
-                      </span>");
-
+var labellayer_tempfn = doT.template("<div class='component' id='{{=it.ldiv}}'><input id='{{=it.label}}' type='text' style='float:left';/><select style='float:left;' class='font-dropdown' id='{{=it.lfamily}}'><option value='Arial'>Arial</option></select><div class='btn-group' style='float:left;'><a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i><span class='caret'></span></a><ul class='dropdown-menu'><li><input id='{{=it.lsize}}' type='range'/></li></ul></div><a href='#' class='btn' toggle='unselect' id='{{=it.lbold}}'><i class='icon-bold'></i></a><a href='#' class='btn' id='{{=it.litalic}}' toggle='unselect'><i class='icon-italic'></i></a><input class='colorbox' id='{{=it.lcolor}}' type='color' value='#cc3333'/><a class='btn' id='{{=it.lleft}}' toggle='unselect'><i class='icon-align-left'></i></a><a class='btn btn-warning' id='{{=it.lcenter}}' toggle='select'><i class='icon-align-center'></i></a><a class='btn' id='{{=it.lright}}' toggle='unselect'><i class='icon-align-right'></i></a><input class='positionbox' id='{{=it.lpos}}' value='center: {{=it.xpos}} , top: {{=it.ypos}}' type='text' readonly='readonly'/><button style='color:#555;' id='{{=it.lbounds}}' class='btn'>Set Bounds</button><div class='clr'></div></div>");
+var bounds_tempfn = doT.template("<span id='{{=it.bspan}}' hidden='true'><span class='badge badge-warning'><a id='{{=it.bsave}}' class='icon-ok' style='cursor:pointer;'></a></span><span class='badge badge-warning'><a id='{{=it.bcancel}}' class='icon-remove' style='cursor:pointer;'></a></span></span>");
 
 fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
 	return {
@@ -141,7 +93,7 @@ $(document).ready(function () {
 		index = indexes[i];
 		current_label = data[0][index];
         var result_labellayer = labellayer_tempfn({ldiv: 'label'+i+'div',
-                                                   llabel: 'label'+i,
+                                                   label: 'label'+i,
                                                    lfamily: 'label'+i+'family',
                                                    lsize: 'label'+i+'size',
                                                    lbold: 'label'+i+'bold',
@@ -151,6 +103,8 @@ $(document).ready(function () {
                                                    lcenter: 'label'+i+'center',
                                                    lright: 'label'+i+'right',
                                                    lpos: 'label'+i+'pos',
+                                                   xpos: xpos,
+					        ypos: ypos,
                                                    lbounds: 'label'+i+'bounds'
                                                   });
         var result_setbounds = bounds_tempfn({bspan: 'boundspan'+i,
@@ -161,8 +115,6 @@ $(document).ready(function () {
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
 		$("#customize").append(result_labellayer);
         $("body").append(result_setbounds);
-        //$("#customize").append("<div class='component' id='label"+i+"div'> <input id='label"+i+"' type='text' style='float:left';/> <select style='float:left;' class='font-dropdown' id='label"+i+"family'><option value='Arial'>Arial</option></select> <div class='btn-group' style='float:left;'> <a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i> <span class='caret'></span></a><ul class='dropdown-menu'><li> <input id='label"+i+"size' type='range'/></li></ul></div>  <a href='#' class='btn' toggle='unselect' id='label"+i+"bold'><i class='icon-bold'></i></a> <a href='#' class='btn' id='label"+i+"italic' toggle='unselect'><i class='icon-italic'></i></a> <input class='colorbox' id='label"+i+"color' type='color' value='#cc3333'/> <a class='btn' id='label"+i+"left' toggle='unselect'><i class='icon-align-left'></i></a> <a class='btn btn-warning' id='label"+i+"center' toggle='select'><i class='icon-align-center'></i></a> <a class='btn' id='label"+i+"right' toggle='unselect'><i class='icon-align-right'></i></a>      <input class='positionbox' id='label"+i+"pos' value='center: "+xpos+" , top: "+ypos+"' type='text' readonly='readonly'/><button style='color:#555;' id='label"+i+"bounds' class='btn'>Set Bounds</button><div class='clr'></div></div>");
-		//$("body").append("<span id='boundspan"+i+"' hidden='true'><span class='badge badge-warning'><a id='label"+i+"boundsave' class='icon-ok' style='cursor:pointer;'></a></span> <span class='badge badge-warning'><a id='label"+i+"boundcancel' class='icon-remove' style='cursor:pointer;'></a></span></span>");
 		
 		labellayer[i] = new fabric.Text(current_label, {
           		left: xpos,
