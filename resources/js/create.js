@@ -39,7 +39,7 @@ $(document).ready(function () {
 	isqrcode = settings.get('qrcode');
 
 	//CSV file related
-	var indexes = settings.get('selected-cols');
+	var indexes = settings.get('selected-cols').split(" ,")||[];
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
 	var csv_file = settings.get('event-csv');
 	var data = $.csv2Array(csv_file);  
