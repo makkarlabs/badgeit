@@ -39,7 +39,7 @@ $(document).ready(function () {
 	isqrcode = settings.get('qrcode');
 
 	//CSV file related
-	var indexes = settings.get('selected-cols').split(" ,")||[];
+	var indexes = settings.get('selected-cols').split(",")||[];
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
 	var csv_file = settings.get('event-csv');
 	var data = $.csv2Array(csv_file);  
@@ -93,25 +93,29 @@ $(document).ready(function () {
 	{
 		index = indexes[i];
 		current_label = data[0][index];
-        var result_labellayer = labellayer_tempfn({ldiv: 'label'+i+'div',
-                                                   label: 'label'+i,
-                                                   lfamily: 'label'+i+'family',
-                                                   lsize: 'label'+i+'size',
-                                                   lbold: 'label'+i+'bold',
-                                                   litalic: 'label'+i+'italic',
-                                                   lcolor: 'label'+i+'color',
-                                                   lleft: 'label'+i+'left',
-                                                   lcenter: 'label'+i+'center',
-                                                   lright: 'label'+i+'right',
-                                                   lpos: 'label'+i+'pos',
-                                                   xpos: xpos,
-					        ypos: ypos,
-                                                   lbounds: 'label'+i+'bounds'
-                                                  });
+        var customize_json = { labelname: current_label,
+                               ldiv: 'label'+i+'div',
+                               label: 'label'+i,
+                               lfamily: 'label'+i+'family',
+                               lsize: 'label'+i+'size',
+                               lbold: 'label'+i+'bold',
+                               litalic: 'label'+i+'italic',
+                               lcolor: 'label'+i+'color',
+                               lleft: 'label'+i+'left',
+                               lcenter: 'label'+i+'center',
+                               lright: 'label'+i+'right',
+                               lpos: 'label'+i+'pos',
+                               xpos: xpos,
+                               ypos: ypos,
+                               lbounds: 'label'+i+'bounds',
+                               bspan: 'boundspan'+i,
+                               bsave: 'label'+i+'boundsave',
+                               bcancel: 'label'+i+'boundcancel'
+                              };
+        var result_labellayer = labellayer_tempfn(customize_json);
         var result_setbounds = bounds_tempfn({bspan: 'boundspan'+i,
                                               bsave: 'label'+i+'boundsave',
                                               bcancel: 'label'+i+'boundcancel'
-                                                
                                             });
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
 		$("#customize").append(result_labellayer);
@@ -135,21 +139,21 @@ $(document).ready(function () {
 		alignDetails.actualleft = labellayer[i].left - labellayer[i].getWidth()/2;
 		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
 		alignDetails.alignment = 'center';
-
-		addAttributes(alignDetails, current_label, '#label'+i, '#label'+i+'size', '#label'+i+'family', '#label'+i+'bold', '#label'+i+'italic', '#label'+i+'color', '#label'+i+'left', '#label'+i+'center', '#label'+i+'right', '#label'+i+'pos', '#label'+i+'bounds', '#boundspan'+i, '#label'+i+'boundsave', '#label'+i+'boundcancel', labellayer[i], fontsize);
-		ypos += 40;
+        customize_json.alignDetails = alignDetails;
+		addAttributes(customize_json);
+        ypos += 40;
 	}
-	
-	function addAttributes(alignobj, label, labelid, labelsize, labelfamily, labelbold, labelitalic, labelcolor, labelleft, labelcenter, labelright, labelpos, labelbounds, boundspan, labelboundsave, labelboundcancel, labellayer, fontsize)
-	{
+	function addAttributes(custom)
+    {
 		canvas.observe('object:selected',function(e){
+	
 			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
 			{
 				if(canvas.getActiveObject()===labellayer)
 				{
 					$(".component").hide();
-					$("#label"+alignobj.index+"div").show();
-					$("#comp-select").val(alignobj.index);
+					$("#label"+custom.alignDetails.index+"div").show();
+					$("#comp-select").val(custom.alignDetails.index);
 				}
 				
 			}
@@ -159,164 +163,164 @@ $(document).ready(function () {
 			if(typeof activeObject.get === 'function'){
   				if(activeObject === labellayer)
 				{
-					alignobj.actualleft = labellayer.left - labellayer.getWidth()/2;
-					alignobj.actualright = labellayer.left + labellayer.getWidth()/2;
-					actualleft[alignobj.index] = alignobj.actualleft;
-					actualright[alignobj.index] = alignobj.actualright;
+					custom.alignDetails.actualleft = labellayer.left - labellayer.getWidth()/2;
+					custom.alignDetails.actualright = labellayer.left + labellayer.getWidth()/2;
+					actualleft[custom.alignDetails.index] = custom.alignDetails.actualleft;
+					actualright[custom.alignDetails.index] = custom.alignDetails.actualright;
 					setpos();
 				}
-				if(activeObject ===alignobj.boundingRect)
+				if(activeObject ===custom.alignDetails.boundingRect)
 				{
-					positionBoundSpan(alignobj.boundingRect,boundspan);
+					positionBoundSpan(custom.alignDetails.boundingRect,boundspan);
 				}
 			}
 		});
-		$(labelid).attr({
+		$(custom.label).attr({
 			placeholder: 'Try something here',
 		});
-		$(labelid).on('keyup', function() {
-  			labellayer.setText($(labelid).val());
+		$(custom.label).on('keyup', function() {
+  			labellayer.setText($(custom.label).val());
 			canvas.renderAll(true);
 		});
-		$(labelsize).attr({
+		$(custom.lsize).attr({
 			min: '0',
 			max: '200',
 			value: fontsize,
 			
 		});
-		$(labelsize).on('change', function() {
-			labellayer.setFontsize($(labelsize).val());
+		$(custom.lsize).on('change', function() {
+			labellayer.setFontsize($(custom.lsize).val());
 			setleft();
 		});
 		
 		for(k=1;k<fonts.length;k++)
 		{
 			displayfont = fonts[k].split(",")[0];
-			$(labelfamily).append("<option value='"+fonts[k]+"'>"+displayfont+"</option>");
+			$(custom.lfamily).append("<option value='"+fonts[k]+"'>"+displayfont+"</option>");
 		}
-		$(labelfamily).change(function(){ 
-			labellayer.set('fontFamily',$(labelfamily).val());
+		$(custom.lfamily).change(function(){ 
+			labellayer.set('fontFamily',$(custom.lfamily).val());
 			canvas.renderAll(true);
 		});
-		$(labelbold).attr({
+		$(custom.lbold).attr({
 			rel: 'tooltip',
 			title: 'Set Font weight Bold'
 		});
-		$(labelitalic).attr({
+		$(custom.litalic).attr({
 			rel: 'tooltip',
 			title: 'Set Font style as Italic'
 		});
-		$(labelcolor).attr({
+		$(custom.lcolor).attr({
 			rel: 'tooltip',
 			title: 'Set Font Color'
 		});
-		$(labelleft).attr({
+		$(custom.lleft).attr({
 			rel: 'tooltip',
 			title: 'Left align: Ensures that text for all badges have left position fixed.'
 		});
-		$(labelcenter).attr({
+		$(custom.lcenter).attr({
 			rel: 'tooltip',
 			title: 'Center align: Ensures that text for all badges have center position fixed.'
 		});
-		$(labelright).attr({
+		$(custom.lright).attr({
 			rel: 'tooltip',
 			title: 'Right align: Ensures that text for all badges have right position fixed.'
 		});
-		$(labelbounds).attr({
+		$(custom.lbounds).attr({
 			rel: 'tooltip',
 			title: 'Avoid long text exceeding the canvas by setting bounds. Ensures all text is scaled to the specified bound region.'
 		});
 		
-		$(labelbold).click(function(event){
+		$(custom.lbold).click(function(event){
 			event.preventDefault();
-			if($(labelbold).attr('toggle') === 'unselect')
+			if($(custom.lbold).attr('toggle') === 'unselect')
 			{
 				labellayer.set('fontWeight', 'bold');
-				$(labelbold).attr({'toggle':'select', 'class':'btn btn-warning'});	
+				$(custom.lbold).attr({'toggle':'select', 'class':'btn btn-warning'});	
 			}
 			else
 			{
                                 labellayer.set('fontWeight', 'normal');
-                                $(labelbold).attr({'toggle':'unselect', 'class':'btn'});
+                                $(custom.lbold).attr({'toggle':'unselect', 'class':'btn'});
 			}
 			canvas.renderAll(true);
 		});
-		$(labelitalic).click(function(event){
+		$(custom.litalic).click(function(event){
                         event.preventDefault();
-                        if($(labelitalic).attr('toggle') === 'unselect')
+                        if($(custom.litalic).attr('toggle') === 'unselect')
                         {
                                 labellayer.set('fontStyle', 'italic');
-                                $(labelitalic).attr({'toggle':'select', 'class':'btn btn-warning'});
+                                $(custom.litalic).attr({'toggle':'select', 'class':'btn btn-warning'});
                         }
                         else
                         {
                                 labellayer.set('fontStyle', 'normal');
-                                $(labelitalic).attr({'toggle':'unselect', 'class':'btn'});
+                                $(custom.litalic).attr({'toggle':'unselect', 'class':'btn'});
                         }
 			canvas.renderAll(true);
                 });
-		$(labelcolor).change(function(){ 
-			labellayer.setColor($(labelcolor).val());
+		$(custom.lcolor).change(function(){ 
+			labellayer.setColor($(custom.lcolor).val());
 			canvas.renderAll(true);
 		});
-		$(labelleft).on('click',function(event){
-			if($(labelleft).attr('toggle') === 'unselect')
+		$(custom.lleft).on('click',function(event){
+			if($(custom.lleft).attr('toggle') === 'unselect')
 			{
 				align('left');
-				$(labelleft).attr({'toggle':'select', 'class':'btn btn-warning'});
-				$(labelcenter).attr({'toggle':'unselect', 'class':'btn'});
-				$(labelright).attr({'toggle':'unselect', 'class':'btn'});
+				$(custom.lleft).attr({'toggle':'select', 'class':'btn btn-warning'});
+				$(custom.lcenter).attr({'toggle':'unselect', 'class':'btn'});
+				$(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
 			}
 			else
 			{
 				align('center');
-				$(labelcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
-                                $(labelleft).attr({'toggle':'unselect', 'class':'btn'});
+				$(custom.lcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
+                                $(custom.lleft).attr({'toggle':'unselect', 'class':'btn'});
 
 			}	
 		});
-		$(labelright).on('click',function(event){
-                        if($(labelright).attr('toggle') === 'unselect')
-                        {
-                                align('right');
-                                $(labelright).attr({'toggle':'select', 'class':'btn btn-warning'});
-                                $(labelcenter).attr({'toggle':'unselect', 'class':'btn'});
-                                $(labelleft).attr({'toggle':'unselect', 'class':'btn'});
-                        }
-                        else
-                        {
-                                align('center');
-                                $(labelcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
-                                $(labelright).attr({'toggle':'unselect', 'class':'btn'});
-                        }
-                });
-		$(labelcenter).on('click', function(event){
-			if($(labelcenter).attr('toggle')==='unselect')
+		$(custom.lright).on('click',function(event){
+            if($(custom.lright).attr('toggle') === 'unselect')
+            {
+                    align('right');
+                    $(custom.lright).attr({'toggle':'select', 'class':'btn btn-warning'});
+                    $(custom.lcenter).attr({'toggle':'unselect', 'class':'btn'});
+                    $(custom.lleft).attr({'toggle':'unselect', 'class':'btn'});
+            }
+            else
+            {
+                    align('center');
+                    $(custom.lcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
+                    $(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
+            }
+        });
+        $(custom.lright).on('click', function(event){
+			if($(custom.lcenter).attr('toggle')==='unselect')
 			{
 				align('center');
-                                $(labelcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
-                                $(labelright).attr({'toggle':'unselect', 'class':'btn'});
-                                $(labelleft).attr({'toggle':'unselect', 'class':'btn'});
+                $(custom.lcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
+                $(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
+                $(custom.lleft).attr({'toggle':'unselect', 'class':'btn'});
 			}
 		});
 		function align(alignval){
 			
-			alignobj.actualleft = labellayer.left - labellayer.getWidth()/2;
-			alignobj.actualright = labellayer.left + labellayer.getWidth()/2;	
-			alignobj.alignment = alignval;	
-			actualleft[alignobj.index] = alignobj.actualleft;
-			actualright[alignobj.index] = alignobj.actualright;
-			alignment[alignobj.index] = alignobj.alignment;	
+			custom.alignDetails.actualleft = labellayer.left - labellayer.getWidth()/2;
+			custom.alignDetails.actualright = labellayer.left + labellayer.getWidth()/2;	
+			custom.alignDetails.alignment = alignval;	
+			actualleft[custom.alignDetails.index] = custom.alignDetails.actualleft;
+			actualright[custom.alignDetails.index] = custom.alignDetails.actualright;
+			alignment[custom.alignDetails.index] = custom.alignDetails.alignment;	
 			setpos();
 		}
 		function setpos(){
 			var x,y;
 			
-			if(alignobj.alignment==='left')
+			if(custom.alignDetails.alignment==='left')
 			{	
 				x = labellayer.left - labellayer.getWidth()/2;
 			}
-			else if(alignobj.alignment==='right')
+			else if(custom.alignDetails.alignment==='right')
 			{	
 				x = labellayer.left + labellayer.getWidth()/2;
 			}
@@ -325,56 +329,56 @@ $(document).ready(function () {
 				x = labellayer.left;
 			}
 			y = labellayer.top;
-			$(labelpos).val(alignobj.alignment+":"+x+' , top:'+y);
+			$(custom.lpos).val(custom.alignDetails.alignment+":"+x+' , top:'+y);
 		}
 		
 		function setleft(){
 			
-			if(alignobj.alignment==='left')
-				labellayer.set('left',alignobj.actualleft+labellayer.getWidth()/2);
-			else if(alignobj.alignment==='right')
-				labellayer.set('left',alignobj.actualright-labellayer.getWidth()/2);
+			if(custom.alignDetails.alignment==='left')
+				labellayer.set('left',custom.alignDetails.actualleft+labellayer.getWidth()/2);
+			else if(custom.alignDetails.alignment==='right')
+				labellayer.set('left',custom.alignDetails.actualright-labellayer.getWidth()/2);
 			canvas.renderAll(true);
 		}
 
-		$(labelbounds).on('click',function(){
+		$(custom.lbounds).on('click',function(){
 			
-			$(labelbounds).attr('disabled', true);
+			$(custom.lbounds).attr('disabled', true);
 			labellayer.lockMovementX = true;
 			labellayer.lockMovementY = true;			
 			labellayer.hasControls = false;
-			alignobj.boundingRect = new fabric.Rect({ left: labellayer.left-10, top: labellayer.top-10, width: labellayer.getWidth()+10, height: labellayer.getHeight()+10, opacity:0.3 });
-			canvas.add(alignobj.boundingRect);
-			positionBoundSpan(alignobj.boundingRect,boundspan);
-			$(boundspan).show();
+			custom.alignDetails.boundingRect = new fabric.Rect({ left: labellayer.left-10, top: labellayer.top-10, width: labellayer.getWidth()+10, height: labellayer.getHeight()+10, opacity:0.3 });
+			canvas.add(custom.alignDetails.boundingRect);
+			positionBoundSpan(custom.alignDetails.boundingRect,custom.bspan);
+			$(custom.bspan).show();
 		});
 		function positionBoundSpan(rect,boundspan)
 		{
 			var absCoords = canvas.getAbsoluteCoords(rect);
-			$(boundspan).css('position','absolute');
-			$(boundspan).css('left',(absCoords.left + rect.width) + 'px');
-			$(boundspan).css('top',(absCoords.top) + 'px');
+			$(custom.bspan).css('position','absolute');
+			$(custom.bspan).css('left',(absCoords.left + rect.width) + 'px');
+			$(custom.bspan).css('top',(absCoords.top) + 'px');
 			
 		}
-		$(labelboundsave).on('click', function(){
-			$(labelbounds).attr('disabled', false);
-			$(boundspan).hide();
+		$(custom.bsave).on('click', function(){
+			$(custom.lbounds).attr('disabled', false);
+			$(custom.bspan).hide();
 			labellayer.hasControls = true;
 			labellayer.lockMovementX = false;
 			labellayer.lockMovementY = false;
-			boundRect[alignobj.index] = alignobj.boundingRect;
-			maxwidth[alignobj.index] = alignobj.boundingRect.getWidth();
-			canvas.remove(alignobj.boundingRect);
+			boundRect[custom.alignDetails.index] = custom.alignDetails.boundingRect;
+			maxwidth[custom.alignDetails.index] = custom.alignDetails.boundingRect.getWidth();
+			canvas.remove(custom.alignDetails.boundingRect);
 		});
-		$(labelboundcancel).on('click', function(){
-			$(labelbounds).attr('disabled', false);
-			$(boundspan).hide();
+		$(custom.bcancel).on('click', function(){
+			$(custom.lbounds).attr('disabled', false);
+			$(custom.bspan).hide();
 			labellayer.hasControls = true;
 			labellayer.lockMovementX = false;
 			labellayer.lockMovementY = false;
-			canvas.remove(alignobj.boundingRect);
-			boundRect[alignobj.index] = null;
-			maxwidth[alignobj.index] = null;
+			canvas.remove(custom.alignDetails.boundingRect);
+			boundRect[custom.alignDetails.index] = null;
+			maxwidth[custom.alignDetails.index] = null;
 		});
 		labellayer.lockRotation = true;
 
