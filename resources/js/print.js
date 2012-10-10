@@ -15,7 +15,7 @@ function printToPdf(orientval,papersizeval)
 	doc = new jsPDF(orient,'pt',papersize);
 	xpos = 0;
 	ypos = 0;
-	var dimensions = settings.get('dimensions');
+	var dimensions = settings.get('badgeProps').dimensions;
 	imgWidth = +dimensions.inchwidth*72;
 	imgHeight = +dimensions.inchheight*72;
 	setRemainingHeight();
@@ -59,17 +59,17 @@ var createPDF = function(imgData) {
 			xpos = ypos = 0;
 			setRemainingHeight();
 			setRemainingWidth();
-			if(counter+1 < setting.get('numentries'))
+			if(counter+1 < settings.get('numentries'))
 				doc.addPage();
 		}
 	}
-	if(++counter < setting.get('numentries'))
+	if(++counter < settings.get('numentries'))
 		getImageFromUrl('filesystem:http://makkarlabs.in/temporary/badges/badge'+counter+'.jpeg', createPDF);
 	else
 	{
 		blob = dataURItoBlob(doc.output('datauristring'));
 		var blobURL = URL.createObjectURL(blob);
-		$('#downloadpdf').attr({'download': setting.get('projectName')+'.pdf','href':blobURL});
+		$('#downloadpdf').attr({'download': settings.get('projectName')+'.pdf','href':blobURL});
 		$('#downloadpdf').show();
 		$('#triggerprint').button('reset');
 	}
@@ -128,13 +128,13 @@ function setRemainingHeight()
 }
 function dataURItoBlob(dataURI) {
 	var byteString = atob(dataURI.split(',')[1]);
-	var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-	var ab = new ArrayBuffer(byteString.length);
+    var mimeString = {type: dataURI.split(',')[0].split(':')[1].split(';')[0]};
+    var ab = new ArrayBuffer(byteString.length);
 	var ia = new Uint8Array(ab);
-	for (var i = 0; i < byteString.length; i++) {
-		ia[i] = byteString.charCodeAt(i);
-	}
-	var bb = new window.WebKitBlobBuilder(); 
+   	for (var i = 0; i < byteString.length; i++) {
+    		ia[i] = byteString.charCodeAt(i);
+    }
+	var bb = new window.WebKitBlobBuilder();
 	bb.append(ab);
 	return bb.getBlob(mimeString);
 }

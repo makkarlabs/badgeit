@@ -27,13 +27,13 @@ var badgeProps = settings.get("badgeProps");
 
 $(document).ready(function () {
 
-	if(badgeProps.eventCsv === undefined || badgeProps.eventTemplate === undefined)
+	/*if(badgeProps.eventCSV === undefined || badgeProps.eventTemplate === undefined)
 	{	
 		
 		$('body').css('background-color','whitesmoke');
 		$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Redirecting you to <a href="./home.html">Home Page</a></p>');
 		location.href='./home.html';
-	}
+	}*/
 
 	dimensions = badgeProps.dimensions;
 	
@@ -42,7 +42,7 @@ $(document).ready(function () {
 	//CSV file related
 	var indexes = badgeProps.selectedCols;
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
-	var csv_file = badgeProps.eventCsv;
+	var csv_file = badgeProps.eventCSV;
 	var data = $.csv2Array(csv_file);  
 	$.each(data, function(index,ar) { 
 		if(ar.length == 0) { 
@@ -598,9 +598,9 @@ $(document).ready(function () {
     		for (var i = 0; i < byteString.length; i++) {
         		ia[i] = byteString.charCodeAt(i);
     		}
-		var bb = new window.WebKitBlobBuilder(); // or just BlobBuilder() if not using Chrome
-    		bb.append(ab);
-    		current_blob = bb.getBlob(mimeString);
+		var bb = new window.WebKitBlobBuilder();
+		bb.append(ab);
+		current_blob = bb.getBlob(mimeString);
 		fs.root.getFile('/badges/badge'+index_i+'.jpeg', {create: true}, function(fileEntry) {
 
 			testfileentry[index_i] = fileEntry;
