@@ -18,9 +18,6 @@ var client_id ="434888942442.apps.googleusercontent.com";
 var scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive";
       
 $.ajax({url:'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='+access_info["access_token"]})
-		.done(function(data){
-		
-		})
 		.fail(function(){
 			$('body').css('background-color','whitesmoke');
 			$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Checking Google Login status</p>');
@@ -48,14 +45,7 @@ var config = {
         };
 var isDriveAuth = false;	
 var holder = document.getElementById('holder');
-
-$("#projectName").change(function() {
-        //settings.set("projectName",this.value);
-        badgeProps.projectName = this.value;
-    });
     
-//localStorage["qrcode"] = "false";
-//settings.set("qrcode", false);
 badgeProps.qrcode = false;
 
 if (typeof window.FileReader === 'undefined') {
@@ -69,15 +59,11 @@ $('#qrcode').click(function() {
 	
 	if($(this).is(':checked')){
 		$('#qrCodeSelect').show();
-		//localStorage["qrcode"] = "true";
-        //settings.set("qrcode", true);
         badgeProps.qrcode = true;
 		$('#qrCodeSelect').find('select').attr("required","required");
 		} 
 	else {
 		$('#qrCodeSelect').hide();
-		//localStorage["qrcode"] = "false";
-        //settings.set("qrcode", false);
         badgeProps.qrcode = false;
 		$('#qrCodeSelect').find('select').removeAttr("required");
 	}
@@ -94,12 +80,9 @@ holder.ondrop = function (e) {
       reader = new FileReader();
   reader.onload = function (event) {
     console.log(event.target);
-    //localStorage["event-template"] = event.target.result;
-    //settings.set("event-template", event.target.result);
     badgeProps.eventTemplate = event.target.result;
-	
 	$('#badgepreview').attr('src', event.target.result);
-			
+
 	var img = $("#badgepreview"); 
 	$("<img/>") // Make in memory copy of image to avoid css issues
 		.attr("src", $(img).attr("src"))
@@ -122,12 +105,14 @@ holder.ondrop = function (e) {
  
   return false;
 };
+
 $('#template_fs').on('click',function(e){
 	e.preventDefault();
 	$('#template_fs').hide();
 	$('#template_gd').hide();
 	$('#fs_input').show();
 });
+
 $('#template_gd').on('click',function(e){
 	e.preventDefault();
 	if(!isDriveAuth)
@@ -157,10 +142,10 @@ $('#list_fs').on('click',function(e){
 	$('#list_gd').hide();
 	$('#fs_list').show();
 });
+
 $('#list_gd').on('click',function(e){
 	e.preventDefault();
-	if(!isDriveAuth)
-	{ 
+	if(!isDriveAuth) { 
 		gapi.auth.authorize(config, function(authresult) {
 			if(authresult && !authresult.error)
 			{	isDriveAuth = true;
@@ -171,8 +156,7 @@ $('#list_gd').on('click',function(e){
 			}
 		});
 	}
-	else
-	{
+	else {
 		$('#list_fs').hide();
 		$('#list_gd').hide();
 		$('#gd_list').show();
@@ -230,40 +214,32 @@ $("#badgeinput").submit(function() {
 	}
 	
 	if($('#qrcode').is(':checked')){
-	if($('#qrCodeSelect').find(':input:checkbox:checked').length == 0) {
+		if($('#qrCodeSelect').find(':input:checkbox:checked').length == 0) {
 			$("#alertmessage").html("<strong>Error!</strong> Select atleast one field for the QR Code list.");
 			$("#errorholder").attr('class','alert alert-error');
 			$("#errorholder").show();
 			return false;
-	}
+		}
 	}
 	
 	var selectedCols = new Array();
 	var qrSelectedCols = new Array();
-	$('#csvColumnsSelect').find(':input:checkbox:checked').each(function() { 
-		
+	$('#csvColumnsSelect').find(':input:checkbox:checked').each(function() { 	
 		selectedCols.push(this.value);
 	});
+
 	if (selectedCols.length != 0) {
-		
-		//localStorage['selected-cols'] = selectedCols;
-        //settings.set("selected-cols", selectedCols);
         badgeProps.selectedCols = selectedCols;
 	}
 	
-	
-	if($('#qrcode').is(':checked')){
+	if($('#qrcode').is(':checked')) {
 		$('#qrCodeSelect').find(':input:checkbox:checked').each(function() { 
 			qrSelectedCols.push(this.value);
 		});
-		//localStorage['qr-cols'] = qrSelectedCols;
-        //settings.set("qr-cols", qrSelectedCols);
         badgeProps.qrCols = qrSelectedCols;
 	}
-	//settings.set("projectName",$("#projectName").val());
+
 	badgeProps.projectName = $("#projectName").val();
-	//_gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', localStorage["projectName"]]);
-    //_gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', settings.get("projectName")]);
     _gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', badgeProps.projectName]);
     dimensions = { 
                 "pixelwidth" : $('#pixelwidth').val(), 
@@ -273,12 +249,10 @@ $("#badgeinput").submit(function() {
                 "scalepixelw" : $('#pixelwidth').val()*$('#dpi').val()/96,
                 "scalepixelh" : $('#pixelheight').val()*$('#dpi').val()/96
             }
-	//localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val()+','+$('#pixelwidth').val()*$('#dpi').val()/96+','+$('#pixelheight').val()*$('#dpi').val()/96;
-	//settings.set("dimensions",dimensions);
 	badgeProps.dimensions = dimensions;
     settings.set("badgeProps",badgeProps);
 
-     });
+  	});
 
 	$("[rel=tooltip]").tooltip();
 });
@@ -319,33 +293,26 @@ function loadPreview(image)
 }
 
 function readFileAsDataURL(file) {
-	
     var reader = new FileReader();
-    
     reader.onload = function(event) {
-	//localStorage[imageName] = event.target.result;
-    //settings.set("imageName") = event.target.result;
-    badgeProps.eventTemplate = event.target.result;
-	loadPreview(event.target.result);	
-    		
-    	};
+    	badgeProps.eventTemplate = event.target.result;
+		loadPreview(event.target.result);		
+    };
 	reader.readAsDataURL(file);
 }
 
-function getAsText(fileToRead, localName)
+function getAsText(fileToRead)
 {
 	
        var reader = new FileReader();
        reader.readAsText(fileToRead);
        reader.onload = function(event){                        
-       //localStorage[localName] = event.target.result;
-       //settings.set(localName, event.target.result);
-       badgeProps.localName = event.targe.result;
+       badgeProps.eventCSV = event.target.result;
            
 	   $('#csvColumnsSelect').empty();	
-	     createMultipleSelect(event.target.result, 'csvColumnsSelect', 'colselect', 'selected-cols');
+	     createMultipleSelect(event.target.result, 'csvColumnsSelect', 'colselect');
 	   $('#qrCodeSelect').empty();
-		 createMultipleSelect(event.target.result, 'qrCodeSelect', 'qrselect', 'qr-cols');
+		 createMultipleSelect(event.target.result, 'qrCodeSelect', 'qrselect');
 		 $('#qrCodeSelect').hide();
        };
        reader.onerror = function(event){
@@ -353,14 +320,12 @@ function getAsText(fileToRead, localName)
        };
 }
 
-function createMultipleSelect(fileString, placeid, colselectid, localStorageName)
+function createMultipleSelect(fileString, placeid, colselectid)
 {
-	
 	csv_text = $.csv2Array(fileString);
 	data = csv_text;
 	var i = 0;
-	while(i<csv_text[0].length)
-	{
+	while(i<csv_text[0].length) {
 		$("#"+placeid).append("<label class='checkbox'><input type='checkbox' id='"+ colselectid +"'value='"+i+"'>"+csv_text[0][i++]+" </input></label>");
 	}
 	
@@ -368,8 +333,7 @@ function createMultipleSelect(fileString, placeid, colselectid, localStorageName
 
 function lockar() {
 	ar = !(ar);
-	if(ar == true)
-	{
+	if(ar == true) {
 		$("#lockar").css("opacity","1"); 
 	}
 	else {
@@ -402,39 +366,37 @@ function createPicker() {
 
 	$("#template_gd").show();
 	$("#list_gd").show();
-       picker = new google.picker.PickerBuilder().
-            addView(google.picker.ViewId.DOCS_IMAGES).
-            setCallback(pickerCallbackImage).
-	    setAppId('434888942442.apps.googleusercontent.com').
-            build();
-       picker.setVisible(false);
+    picker = new google.picker.PickerBuilder().
+    	addView(google.picker.ViewId.DOCS_IMAGES).
+    	setCallback(pickerCallbackImage).
+		setAppId('434888942442.apps.googleusercontent.com').
+		build();
+	picker.setVisible(false);
 
 	picker1 = new google.picker.PickerBuilder().
-            addView(google.picker.ViewId.SPREADSHEETS).
-            setCallback(pickerCallbackSheet).
+        addView(google.picker.ViewId.SPREADSHEETS).
+        setCallback(pickerCallbackSheet).
 	    setAppId('434888942442.apps.googleusercontent.com').
-            build();
-       picker1.setVisible(false);
+        build();
+	picker1.setVisible(false);
 }
 
 function pickerCallbackImage(data) {
-      var fileid = 'nothing';
-      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) 
-      {
+    var fileid = 'nothing';
+    
+    if(data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
         var doc = data[google.picker.Response.DOCUMENTS][0];
         fileid = doc[google.picker.Document.ID];
-	$('#google_image').val(doc[google.picker.Document.NAME]);
-
+		$('#google_image').val(doc[google.picker.Document.NAME]);
        	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':gapi.auth.getToken().access_token},'callback':handleDriveImage});
     }
 }
 function pickerCallbackSheet(data) {
-      var fileid = 'nothing';
-      if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) 
-      {
+	var fileid = 'nothing';
+    if(data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
         var doc = data[google.picker.Response.DOCUMENTS][0];	
         fileid = doc[google.picker.Document.ID];
-	$('#csvGoogle').val(doc[google.picker.Document.NAME]);
+		$('#csvGoogle').val(doc[google.picker.Document.NAME]);
        	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':gapi.auth.getToken().access_token},'callback':handleDriveSheet});	
     }
 }
@@ -448,18 +410,15 @@ function handleDriveImage(response) {
 	var oReq = new XMLHttpRequest();
 	oReq.open("GET", response.downloadUrl+'&access_token=' + encodeURIComponent(gapi.auth.getToken().access_token), true);
 	oReq.responseType = "arraybuffer";
- 
 	oReq.onload = function(oEvent) {
-	  var blobBuilder = new BlobBuilder();
-	  blobBuilder.append(oReq.response);
-	  var blob = blobBuilder.getBlob(response.mimeType);
-	  var rdr = new FileReader();
-	  rdr.onload = function(event){
-          //localStorage['event-template'] = event.target.result;
-          //settings.set('event-template',event.target.result);
-          badgeProps.eventTemplate = event.target.result;
-          loadPreview(event.target.result);};
-	  rdr.readAsDataURL(blob);
+		var blobBuilder = new BlobBuilder();
+		blobBuilder.append(oReq.response);
+		var blob = blobBuilder.getBlob(response.mimeType);
+		var rdr = new FileReader();
+		rdr.onload = function(event){
+		    badgeProps.eventTemplate = event.target.result;
+		    oadPreview(event.target.result);};
+		rdr.readAsDataURL(blob);
 	};
  
 	oReq.send();
@@ -471,55 +430,36 @@ function handleDriveSheet(response) {
 	$.ajax({'url':'https://badgeitrelay.appspot.com/badgeitrelay?link='+ encodeURIComponent(url), 'crossDomain':true}).
 		done(function(data){
 			$('#csvColumnsSelect').html("");
-			//localStorage['event-csv']=data;
-            //settings.set('event-csv',data);
-            badgeProps.eventCSV = data;
-			 createMultipleSelect(data, 'csvColumnsSelect', 'colselect', 'selected-cols');
-			 createMultipleSelect(data, 'qrCodeSelect', 'qrselect', 'qr-cols');
+		    badgeProps.eventCSV = data;
+			createMultipleSelect(data, 'csvColumnsSelect', 'colselect');
+			createMultipleSelect(data, 'qrCodeSelect', 'qrselect');
 			 $('#qrCodeSelect').hide();
 		});
 
 }
 
 function setPixelWidth() {
-
 	if(($('#dpi').val() != "") && !isNaN($('#dpi').val())) {
-	
-	$('#pixelwidth').val(($('#dpi').val()*$('#inchwidth').val()).toFixed(2));
-	
-	if(ar) {
-		
-		$('#inchheight').val(($('#inchwidth').val() / aspectRatio).toFixed(2));
-		$('#pixelheight').val(($('#dpi').val()*$('#inchheight').val()).toFixed(2));
-	  }
+		$('#pixelwidth').val(($('#dpi').val()*$('#inchwidth').val()).toFixed(2));
+		if(ar) {	
+			$('#inchheight').val(($('#inchwidth').val() / aspectRatio).toFixed(2));
+			$('#pixelheight').val(($('#dpi').val()*$('#inchheight').val()).toFixed(2));
+	  	}
 	}
 }
 
 
 function setPixelHeight() {
-
 	if(($('#dpi').val() != "") && !isNaN($('#dpi').val())) {
-	
-	
-	$('#pixelheight').val(($('#dpi').val()*$('#inchheight').val()).toFixed(2));
-	
-	if(ar) {
-		
-		$('#inchwidth').val(($('#inchheight').val() * aspectRatio).toFixed(2));
-		$('#pixelwidth').val(($('#dpi').val()*$('#inchwidth').val()).toFixed(2));
-	 }
+		$('#pixelheight').val(($('#dpi').val()*$('#inchheight').val()).toFixed(2));
+		if(ar) {		
+			$('#inchwidth').val(($('#inchheight').val() * aspectRatio).toFixed(2));
+			$('#pixelwidth').val(($('#dpi').val()*$('#inchwidth').val()).toFixed(2));
+	 	}
 	}
 }
 
 function demo() {	
-    
-		//localStorage["event-template"]= demoJSON["event-template"]
-		//localStorage["dimensions"]=demoJSON["dimensions"];
-		//localStorage["event-csv"]=demoJSON["event-csv"];
-		//localStorage['selected-cols'] = demoJSON["selected-cols"];
-		//localStorage['qrcode']=demoJSON["qrcode"];
-		//localStorage['qr-cols']=demoJSON["qr-cols"];
-        //settings = new Store("settings", demoJSON);
         settings.set("badgeProps",demoJSON);
 		$("#badgeinput")[0].submit();
 }
