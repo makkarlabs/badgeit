@@ -23,10 +23,11 @@ window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFile
 
 //Local Storage
 var settings = new Store("settings");
+var badgeProps = settings.get("badgeProps");
 
 $(document).ready(function () {
 
-	if(settings.get('event-csv') === undefined || settings.get('event-template') === undefined)
+	if(badgeProps.eventCsv === undefined || badgeProps.eventTemplate === undefined)
 	{	
 		
 		$('body').css('background-color','whitesmoke');
@@ -34,14 +35,14 @@ $(document).ready(function () {
 		location.href='./home.html';
 	}
 
-	dimensions = settings.get('dimensions');
+	dimensions = badgeProps.dimensions;
 	
-	isqrcode = settings.get('qrcode');
+	isqrcode = badgeProps.qrcode;
 
 	//CSV file related
-	var indexes = settings.get('selected-cols');
+	var indexes = badgeProps.selectedCols;
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
-	var csv_file = settings.get('event-csv');
+	var csv_file = badgeProps.eventCsv;
 	var data = $.csv2Array(csv_file);  
 	$.each(data, function(index,ar) { 
 		if(ar.length == 0) { 
@@ -58,11 +59,11 @@ $(document).ready(function () {
 	//Infographics
 	if(isqrcode==='true')
 	{
-		var qr_indexes = settings.get('qr-cols');
+		var qr_indexes = badgeProps.qrCols;
 		for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
 	}
 	
-	canvas = new fabric.Canvas('canvas', {backgroundImage:settings.get('event-template')});
+	canvas = new fabric.Canvas('canvas', {backgroundImage:badgeProps.eventTemplate});
 	canvas.setHeight(+dimensions.pixelheight);
 	canvas.setWidth(+dimensions.pixelwidth);
 	scale = 1;
@@ -445,7 +446,7 @@ $(document).ready(function () {
 	});
 	$("div#ziplink > a").on('click', function(){
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
-			$("div#ziplink > a").attr({'download': settings.get('projectName')+'.zip','href':blobURL});
+			$("div#ziplink > a").attr({'download': badgeProps.projectName+'.zip','href':blobURL});
 		});
 	});
 	
@@ -622,7 +623,7 @@ $(document).ready(function () {
 				else{
 					$("span#genimages > progress#gen").attr('value',data.length);
 					$("span#genimages > progress#gen").hide();
-					_gaq.push(['_trackEvent', 'Badge', 'Created', settings.get("projectName"), data.length]);
+					_gaq.push(['_trackEvent', 'Badge', 'Created', badgeProps.projectName, data.length]);
 					$("#comp-select").hide();
 					$("#customize").hide();
 					$("#genimages").hide();
