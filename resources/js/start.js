@@ -1,6 +1,7 @@
 var picker, picker1,feed, data, ar=true, aspectRatio;
 var preloadImage = true, preloadCSV = true;
 var settings = new Store("settings");
+var badgeProps = new Object();
 google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
@@ -49,11 +50,13 @@ var isDriveAuth = false;
 var holder = document.getElementById('holder');
 
 $("#projectName").change(function() {
-        settings.set("projectName",this.value);
+        //settings.set("projectName",this.value);
+        badgeProps.projectName = this.value;
     });
     
 //localStorage["qrcode"] = "false";
-settings.set("qrcode", false);
+//settings.set("qrcode", false);
+badgeProps.qrcode = false;
 
 if (typeof window.FileReader === 'undefined') {
   console.log('File reader API failed');
@@ -67,13 +70,15 @@ $('#qrcode').click(function() {
 	if($(this).is(':checked')){
 		$('#qrCodeSelect').show();
 		//localStorage["qrcode"] = "true";
-        settings.set("qrcode", true);
+        //settings.set("qrcode", true);
+        badgeProps.qrcode = true;
 		$('#qrCodeSelect').find('select').attr("required","required");
 		} 
 	else {
 		$('#qrCodeSelect').hide();
 		//localStorage["qrcode"] = "false";
-        settings.set("qrcode", false);
+        //settings.set("qrcode", false);
+        badgeProps.qrcode = false;
 		$('#qrCodeSelect').find('select').removeAttr("required");
 	}
 });
@@ -90,7 +95,8 @@ holder.ondrop = function (e) {
   reader.onload = function (event) {
     console.log(event.target);
     //localStorage["event-template"] = event.target.result;
-      settings.set("event-template", event.target.result);
+    //settings.set("event-template", event.target.result);
+    badgeProps.eventTemplate = event.target.result;
 	
 	$('#badgepreview').attr('src', event.target.result);
 			
@@ -241,7 +247,8 @@ $("#badgeinput").submit(function() {
 	if (selectedCols.length != 0) {
 		
 		//localStorage['selected-cols'] = selectedCols;
-        settings.set("selected-cols", selectedCols);
+        //settings.set("selected-cols", selectedCols);
+        badgeProps.selectedCols = selectedCols;
 	}
 	
 	
@@ -250,11 +257,14 @@ $("#badgeinput").submit(function() {
 			qrSelectedCols.push(this.value);
 		});
 		//localStorage['qr-cols'] = qrSelectedCols;
-        settings.set("qr-cols", qrSelectedCols);
+        //settings.set("qr-cols", qrSelectedCols);
+        badgeProps.qrCols = qrSelectedCols;
 	}
-	settings.set("projectName",$("#projectName").val());
+	//settings.set("projectName",$("#projectName").val());
+	badgeProps.projectName = $("#projectName").val();
 	//_gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', localStorage["projectName"]]);
-    _gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', settings.get("projectName")]);
+    //_gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', settings.get("projectName")]);
+    _gaq.push(['_trackEvent', 'Template', 'Submit', 'Project', badgeProps.projectName]);
     dimensions = { 
                 "pixelwidth" : $('#pixelwidth').val(), 
                 "pixelheight" : $('#pixelheight').val(), 
@@ -264,12 +274,13 @@ $("#badgeinput").submit(function() {
                 "scalepixelh" : $('#pixelheight').val()*$('#dpi').val()/96
             }
 	//localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val()+','+$('#pixelwidth').val()*$('#dpi').val()/96+','+$('#pixelheight').val()*$('#dpi').val()/96;
-	   settings.set("dimensions",dimensions);
+	//settings.set("dimensions",dimensions);
+	badgeProps.dimensions = dimensions;
             
      });
 
 	$("[rel=tooltip]").tooltip();
-
+	settings.set("badgeProps",badgeProps);
 });
 function change()
 {
@@ -313,7 +324,8 @@ function readFileAsDataURL(file, imageName) {
     
     reader.onload = function(event) {
 	//localStorage[imageName] = event.target.result;
-    settings.set("imageName") = event.target.result;
+    //settings.set("imageName") = event.target.result;
+    badgeProps.imageName = event.target.result;
 	loadPreview(event.target.result);	
     		
     	};
@@ -327,7 +339,8 @@ function getAsText(fileToRead, localName)
        reader.readAsText(fileToRead);
        reader.onload = function(event){                        
        //localStorage[localName] = event.target.result;
-       settings.set(localName, event.target.result);
+       //settings.set(localName, event.target.result);
+       badgeProps.localName = event.targe.result;
            
 	   $('#csvColumnsSelect').empty();	
 	     createMultipleSelect(event.target.result, 'csvColumnsSelect', 'colselect', 'selected-cols');
@@ -443,7 +456,8 @@ function handleDriveImage(response) {
 	  var rdr = new FileReader();
 	  rdr.onload = function(event){
           //localStorage['event-template'] = event.target.result;
-          settings.set('event-template',event.target.result);
+          //settings.set('event-template',event.target.result);
+          badgeProps.eventTemplate = event.target.result;
           loadPreview(event.target.result);};
 	  rdr.readAsDataURL(blob);
 	};
@@ -458,7 +472,8 @@ function handleDriveSheet(response) {
 		done(function(data){
 			$('#csvColumnsSelect').html("");
 			//localStorage['event-csv']=data;
-            settings.set('event-csv',data);
+            //settings.set('event-csv',data);
+            badgeProps.eventCSV = data;
 			 createMultipleSelect(data, 'csvColumnsSelect', 'colselect', 'selected-cols');
 			 createMultipleSelect(data, 'qrCodeSelect', 'qrselect', 'qr-cols');
 			 $('#qrCodeSelect').hide();
@@ -504,6 +519,7 @@ function demo() {
 		//localStorage['selected-cols'] = demoJSON["selected-cols"];
 		//localStorage['qrcode']=demoJSON["qrcode"];
 		//localStorage['qr-cols']=demoJSON["qr-cols"];
-        settings = new Store("settings", demoJSON);
+        //settings = new Store("settings", demoJSON);
+        settings.set("badgeProps",demoJSON);
 		$("#badgeinput")[0].submit();
 }
