@@ -276,11 +276,11 @@ $("#badgeinput").submit(function() {
 	//localStorage["dimensions"] = $('#pixelwidth').val()+','+$('#pixelheight').val()+','+$('#inchwidth').val()+','+$('#inchheight').val()+','+$('#pixelwidth').val()*$('#dpi').val()/96+','+$('#pixelheight').val()*$('#dpi').val()/96;
 	//settings.set("dimensions",dimensions);
 	badgeProps.dimensions = dimensions;
-            
+    settings.set("badgeProps",badgeProps);
+
      });
 
 	$("[rel=tooltip]").tooltip();
-	settings.set("badgeProps",badgeProps);
 });
 function change()
 {
@@ -318,14 +318,14 @@ function loadPreview(image)
 	$('#holder').css('background-color','white');
 }
 
-function readFileAsDataURL(file, imageName) {
+function readFileAsDataURL(file) {
 	
     var reader = new FileReader();
     
     reader.onload = function(event) {
 	//localStorage[imageName] = event.target.result;
     //settings.set("imageName") = event.target.result;
-    badgeProps.imageName = event.target.result;
+    badgeProps.eventTemplate = event.target.result;
 	loadPreview(event.target.result);	
     		
     	};

@@ -89,7 +89,7 @@
 				<a class='btn' rel='tooltip' title='Select Background image from your local drive.' id='template_fs'><i class="icon-folder-open"> </i> My Computer</a>
 				<a class='btn btn-warning' rel='tooltip' title='Select Background image from Google Drive.' id='template_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
 				<span id="fs_input" class="invi">
-					<input type="file" accept="image/*" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0],'event-template');"></input>
+					<input type="file" accept="image/*" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0]);"></input>
 					<a class="icon-repeat cpointer" id="return_image" onclick="change();"></a>
 				</span>
 				<span id="gd_input" class="invi">				
