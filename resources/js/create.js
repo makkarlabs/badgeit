@@ -39,7 +39,7 @@ $(document).ready(function () {
 	isqrcode = settings.get('qrcode');
 
 	//CSV file related
-	var indexes = settings.get('selected-cols').split(",")||[];
+	var indexes = settings.get('selected-cols');
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
 	var csv_file = settings.get('event-csv');
 	var data = $.csv2Array(csv_file);  
@@ -93,7 +93,26 @@ $(document).ready(function () {
 	{
 		index = indexes[i];
 		current_label = data[0][index];
-        var customize_json = { labelname: current_label,
+        customize_json = { labelname: current_label,
+                               ldiv: '#label'+i+'div',
+                               label: '#label'+i,
+                               lfamily: '#label'+i+'family',
+                               lsize: '#label'+i+'size',
+                               lbold: '#label'+i+'bold',
+                               litalic: '#label'+i+'italic',
+                               lcolor: '#label'+i+'color',
+                               lleft: '#label'+i+'left',
+                               lcenter: '#label'+i+'center',
+                               lright: '#label'+i+'right',
+                               lpos: '#label'+i+'pos',
+                               xpos: xpos,
+                               ypos: ypos,
+                               lbounds: '#label'+i+'bounds',
+                               bspan: '#boundspan'+i,
+                               bsave: '#label'+i+'boundsave',
+                               bcancel: '#label'+i+'boundcancel'
+                              };
+        var result_labellayer = labellayer_tempfn({ 
                                ldiv: 'label'+i+'div',
                                label: 'label'+i,
                                lfamily: 'label'+i+'family',
@@ -108,11 +127,7 @@ $(document).ready(function () {
                                xpos: xpos,
                                ypos: ypos,
                                lbounds: 'label'+i+'bounds',
-                               bspan: 'boundspan'+i,
-                               bsave: 'label'+i+'boundsave',
-                               bcancel: 'label'+i+'boundcancel'
-                              };
-        var result_labellayer = labellayer_tempfn(customize_json);
+                              });
         var result_setbounds = bounds_tempfn({bspan: 'boundspan'+i,
                                               bsave: 'label'+i+'boundsave',
                                               bcancel: 'label'+i+'boundcancel'
@@ -140,11 +155,13 @@ $(document).ready(function () {
 		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
 		alignDetails.alignment = 'center';
         customize_json.alignDetails = alignDetails;
-		addAttributes(customize_json);
+	
+		addAttributes(customize_json, labellayer[i]);
         ypos += 40;
 	}
-	function addAttributes(custom)
-    {
+	function addAttributes(custom, labellayer)
+    	{
+		console.log(custom);
 		canvas.observe('object:selected',function(e){
 	
 			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
@@ -171,7 +188,7 @@ $(document).ready(function () {
 				}
 				if(activeObject ===custom.alignDetails.boundingRect)
 				{
-					positionBoundSpan(custom.alignDetails.boundingRect,boundspan);
+					positionBoundSpan(custom.alignDetails.boundingRect,custom.bspan);
 				}
 			}
 		});
@@ -294,7 +311,7 @@ $(document).ready(function () {
                     $(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
             }
         });
-        $(custom.lright).on('click', function(event){
+        $(custom.lcenter).on('click', function(event){
 			if($(custom.lcenter).attr('toggle')==='unselect')
 			{
 				align('center');
