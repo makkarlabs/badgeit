@@ -156,7 +156,7 @@
 				<a class='btn' id='list_fs' rel='tooltip' title='Select a CSV file containing the details of attendees from your local drive.'><i class="icon-folder-open"> </i> My Computer</a>
 				<a class='btn btn-warning' id='list_gd' rel='tooltip' title='Select a Spreadsheet containing the details of attendees from Google Drive.'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
 				<span id="fs_list" class="invi">
-					<input type="file" class="input-file" accept=".csv" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0], 'event-csv');"> </input>
+					<input type="file" class="input-file" accept=".csv" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0]);"> </input>
 					<a class="icon-repeat cpointer" id="return_image" onclick="changeCsv();"></a>
 				</span>
 				<span id="gd_list" class="invi">				
