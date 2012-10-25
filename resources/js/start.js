@@ -1,27 +1,31 @@
-var picker, picker1,feed, data, ar=true, aspectRatio;
+var imagePicker, sheetPicker, projectPicker, feed, data, ar=true, aspectRatio;
 var preloadImage = true, preloadCSV = true;
 var settings = new Store("settings");
 var badgeProps = new Object();
+var responseJSON, projectJSON;
+var source = "start";
+
 google.setOnLoadCallback(createPicker);
 google.load('picker',1);
 
 $(function() {
+
 // First, parse the query string
 var access_info = {}, queryString = location.hash.substring(1),
     regex = /([^&=]+)=([^&]*)/g, m;
 while (m = regex.exec(queryString)) {
   access_info[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
 }
-	
 
 var client_id ="434888942442.apps.googleusercontent.com";
 var scope = "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/drive";
-      
+
+// CHANGE REDIRECT URL WHILE MOVING TO PRODUCTION      
 $.ajax({url:'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token='+access_info["access_token"]})
 		.fail(function(){
 			$('body').css('background-color','whitesmoke');
 			$('body').html('<p style="font-size:20px; text-align:center; margin-top:100px">Checking Google Login status</p>');
-			location.href = "https://accounts.google.com/o/oauth2/auth?response_type=token&client_id="+encodeURIComponent(client_id)+"&scope="+encodeURIComponent(scope)+"&redirect_uri="+encodeURIComponent("http://makkarlabs.in/badgeit/start.html");
+			location.href = "https://accounts.google.com/o/oauth2/auth?response_type=token&client_id="+encodeURIComponent(client_id)+"&scope="+encodeURIComponent(scope)+"&redirect_uri="+encodeURIComponent("http://makkarlabs.in/preprod/badgeit/start.html");
 	
 		});
 
@@ -34,19 +38,11 @@ $.ajax({url:'https://www.googleapis.com/oauth2/v1/userinfo?access_token='+access
 				});
 
 
-$("#template_gd").hide();
-$("#list_gd").hide();
-
-
-var config = {
-          'client_id': '434888942442.apps.googleusercontent.com',
-          'scope': 'https://www.googleapis.com/auth/drive',
-	      'immediate':false
-        };
-var isDriveAuth = false;	
-var holder = document.getElementById('holder');
+hideDriveButtons();
+$("a[rel*=leanModal]").leanModal({ top : 200, overlay : 0.4, closeButton: ".modal_close" });
     
 badgeProps.qrcode = false;
+settings.set("openFromDrive", false);
 
 if (typeof window.FileReader === 'undefined') {
   console.log('File reader API failed');
@@ -69,103 +65,42 @@ $('#qrcode').click(function() {
 	}
 });
 
- 
-holder.ondragover = function () { this.className = 'hover'; return false; };
-holder.ondragend = function () { this.className = ''; return false; };
-holder.ondrop = function (e) {
-  this.className = '';
-  e.preventDefault();
+$('#goToNewProject').click(function(){
 
-  var file = e.dataTransfer.files[0],
-      reader = new FileReader();
-  reader.onload = function (event) {
-    console.log(event.target);
-    badgeProps.eventTemplate = event.target.result;
-	$('#badgepreview').attr('src', event.target.result);
+	$('#navButtons').hide();
+	$('#newProject').show();
+	$("footer").removeClass("fixed");
 
-	var img = $("#badgepreview"); 
-	$("<img/>") // Make in memory copy of image to avoid css issues
-		.attr("src", $(img).attr("src"))
-		.load(function() {
-	$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
-	$("#pixelheight").val(this.height); // work for in memory images.
-	aspectRatio = $('#pixelwidth').val() / $('#pixelheight').val(); 
-	$('#inchheight').val(($("#pixelheight").val() / $("#dpi").val()).toFixed(2));;
-	$('#inchwidth').val(($("#pixelwidth").val() / $("#dpi").val()).toFixed(2));;
-	
-	
-	});
-	$("#holderCaption").hide();
-	$('#holder').css('border','0px');
-	$('#holder').css('background-color','white');
-	$('#templateChooser').removeAttr("required");
-  };
-  console.log(file);
-  reader.readAsDataURL(file);
- 
-  return false;
-};
-
-$('#template_fs').on('click',function(e){
-	e.preventDefault();
-	$('#template_fs').hide();
-	$('#template_gd').hide();
-	$('#fs_input').show();
 });
 
-$('#template_gd').on('click',function(e){
-	e.preventDefault();
-	if(!isDriveAuth)
-	{ 
-		gapi.auth.authorize(config, function(authresult) {
-			if(authresult && !authresult.error)
-			{	isDriveAuth = true;
-				$('#template_fs').hide();
-				$('#template_gd').hide();
-				$('#gd_input').show();
-				picker.setVisible(true);
-			}
-		});
-	}
-	else
-	{
-		$('#template_fs').hide();
-		$('#template_gd').hide();
-		$('#gd_input').show();
-		picker.setVisible(true);
-	}
+
+$('#goToDemo').click(function(){
+	demo();
 });
 
-$('#list_fs').on('click',function(e){
-	e.preventDefault();
-	$('#list_fs').hide();
-	$('#list_gd').hide();
-	$('#fs_list').show();
-});
-
-$('#list_gd').on('click',function(e){
+$("#goToOpenProject").click(function(e) {
 	e.preventDefault();
 	if(!isDriveAuth) { 
 		gapi.auth.authorize(config, function(authresult) {
 			if(authresult && !authresult.error)
 			{	isDriveAuth = true;
-				$('#list_fs').hide();
-				$('#list_gd').hide();
-				$('#gd_list').show();
-				picker1.setVisible(true);
+				projectPicker.setVisible(true);
 			}
 		});
 	}
 	else {
-		$('#list_fs').hide();
-		$('#list_gd').hide();
-		$('#gd_list').show();
-		picker1.setVisible(true);
+		projectPicker.setVisible(true);
 	}
-	
 });
 
+$("#backButton").click(function(e){
+	e.preventDefault();
+	$('#navButtons').show();
+	$('#newProject').hide();
+	$("footer").addClass("fixed");
+});
 
+setFileChooseHandlers();
 
 
 $("#badgeinput").submit(function() {
@@ -256,69 +191,6 @@ $("#badgeinput").submit(function() {
 
 	$("[rel=tooltip]").tooltip();
 });
-function change()
-{
-	$('#template_chooser').attr('required','required');
-	$('#fs_input').hide();
-	$('#gd_input').hide();		
-	$('#template_fs').show();
-	$('#template_gd').show();
-}
-function changeCsv()
-{
-	$('#fs_list').hide();
-	$('#gd_list').hide();		
-	$('#list_fs').show();
-	$('#list_gd').show();
-}
-
-function loadPreview(image)
-{
-	$('#badgepreview').attr('src', image);
-	var img = $("#badgepreview"); 
-	$("<img/>") // Make in memory copy of image to avoid css issues
-		.attr("src", $(img).attr("src"))
-		.load(function() {
-			$("#pixelwidth").val(this.width);   // Note: $(this).width() will not
-			$("#pixelheight").val(this.height); // work for in memory images.
-			aspectRatio = $('#pixelwidth').val() / $('#pixelheight').val();
-			if(($('#dpi').val() != "") && !isNaN($('#dpi').val())) {
-				$('#inchheight').val(($("#pixelheight").val() / $("#dpi").val()).toFixed(2));
-				$('#inchwidth').val(($("#pixelwidth").val() / $("#dpi").val()).toFixed(2));
-			}
-		});
-	$("#holderCaption").hide();
-	$('#holder').css('border','0px');
-	$('#holder').css('background-color','white');
-}
-
-function readFileAsDataURL(file) {
-    var reader = new FileReader();
-    reader.onload = function(event) {
-    	badgeProps.eventTemplate = event.target.result;
-		loadPreview(event.target.result);		
-    };
-	reader.readAsDataURL(file);
-}
-
-function getAsText(fileToRead)
-{
-	
-       var reader = new FileReader();
-       reader.readAsText(fileToRead);
-       reader.onload = function(event){                        
-       badgeProps.eventCSV = event.target.result;
-           
-	   $('#csvColumnsSelect').empty();	
-	     createMultipleSelect(event.target.result, 'csvColumnsSelect', 'colselect');
-	   $('#qrCodeSelect').empty();
-		 createMultipleSelect(event.target.result, 'qrCodeSelect', 'qrselect');
-		 $('#qrCodeSelect').hide();
-       };
-       reader.onerror = function(event){
-            console.log("The Error is"+event.target.error.name);
-       };
-}
 
 function createMultipleSelect(fileString, placeid, colselectid)
 {
@@ -360,83 +232,6 @@ function clear() {
         }
     });
 };
-
-
-function createPicker() {
-
-	$("#template_gd").show();
-	$("#list_gd").show();
-    picker = new google.picker.PickerBuilder().
-    	addView(google.picker.ViewId.DOCS_IMAGES).
-    	setCallback(pickerCallbackImage).
-		setAppId('434888942442.apps.googleusercontent.com').
-		build();
-	picker.setVisible(false);
-
-	picker1 = new google.picker.PickerBuilder().
-        addView(google.picker.ViewId.SPREADSHEETS).
-        setCallback(pickerCallbackSheet).
-	    setAppId('434888942442.apps.googleusercontent.com').
-        build();
-	picker1.setVisible(false);
-}
-
-function pickerCallbackImage(data) {
-    var fileid = 'nothing';
-    
-    if(data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-        var doc = data[google.picker.Response.DOCUMENTS][0];
-        fileid = doc[google.picker.Document.ID];
-		$('#google_image').val(doc[google.picker.Document.NAME]);
-       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':gapi.auth.getToken().access_token},'callback':handleDriveImage});
-    }
-}
-function pickerCallbackSheet(data) {
-	var fileid = 'nothing';
-    if(data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-        var doc = data[google.picker.Response.DOCUMENTS][0];	
-        fileid = doc[google.picker.Document.ID];
-		$('#csvGoogle').val(doc[google.picker.Document.NAME]);
-       	gapi.client.request({'path':'/drive/v2/files/'+fileid,'params':{'access_token':gapi.auth.getToken().access_token},'callback':handleDriveSheet});	
-    }
-}
-
-
-function handleDriveImage(response) {
-	$('#holder>img').attr({'src':'bootstrap/img/loadingbig.gif','width':'100', 'height':'84'});
-	$('#template_chooser').removeAttr('required');
-	console.log(response);
-	var BlobBuilder = window.WebKitBlobBuilder || window.BlobBuilder;
-	var oReq = new XMLHttpRequest();
-	oReq.open("GET", response.downloadUrl+'&access_token=' + encodeURIComponent(gapi.auth.getToken().access_token), true);
-	oReq.responseType = "arraybuffer";
-	oReq.onload = function(oEvent) {
-		var blobBuilder = new BlobBuilder();
-		blobBuilder.append(oReq.response);
-		var blob = blobBuilder.getBlob(response.mimeType);
-		var rdr = new FileReader();
-		rdr.onload = function(event){
-		    badgeProps.eventTemplate = event.target.result;
-		    oadPreview(event.target.result);};
-		rdr.readAsDataURL(blob);
-	};
- 
-	oReq.send();
-}
-function handleDriveSheet(response) {
-	$('#csvColumnsSelect').html("<img src='bootstrap/img/loading.gif' />");
-	var url = response.exportLinks['application/pdf'].substring(0,response.exportLinks['application/pdf'].length-3)+'csv&access_token='+gapi.auth.getToken().access_token;
-	console.log(url);
-	$.ajax({'url':'https://badgeitrelay.appspot.com/badgeitrelay?link='+ encodeURIComponent(url), 'crossDomain':true}).
-		done(function(data){
-			$('#csvColumnsSelect').html("");
-		    badgeProps.eventCSV = data;
-			createMultipleSelect(data, 'csvColumnsSelect', 'colselect');
-			createMultipleSelect(data, 'qrCodeSelect', 'qrselect');
-			 $('#qrCodeSelect').hide();
-		});
-
-}
 
 function setPixelWidth() {
 	if(($('#dpi').val() != "") && !isNaN($('#dpi').val())) {

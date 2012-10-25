@@ -1,4 +1,5 @@
 var demoJSON = {	
+		"projectName" : "DevCon-Gotham",
 		"dimensions" : {"pixelwidth":"600.00","pixelheight":"480.00","inchwidth":"4","inchheight":"3.20","scalepixelw":"937.5","scalepixelh":"750"},
 		"eventCSV" :"Name,Designation,Organization\nBruce Wayne,Developer,Wayne Enterprises\nAlfred Pennyworth,Developer,Wayne Enterprises\nJames Gordon,Developer,Wayne Enterprises\nLucius Fox,Developer,Wayne Enterprises\nJohn Blake,Designer,Wayne Enterprises\nRa's Al Ghul,Cracker,League of Shadows\nBane,Cracker,League of Shadows",
 		"selectedCols":[0,1,2],

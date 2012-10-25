@@ -7,11 +7,14 @@
     <script src="resources/js/jquery.js"></script>
     <script src="https://apis.google.com/js/client.js"></script>
     <script src="resources/js/jquery-csv.js"></script>
-     <script src="resources/js/store.js"></script>
-	 <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="resources/js/store.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
     <script src="http://www.google.com/jsapi?key=AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8"></script>
-    <script src="resources/js/start.js"></script>
     <script src="resources/js/demo.js"></script>
+    <script src="resources/js/jquery.leanModal.min.js"></script>
+    <script src="resources/js/dataProcess.js"></script>
+    <script src="resources/js/start.js"></script>
+    <script src="resources/js/analytics.js"></script>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
@@ -38,12 +41,19 @@
 	.mtop {margin-top:10px}
 	.action-form{width:400px;}
 	.mleft{margin-left:5px;}
+	#lean_overlay { position: fixed;  z-index:100; top: 0px; left: 0px; height:100%; width:100%; background: #000; display: none;}
+	#waitForProject {display: none; position: fixed; opacity: 1; z-index: 101; left: 50%; margin-left: -202px; top: 200px; width:400px; height: 175px; background: whitesmoke; border-radius: 10px; margin: 20px; text-align: center; padding-top: 50px;}
+	#newProject{display: none;}
+	#backButton{cursor:pointer; position:relative;}
+	.bigButton{width: 65px; height: 80px; color: black; padding: 17px 35px; cursor: pointer; margin: 10px; font-size: 75px; font-family: Rancho;}
+	#goToNewProject{background-color: lightgreen; padding: 17px 51px;}
+	#goToOpenProject{background-color: lightblue; padding: 17px 41px;}
+	#goToDemo{background-color: lightgoldenrodyellow;}
+	#navSpan{margin-right: auto; margin-left: auto; width: 700px; margin-top: 15%;}
 	</style>
-
-
-<script src="resources/js/analytics.js"></script>
+	
   </head>
-  <body onload="$('#projectName').focus();">
+<body>
   
 <div id="social"></div>
  
@@ -64,20 +74,36 @@
 </header>
 </div>
 
+<div id="navButtons" class="container">
 
-<div class="container">	
-		
-		<div id="vetti">
+	<div id="navSpan">
+		<a class="bigButton" id="goToNewProject" rel="tooltip" title="Create a new Badge It project.">New</a>
+		<a class="bigButton" id="goToOpenProject" rel="tooltip" title="Opens a saved Project from Google Drive.">Open</a>
+		<a class="bigButton" id="goToDemo" rel="tooltip" title="Go on a complete Product tour, try out Badge-It with sample data.">Demo</a>
+	</div>
+
+</div>
+
+<a rel="leanModal" id="triggerWait" name="waitForProject" href="#waitForProject" hidden="true"></a>
+
+<div id="waitForProject">
+	<h2> Fetching your project. </h2>
+	<img id="waitLoading" src="bootstrap/img/loadingbig.gif"/>
+</div>
+
+<div class="container" id="newProject">			
+	<div id="vetti">
 		<form class="form-horizontal" id="badgeinput" action="./create.html">
 		<fieldset>
 		<div class="control-group">
+			<a class="left carousel-control" rel="tooltip" title="Go back to start page" id="backButton">&lsaquo;</a>
 			<input type="text" placeholder="Event Name" class="input" id="projectName" name="projectName" required="required"></input> 
 		</div>
 		
 		<div id="errorholder" class="alert alert-success">
 			<!--<button type="button" class="close" data-dismiss="alert">×</button>-->
 			<div id="alertmessage">
-			<strong>Howdy!</strong> First time here? Try clicking the demo button below.
+			<strong>Howdy!</strong> First time here? Go back to start page and click on Demo.
 			</div>
 		</div>
 		
@@ -182,18 +208,16 @@
 		</div>
 		</fieldset>
 
+		<fieldset>
 			<div class="form-actions action-form">
-				<button class="btn btn-primary" type="submit"> Submit </button>
-				<a class="btn btn-success mleft" rel="tooltip" title="Prefills the form with sample image & data, and submits it." onclick="demo()"> Demo </a>
-
+				<button class="btn btn-large btn-success" type="submit"> Submit </button>
 			</div>
 		</fieldset>
 		</form>
 		</div>
 		</div>
 
-
-<footer class="footer">
+<footer class="footer fixed">
 	<div class="container">
 		<p> <a target="_blank" href="http://makkarlabs.in">Makkar Labs</a>, 2012</p>
 		<p> Customized for Google Chrome (Version 13.0+)</p>
