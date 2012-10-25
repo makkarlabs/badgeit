@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="bootstrap/css/bootstrap-responsive.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/head.css" type="text/css">	
 	<link rel="stylesheet" href="bootstrap/css/createfonts.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/joyride-2.0.1.css">
 
 	<style>
 	    canvas {
@@ -28,16 +29,27 @@
 		#comp-select {width:150px; margin-bottom:10px;margin-left:5px;}
 		#minimizetoolbox {float:right; margin-top:-15px;}
 		.savebutton{width:70px; margin-top:18px; margin-left:462px;}
-		#zip{margin-left:466px;display:none;}
-		#ziplink{margin-top:10px;margin-left:452px;margin-bottom:-15px;}
-		#print{display:none; margin-left:402px; margin-top:10px;}
 		.invi{display:none;}
-		#back{margin-left: 5px; margin-top:10px; float: left; display:none;}
-		#finish{float:right; margin-top:-30px; display:none;}
 		.thankyou{font-family: OvertheRainbow; font-size: 48px; margin-top: 210px; text-align:center; color: #08C;}
+		#lean_overlay { position: fixed;  z-index:100; top: 0px; left: 0px; height:100%; width:100%; background: #000; display: none;}
+		.editModalWindow {display: none; position: fixed; opacity: 1; z-index: 101; left: 50%; margin-left: -202px; top: 200px; width:400px; height: 170px; 
+			background: whitesmoke; border-radius: 10px; margin: 20px; text-align: center; padding: 20px;}
+		.okButton {margin-top: 10px;}
+		.modal_close { position: absolute; top: 12px; right: 12px; display: block; width: 14px; height: 14px; background: url("resources/images/modal_close.png");
+z-index: 2; cursor: pointer; border-radius: 5px;}
+		#waitForSave {height: 200px; }
+		#createAndZip {height: 100px; }
+		#createAndPdf {height: 310px; }
+		.generateBadges {height: 100px; top: auto !important; bottom: 0px !important;}
+		
+		#controlsHolder {text-align: center;}
+		.topControl {padding: 10px; margin: 5px; border-radius: 3px; background-color: lightgoldenrodyellow;}
+		#waitSaving {max-width: 150px;}
 	</style>
 		  <script src="resources/js/jquery.js"></script>
 		  <script src="bootstrap/js/bootstrap.js"></script>
+		  <script src="resources/js/dataProcess.js"></script>
+		  <script src="resources/js/jquery.leanModal.min.js"></script>
           <script src="resources/js/doT.min.js"></script>
           <script src="resources/js/store.js"></script>
 		  <script src="resources/js/jquery.qrcode.js"></script>
@@ -47,14 +59,18 @@
 		  <script src="resources/js/fonts.js"></script>
 		  <script src="resources/js/zip.js"></script>
 		  <script src="resources/js/create.js"> </script>
-		  <script type="text/javascript" src="resources/js/jspdf/jspdf.js"></script>
-		  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.standard_fonts_metrics.js"></script>
-	  	  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.split_text_to_size.js"></script>
-		  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.from_html.js"></script>
-	  	  <script type="text/javascript" src="resources/js/jspdf/jspdf.plugin.addimage.js"></script>
+		  <script src="resources/js/jquery.joyride-2.0.1.js"></script>
+		  <script src="resources/js/jspdf/jspdf.js"></script>
+		  <script src="resources/js/jspdf/jspdf.plugin.standard_fonts_metrics.js"></script>
+	  	  <script src="resources/js/jspdf/jspdf.plugin.split_text_to_size.js"></script>
+		  <script src="resources/js/jspdf/jspdf.plugin.from_html.js"></script>
+	  	  <script src="resources/js/jspdf/jspdf.plugin.addimage.js"></script>
 		  <script src="resources/js/print.js"> </script>
 		  <script src="resources/js/analytics.js"></script>
-		  <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+		  <script src="https://apis.google.com/js/plusone.js"></script>
+		  <script src="https://apis.google.com/js/client.js?onload=auth"></script>
+	      <script src="http://www.google.com/jsapi?key=AIzaSyD8CT73BsKLu43ZiU6jv-RCSOhF406XYy8&callback=googleLoad"></script>
+
   </head>
   <body>
   
@@ -79,7 +95,16 @@
 	
 	
 	<div class="container">
-	
+    
+    <div id="controlsHolder">
+	    <a id="changeImage" class="topControl" tabindex="-1" rel="leanModal" name="editImage" href="#editImage" title="Change the background image template">Edit Background</a>
+		<a id="changeData" class="topControl" tabindex="-1" rel="leanModal" name="editData" href="#editData" title="Change data source">Edit Data</a>
+		<a id="zipAndSave" class="topControl" tabindex="-1" name="generateAllZip" href="#generateAllZip" rel="leanModal" title="Render Badges and download as images." >Download Badges</a>
+		<a tabindex="-1" class="topControl" id="pdfAndSave" name="generateAllPdf" href="#generateAllPdf" rel="leanmodal" title="Render all badges and save them in a single PDF file">Print to PDF</a>
+		<a id="saveToDrive" class="topControl" tabindex="-1" rel="leanModal" name="waitForSave" href="#waitForSave" title="Save your project to Google Drive" >Save to Drive</a>
+		<a id="finish" class="topControl" href="#" rel="tooltip" title="Clears locally stored data and moves to Start page" role="button">Exit</a>
+	</div>
+
 	<div id="canvasnbox">
 	<div id="canvasholder">
 		<canvas id='canvas' width='canvasWidth()' height='canvasHeight()'></canvas>
@@ -97,45 +122,6 @@
 			<a href="" id ="minimizetoolbox" rel="tooltip" title="Minimize toolbox"><i class="icon-chevron-down"></i></a>		
 			<div id="customize">
 			</div>
-			<span id="genimages">	
-				<button class="btn btn-primary savebutton" id="save" title="Click to create all badges">Next</button>
-				<progress id="gen" value="1" hidden='true' ></progress>
-			</span>
-
-			<button class="btn btn-primary" rel="tooltip" title="Create a Zip compressed file of all badges" hidden="hidden" id="zip">Zip Files</button>
-			<progress id="zipprogress" hidden='true'></progress>
-			<div hidden="true" id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
-			<br>
-			<a id="print" class="btn btn-primary" rel="tooltip" title="View all badges tiled, opens in a new tab" hidden="hidden" href="#printModal" role="button" data-toggle="modal">Print to PDF</a>   
-			<div class="modal hide fade" id="printModal" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h3 id="printModalLabel">Print to PDF - Settings</h3>
-				</div>
-				<div class="modal-body">
-					<form>
-						<label>Page orientation</label>
-						<select id='orient'>
-							<option selected="selected" value="p">Potrait</option>
-							<option value="l">Landscape</option>
-
-						</select>
-						<br><br>
-						<label>Paper size</label>
-						<select id='papersize'>
-							<option selected="selected" value="a4">A4</option>
-							<option value="a3">A3</option>
-						</select>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-primary" id="triggerprint" data-loading-text="Creating PDF">Print</button>
-					<a class="btn btn-success invi" id="downloadpdf">Download PDF</a>
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				</div>
-			</div> 
-			<button id="back" class="btn btn-danger" rel="tooltip" title="Go back to customize the badges" hidden="hidden">Back</button>
-			<button class="btn btn-danger" rel="tooltip" title="Exit the applications. Clears local application data" hidden="hidden" id ="finish">Exit</button>		
 			<div class="clr"></div>
 		</div>
 	</div>
@@ -151,6 +137,128 @@
 	</div>
 	</div>
 	
+	<div id="editData" class="editModalWindow">
+		<a class="modal_close" id="dataModalClose"></a>
+		<h2> Edit Data source </h2>
+		<p> Choose From </h2>
+		<div class="controls">	
+			<a class='btn' id='list_fs' rel='tooltip' title='Select a CSV file containing the details of attendees from your local drive.'><i class="icon-folder-open"> </i> My Computer</a>
+			<a class='btn btn-warning' id='list_gd' rel='tooltip' title='Select a Spreadsheet containing the details of attendees from Google Drive.'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
+			<span id="fs_list" class="invi">
+				<input type="file" class="input-file" accept=".csv" id="csvChooser" name="csvChooser" onchange="getAsText(this.files[0]);"> </input>
+				<a class="icon-repeat cpointer" id="return_image" onclick="changeCsv();"></a>
+			</span>
+			<span id="gd_list" class="invi">				
+				<input readonly="readonly" placeholder="Google Drive Spreadsheet" id="csvGoogle" name="csvGoogle" />
+				<a class="icon-repeat cpointer" onclick="changeCsv();" id="return_image1"></a>
+			</span>
+		</div>
+		<button type="button" class="btn btn-success okButton" id="newDataOk" data-loading-text="Loading Data...">OK</button>
+	</div>
+
+	<div id="editImage" class="editModalWindow">
+		<a class="modal_close" id="imgModalClose"></a>
+		<h2> Edit Background Image </h2>
+		<p> Choose From </h2>
+		<div class="controls" id="template_chooser">
+			<a class='btn' rel='tooltip' title='Select Background image from your local drive.' id='template_fs'><i class="icon-folder-open"> </i> My Computer</a>
+			<a class='btn btn-warning' rel='tooltip' title='Select Background image from Google Drive.' id='template_gd'><img src="bootstrap/img/drive_icon_mono.png" width="14px" height="14px"/> Google Drive</a>	
+			<span id="fs_input" class="invi">
+				<input type="file" accept="image/*" class="input-file" id="templateChooser" name="templateChooser" onchange="readFileAsDataURL(this.files[0]);"></input>
+				<a class="icon-repeat cpointer" id="readonlyturn_image" onclick="change();"></a>
+			</span>
+			<span id="gd_input" class="invi">				
+				<input readonly="readonly" placeholder="Google Drive Image" id="google_image" name="google_image" />
+				<a class="icon-repeat cpointer" onclick="change();" id="return_image1"></a>
+			</span>
+		</div>	
+		<button type="button" class="btn btn-success okButton" id="newImageOk" data-loading-text="Loading Image...">OK</button>
+	</div>
+
+	<div id="generateAllZip" class="editModalWindow generateBadges">	
+		<a class="modal_close" id="genZipClose"></a>
+		<h2> Creating Badges </h2>
+		<span id="zipProgressMsg"></span>
+		<progress id="zipGen" value="1" hidden='true' ></progress>
+		<a rel="leanModal" name="createAndZip" href="#createAndZip" hidden="true" id="zipTrigger"></a>
+	</div>
+
+	<div id="generateAllPdf" class="editModalWindow generateBadges">	
+		<a class="modal_close" id="genPdfClose"></a>
+		<h2> Creating Badges </h2>
+		<span id="pdfProgressMsg"></span>
+		<progress id="pdfGen" value="1" hidden='true' ></progress>
+		<a rel="leanModal" name="createAndPdf" href="#createAndPdf" hidden="true" id="pdfTrigger"></a>
+	</div>
+
+	<div id="createAndZip" class="editModalWindow">
+		<a class="modal_close" id="zipModalClose"></a>
+		<h2> Creating Zip File </h2>
+		<progress id="zipprogress" hidden='true'></progress>
+		<div hidden="true" id="ziplink"><a class="btn btn-success" id='download'>Download Zip</a></div>
+	</div>
+
+	<div id="createAndPdf" class="editModalWindow">
+		<a class="modal_close" id="pdfModalClose"></a>
+		<h2> Download as PDF </h2>
+		<div class="modal-header">
+			<h3 id="printModalLabel">Print to PDF - Settings</h3>
+		</div>
+		<div class="modal-body">
+			<form>
+				<label>Page orientation</label>
+				<select id='orient'>
+					<option selected="selected" value="p">Potrait</option>
+					<option value="l">Landscape</option>
+				</select>
+				<br><br>
+				<label>Paper size</label>
+				<select id='papersize'>
+					<option selected="selected" value="a4">A4</option>
+					<option value="a3">A3</option>
+				</select>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" id="triggerprint" data-loading-text="Creating PDF">Print</button>
+			<a class="btn btn-success invi" id="downloadpdf">Download PDF</a>
+		</div>
+	</div>
+
+	<div id="waitForSave" class="editModalWindow">
+		<a class="modal_close" id="saveModalClose"></a>
+		<div id="waitModalContent">
+			<h3> Saving your project. </h3>
+			<img id="waitSaving" src="bootstrap/img/loadingbig.gif"/>
+		</div>
+	</div>
+	
+	<ol id="tourCreate" hidden="true">
+		<li data-id="canvas" data-options="nubPosition:right">
+			<p>Hey there! This canvas is where you can design you badge. Moved stuff around, resize them.</p>
+		</li>
+		<li data-id="toolbox" data-options="topLocation:top;nubPosition:right">
+			<p>Apply styles to the canvas components from this toolbox.</p>
+		</li>
+		<li data-id="changeImage" data-options="tipLocation:bottom;nubPosition:top">
+			<p>Minor change in your background image? Don't worry, choose a new one here.</p>
+		</li>
+		<li data-id="changeData" data-options="tipLocation:bottom;nubPosition:top">
+			<p>Same badge, for a new set of attendees? Pick a new spreadsheet here.</p>
+		</li>
+		<li data-id="zipAndSave" data-options="tipLocation:bottom;nubPosition:top">
+			<p>Creates badges and lets you download a Zip file of all the badges.</p>
+		</li>
+		<li data-id="pdfAndSave" data-options="tipLocation:bottom;nubPosition:top">
+			<p>Quit tiling all badges manually. Choose your paper size and orientation and get a PDF to print.</p>
+		</li>
+		<li data-id="saveToDrive" data-options="tipLocation:bottom;nubPosition:top">
+			<p>Wanna come back later? Wanna share your design with friends? No problem. Save to Google Drive and come back any time!</p>
+		</li>
+		<li data-id="finish" data-options="tipLocation:right;nubPosition:left" data-button="Close">
+			<p>Exit clears your system resources and takes you to start page. Have fun creating your badges :)</p>
+		</li>
+	</ol>
 	<span id="fontloaderfix" style="">
     		<span style="font-family: Capriola;transparency: white; opacity:0">M</span>
    			<span style="font-family: Italiana;opacity: 0;">a</span>

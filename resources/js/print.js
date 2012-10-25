@@ -69,7 +69,7 @@ var createPDF = function(imgData) {
 	{
 		blob = dataURItoBlob(doc.output('datauristring'));
 		var blobURL = URL.createObjectURL(blob);
-		$('#downloadpdf').attr({'download': settings.get('projectName')+'.pdf','href':blobURL});
+		$('#downloadpdf').attr({'download': settings.get('badgeProps').projectName+'.pdf','href':blobURL});
 		$('#downloadpdf').show();
 		$('#triggerprint').button('reset');
 	}
