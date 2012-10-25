@@ -1,9 +1,10 @@
 var dimensions, canvas, labellayer = new Array(), alignment = new Array(), actualleft = new Array(), actualright = new Array(), 
 boundRect = new Array(),maxwidth = new Array(), remove = new Array(), isqrcode, qrlayer, qrdataurl, qrdata='', index_i=1, 
 current_dataurl, img = new Array(), testfileentry = new Array(),xfactor = new Array(), yfactor = new Array();
+source = 'create';
 
 //Dot Templating
-var labellayer_tempfn = doT.template("<div class='component' id='{{=it.ldiv}}'><input id='{{=it.label}}' type='text' style='float:left';/><select style='float:left;' class='font-dropdown' id='{{=it.lfamily}}'><option value='Arial'>Arial</option></select><div class='btn-group' style='float:left;'><a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i><span class='caret'></span></a><ul class='dropdown-menu'><li><input id='{{=it.lsize}}' type='range'/></li></ul></div><a href='#' class='btn' toggle='unselect' id='{{=it.lbold}}'><i class='icon-bold'></i></a><a href='#' class='btn' id='{{=it.litalic}}' toggle='unselect'><i class='icon-italic'></i></a><input class='colorbox' id='{{=it.lcolor}}' type='color' value='#cc3333'/><a class='btn' id='{{=it.lleft}}' toggle='unselect'><i class='icon-align-left'></i></a><a class='btn btn-warning' id='{{=it.lcenter}}' toggle='select'><i class='icon-align-center'></i></a><a class='btn' id='{{=it.lright}}' toggle='unselect'><i class='icon-align-right'></i></a><input class='positionbox' id='{{=it.lpos}}' value='center: {{=it.xpos}} , top: {{=it.ypos}}' type='text' readonly='readonly'/><button style='color:#555;' id='{{=it.lbounds}}' class='btn'>Set Bounds</button><div class='clr'></div></div>");
+var labellayer_tempfn = doT.template("<div class='component' id='{{=it.ldiv}}'><input id='{{=it.label}}' type='text' style='float:left';/><select style='float:left;' class='font-dropdown' id='{{=it.lfamily}}'><option value='{{=it.fontSelect}}'>{{=it.fontSelect}}</option></select><div class='btn-group' style='float:left;'><a class='btn dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon-text-height'></i><span class='caret'></span></a><ul class='dropdown-menu'><li><input id='{{=it.lsize}}' type='range'/></li></ul></div><a href='#' class='{{=it.boldClass}}' toggle='{{=it.boldSelect}}' id='{{=it.lbold}}'><i class='icon-bold'></i></a><a href='#' class='{{=it.italicClass}}' id='{{=it.litalic}}' toggle='{{=it.italicSelect}}'><i class='icon-italic'></i></a><input class='colorbox' id='{{=it.lcolor}}' type='color' value='{{=it.colorSelect}}'/><a class='{{=it.leftClass}}' id='{{=it.lleft}}' toggle='{{=it.leftSelect}}'><i class='icon-align-left'></i></a><a class='{{=it.centerClass}}' id='{{=it.lcenter}}' toggle='{{=it.centerSelect}}'><i class='icon-align-center'></i></a><a class='{{=it.rightClass}}' id='{{=it.lright}}' toggle='{{=it.rightSelect}}'><i class='icon-align-right'></i></a><input class='positionbox' id='{{=it.lpos}}' value='center: {{=it.xpos}} , top: {{=it.ypos}}' type='text' readonly='readonly'/><button style='color:#555;' id='{{=it.lbounds}}' class='btn'>Set Bounds</button><div class='clr'></div></div>");
 var bounds_tempfn = doT.template("<span id='{{=it.bspan}}' hidden='true'><span class='badge badge-warning'><a id='{{=it.bsave}}' class='icon-ok' style='cursor:pointer;'></a></span><span class='badge badge-warning'><a id='{{=it.bcancel}}' class='icon-remove' style='cursor:pointer;'></a></span></span>");
 
 fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
@@ -14,7 +15,7 @@ fabric.Canvas.prototype.getAbsoluteCoords = function(object) {
 }
 
 //CSV file related
-var indexes, csv_file, data;
+var qr_indexes, csv_file, data;
 //Stop Badge gen
 var isStopSave = false;
 
@@ -25,8 +26,16 @@ window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFile
 var settings = new Store("settings");
 var badgeProps = settings.get("badgeProps");
 
+function googleLoad(){
+	//Loading Google Picker
+	google.setOnLoadCallback(createPicker);
+	google.load('picker',1);
+}
 $(document).ready(function () {
 
+	$("#tourCreate").joyride({
+      /* Options will go here */
+    });
 	/*if(badgeProps.eventCSV === undefined || badgeProps.eventTemplate === undefined)
 	{	
 		
@@ -35,31 +44,21 @@ $(document).ready(function () {
 		location.href='./home.html';
 	}*/
 
+	//Setup stuff
+
 	dimensions = badgeProps.dimensions;
-	
 	isqrcode = badgeProps.qrcode;
 
 	//CSV file related
-	var indexes = badgeProps.selectedCols;
+	indexes = badgeProps.selectedCols;
 	for(var j=0; j<indexes.length; j++) { indexes[j] = +indexes[j]; } 
-	var csv_file = badgeProps.eventCSV;
-	var data = $.csv2Array(csv_file);  
-	$.each(data, function(index,ar) { 
-		if(ar.length == 0) { 
-		remove.push(index);
-		} 
-	});
-	$.each(remove, function(no, value) { 
-		remove[no] = value-no;  
-		data.splice(remove[no],1);
-	});
-
+	setDataSource();
 	settings.set('numentries',data.length);
 
 	//Infographics
-	if(isqrcode==='true')
+	if(isqrcode)
 	{
-		var qr_indexes = badgeProps.qrCols;
+		qr_indexes = badgeProps.qrCols;
 		for(var k=0; k<qr_indexes.length; k++) {qr_indexes[k] = +qr_indexes[k]; }
 	}
 	
@@ -72,63 +71,133 @@ $(document).ready(function () {
 
 	canvas.renderAll(true);
 	canvas.HOVER_CURSOR = 'pointer';
-	if(isqrcode === 'true')
+	
+   
+	if(settings.get('openFromDrive')===true)
 	{
-		for(var k = 0; k < qr_indexes.length; k++)
+		var savedCanvas = settings.get("canvas");
+		var textObjects = savedCanvas.objects;
+		if(isqrcode)
 		{
-			qrdata+=data[0][qr_indexes[k]]+"\n";
+			qrObject = textObjects.pop();
+			fabric.Image.fromObject(qrObject, function(qr){
+				canvas.add(qr);
+				qrlayer = qr;
+			});
 		}
-		$('#qrcode').qrcode({width: 64,height: 64,text: qrdata});
-		qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png'); 
-		fabric.Image.fromURL(qrdataurl, function(qr) {
-        		qr.set({
-        			left: canvas.getWidth()-90,
-            		top: canvas.getHeight()-70,
-            	});
-          	canvas.add(qr);
-	  	qrlayer = qr;
-        	});
+		$.each(textObjects, function(i,textObj){
+			var textLayer = new fabric.Text.fromObject(textObj);
+			createToolbarForLayer(textLayer, i);
+		});
 	}
-   	var fontsize = 25, xpos = canvas.getWidth()/2, ypos = canvas.getHeight()/4;
-	for(i=0; i<indexes.length; i++)
+	else
 	{
-		index = indexes[i];
-		current_label = data[0][index];
-        customize_json = { labelname: current_label,
-                               ldiv: '#label'+i+'div',
-                               label: '#label'+i,
-                               lfamily: '#label'+i+'family',
-                               lsize: '#label'+i+'size',
-                               lbold: '#label'+i+'bold',
-                               litalic: '#label'+i+'italic',
-                               lcolor: '#label'+i+'color',
-                               lleft: '#label'+i+'left',
-                               lcenter: '#label'+i+'center',
-                               lright: '#label'+i+'right',
-                               lpos: '#label'+i+'pos',
-                               xpos: xpos,
-                               ypos: ypos,
-                               lbounds: '#label'+i+'bounds',
-                               bspan: '#boundspan'+i,
-                               bsave: '#label'+i+'boundsave',
-                               bcancel: '#label'+i+'boundcancel'
-                              };
+		var fontsize = 25, xpos = canvas.getWidth()/2, ypos = canvas.getHeight()/4;
+		if(isqrcode)
+		{
+			for(var k = 0; k < qr_indexes.length; k++)
+			{
+				qrdata+=data[0][qr_indexes[k]]+"\n";
+			}
+			$('#qrcode').qrcode({width: 64,height: 64,text: qrdata});
+			qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png'); 
+			fabric.Image.fromURL(qrdataurl, function(qr) {
+	    		qr.set({
+	    			left: canvas.getWidth()-90,
+	        		top: canvas.getHeight()-70,
+	        	});
+	      		canvas.add(qr);
+		  		qrlayer = qr;
+	        });
+		}
+		$.each(indexes, function(i, index)
+		{
+			current_label = data[0][index];
+	        
+			labellayer[i] = new fabric.Text(current_label, {
+	      		left: xpos,
+	      		top: ypos,
+	      		fontSize: fontsize,
+	      		fontFamily: "Arial",
+	      		fill: "black",
+				textAlign: "center",
+				useNative: true,
+			});
+			createToolbarForLayer(labellayer[i], i);
+	        ypos += 40;
+		});
+	}
+	
+	canvas.setActiveObject(labellayer[0]);
+
+	function setDataSource()
+	{
+		csv_file = badgeProps.eventCSV;
+		data = $.csv2Array(csv_file);  
+		$.each(data, function(index,ar) { 
+			if(ar.length == 0) { 
+			remove.push(index);
+			} 
+		});
+		$.each(remove, function(no, value) { 
+			remove[no] = value-no;  
+			data.splice(remove[no],1);
+		});
+	}
+	function createToolbarForLayer(textLayer, i)
+	{
+		current_label = textLayer.text;
+		xpos = textLayer.left;
+		ypos = textLayer.top;
+			
+		customize_json = { 	   
+    					labelname: current_label,
+                        ldiv: '#label'+i+'div',
+                        label: '#label'+i,
+                        lfamily: '#label'+i+'family',
+                        lsize: '#label'+i+'size',
+                        lbold: '#label'+i+'bold',
+                        litalic: '#label'+i+'italic',
+                        lcolor: '#label'+i+'color',
+                        lleft: '#label'+i+'left',
+                        lcenter: '#label'+i+'center',
+                        lright: '#label'+i+'right',
+                        lpos: '#label'+i+'pos',
+                        xpos: xpos,
+                        ypos: ypos,
+                        lbounds: '#label'+i+'bounds',
+                        bspan: '#boundspan'+i,
+                        bsave: '#label'+i+'boundsave',
+                        bcancel: '#label'+i+'boundcancel'
+                     };
         var result_labellayer = labellayer_tempfn({ 
-                               ldiv: 'label'+i+'div',
-                               label: 'label'+i,
-                               lfamily: 'label'+i+'family',
-                               lsize: 'label'+i+'size',
-                               lbold: 'label'+i+'bold',
-                               litalic: 'label'+i+'italic',
-                               lcolor: 'label'+i+'color',
-                               lleft: 'label'+i+'left',
-                               lcenter: 'label'+i+'center',
-                               lright: 'label'+i+'right',
-                               lpos: 'label'+i+'pos',
-                               xpos: xpos,
-                               ypos: ypos,
-                               lbounds: 'label'+i+'bounds',
-                              });
+                            ldiv: 'label'+i+'div',
+                            label: 'label'+i,
+                            lfamily: 'label'+i+'family',
+                            lsize: 'label'+i+'size',
+                            lbold: 'label'+i+'bold',
+                            litalic: 'label'+i+'italic',
+                            lcolor: 'label'+i+'color',
+                            lleft: 'label'+i+'left',
+                            lcenter: 'label'+i+'center',
+                            lright: 'label'+i+'right',
+                            lpos: 'label'+i+'pos',
+                            xpos: xpos,
+                            ypos: ypos,
+                            fontSelect: textLayer.fontFamily.split(',')[0],
+                            boldSelect: (textLayer.fontWeight==='bold')?'select':'unselect',
+                            boldClass: (textLayer.fontWeight==='bold')?'btn btn-warning':'btn',
+                            italicSelect: (textLayer.fontStyle==='italic')?'select':'unselect',
+                            italicClass: (textLayer.fontStyle==='italic')?'btn btn-warning':'btn',
+                            colorSelect: textLayer.fill,
+                            leftSelect: 'unselect',
+                            rightSelect: 'unselect',
+                            centerSelect: 'select',
+                            leftClass: 'btn',
+                            rightClass: 'btn',
+                            centerClass: 'btn btn-warning',
+                            lbounds: 'label'+i+'bounds',
+                         });
         var result_setbounds = bounds_tempfn({bspan: 'boundspan'+i,
                                               bsave: 'label'+i+'boundsave',
                                               bcancel: 'label'+i+'boundcancel'
@@ -136,33 +205,22 @@ $(document).ready(function () {
 		$("#comp-select").append("<option value='"+i+"'>"+current_label+"</option>");
 		$("#customize").append(result_labellayer);
         $("body").append(result_setbounds);
-		
-		labellayer[i] = new fabric.Text(current_label, {
-          		left: xpos,
-          		top: ypos,
-          		fontSize: fontsize,
-          		fontFamily: "Arial",
-          		fill: "black",
-			textAlign: "center",
-			useNative: true,
-		  });
-		
-		canvas.add(labellayer[i]);
-		canvas.setActiveObject(labellayer[0]);
+
+		canvas.add(textLayer);
+		canvas.renderAll(true);
 		alignDetails = new Object();
 		alignDetails.index = i;
-		alignDetails.layer = labellayer[i];
-		alignDetails.actualleft = labellayer[i].left - labellayer[i].getWidth()/2;
-		alignDetails.actualright = labellayer[i].left + labellayer[i].getWidth()/2;
+		alignDetails.layer = textLayer;
+		alignDetails.actualleft = textLayer.left - textLayer.getWidth()/2;
+		alignDetails.actualright = textLayer.left + textLayer.getWidth()/2;
 		alignDetails.alignment = 'center';
         customize_json.alignDetails = alignDetails;
-	
-		addAttributes(customize_json, labellayer[i]);
-        ypos += 40;
+        labellayer[i] = textLayer;
+        addAttributes(customize_json, textLayer);
 	}
+	
 	function addAttributes(custom, labellayer)
-    	{
-		console.log(custom);
+    {
 		canvas.observe('object:selected',function(e){
 	
 			if(canvas.getActiveGroup()===null && canvas.getActiveObject()!=null)
@@ -258,25 +316,25 @@ $(document).ready(function () {
 			}
 			else
 			{
-                                labellayer.set('fontWeight', 'normal');
-                                $(custom.lbold).attr({'toggle':'unselect', 'class':'btn'});
+                labellayer.set('fontWeight', 'normal');
+                $(custom.lbold).attr({'toggle':'unselect', 'class':'btn'});
 			}
 			canvas.renderAll(true);
 		});
 		$(custom.litalic).click(function(event){
-                        event.preventDefault();
-                        if($(custom.litalic).attr('toggle') === 'unselect')
-                        {
-                                labellayer.set('fontStyle', 'italic');
-                                $(custom.litalic).attr({'toggle':'select', 'class':'btn btn-warning'});
-                        }
-                        else
-                        {
-                                labellayer.set('fontStyle', 'normal');
-                                $(custom.litalic).attr({'toggle':'unselect', 'class':'btn'});
-                        }
+            event.preventDefault();
+            if($(custom.litalic).attr('toggle') === 'unselect')
+            {
+                    labellayer.set('fontStyle', 'italic');
+                    $(custom.litalic).attr({'toggle':'select', 'class':'btn btn-warning'});
+            }
+            else
+            {
+                    labellayer.set('fontStyle', 'normal');
+                    $(custom.litalic).attr({'toggle':'unselect', 'class':'btn'});
+            }
 			canvas.renderAll(true);
-                });
+    	});
 		$(custom.lcolor).change(function(){ 
 			labellayer.setColor($(custom.lcolor).val());
 			canvas.renderAll(true);
@@ -285,6 +343,7 @@ $(document).ready(function () {
 			if($(custom.lleft).attr('toggle') === 'unselect')
 			{
 				align('left');
+				labellayer.set('textAlign', 'left');
 				$(custom.lleft).attr({'toggle':'select', 'class':'btn btn-warning'});
 				$(custom.lcenter).attr({'toggle':'unselect', 'class':'btn'});
 				$(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
@@ -292,6 +351,7 @@ $(document).ready(function () {
 			else
 			{
 				align('center');
+				labellayer.set('textAlign', 'center');
 				$(custom.lcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
                                 $(custom.lleft).attr({'toggle':'unselect', 'class':'btn'});
 
@@ -301,6 +361,7 @@ $(document).ready(function () {
             if($(custom.lright).attr('toggle') === 'unselect')
             {
                     align('right');
+					labellayer.set('textAlign', 'right');                
                     $(custom.lright).attr({'toggle':'select', 'class':'btn btn-warning'});
                     $(custom.lcenter).attr({'toggle':'unselect', 'class':'btn'});
                     $(custom.lleft).attr({'toggle':'unselect', 'class':'btn'});
@@ -308,6 +369,7 @@ $(document).ready(function () {
             else
             {
                     align('center');
+                    labellayer.set('textAlign', 'center');
                     $(custom.lcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
                     $(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
             }
@@ -316,6 +378,7 @@ $(document).ready(function () {
 			if($(custom.lcenter).attr('toggle')==='unselect')
 			{
 				align('center');
+				labellayer.set('textAlign', 'center');
                 $(custom.lcenter).attr({'toggle':'select', 'class':'btn btn-warning'});
                 $(custom.lright).attr({'toggle':'unselect', 'class':'btn'});
                 $(custom.lleft).attr({'toggle':'unselect', 'class':'btn'});
@@ -403,17 +466,18 @@ $(document).ready(function () {
 	};
 	
 	//handler to generate badges/stop generation
-	$("span#genimages > button#save").on('click',function(){
-		if($("span#genimages > button#save").html()=='Next')
-		{
-			save();
-			$("span#genimages > button#save").html('Stop');
-			$("span#genimages > button#save").attr({'title':'Click to stop badge creation', 'class':'btn btn-danger savebutton'});	
-		}
-		else
-		{
-			isStopSave = true;
-		}
+	$("#zipAndSave").on('click',function(){
+		saveMechanism = 'zip';
+		isStopSave = false;
+		$("#zipGen").show();
+		save();	
+	});
+
+	$("#pdfAndSave").on('click',function(){
+		saveMechanism = 'pdf';
+		isStopSave = false;
+		$("#pdfGen").show();
+		save();	
 	});
 	
 	$("#minimizetoolbox").on("click",function(event) {
@@ -435,47 +499,27 @@ $(document).ready(function () {
 	$('#comp-select').on('change',function() {
 		$(".component").hide();
 		$("#label"+this.value+"div").show();
-		canvas.setActiveObject(labellayer[this.value])
+		canvas.setActiveObject(labellayer[this.value]);
 	});
 	
-	$("div#ziplink").hide();
-	$("#zip").on('click', function(){
-		zipthis.addFiles(function(){},function(file){$("#zipprogress").value = 0;
-				$("#zipprogress").max = 0; $("#zipprogress").show(); },function(current, total){$("#zipprogress").value = current;
-				},function(){$("#zipprogress").hide(); $("div#ziplink").show();});
+	$("#ziplink").hide();
+	$('#zipTrigger').click(function(){
+		zipthis.addFiles(function(){},function(file){
+			$("#zipprogress").value = 0;
+			$("#zipprogress").max = 0; 
+			$("#zipprogress").show();},
+			function(current, total){
+				$("#zipprogress").value = current;},
+			function(){
+				$("#zipprogress").hide(); $("#ziplink").show();
+			});
 	});
-	$("div#ziplink > a").on('click', function(){
+	$("#ziplink > a").on('click', function(){
 		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
-			$("div#ziplink > a").attr({'download': badgeProps.projectName+'.zip','href':blobURL});
+			$("#ziplink > a").attr({'download': badgeProps.projectName+'.zip','href':blobURL});
 		});
 	});
 	
-	$("#back").on('click', function(){
-		for(var i=0;i<indexes.length;i++)
-                {
-                        labellayer[i].set('text',data[0][indexes[i]]);
-                }
-                canvas.renderAll(true);
-
-		$("#comp-select").show();
-                
-		$("#customize").show();
-        $("#zip").hide();
-        $("#print").hide();
-        $("#back").hide();
-		$("span#genimages > button#save").html('Next');
-		$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-primary savebutton'});
-		$("#genimages").show();
-		$("#ziplink").hide();
-		$("#zipprogress").hide();
-		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
-			console.log('Zip revoked');
-		});
-		$("#finish").hide();
-		$("#finish").css('margin-top','-30px');
-		boundRect = [];
-		maxwidth = [];
-	});
 
 	$('#triggerprint').on('click',function(){
 		$('#downloadpdf').hide();
@@ -494,17 +538,159 @@ $(document).ready(function () {
     			}, errorHandler);
 		  }, errorHandler);
 	   }, errorHandler);
+	  location.href = "start.html";
 	});
 	
-	$('#printModal').on('hidden', function () {
-		$('#downloadpdf').hide();
+	$('#saveModalClose').click( function(){
+		$('#waitModalContent').html('<h3> Saving your project. </h3><img id="waitSaving" src="bootstrap/img/loadingbig.gif"/>')
 	})
+	$('#pdfModalClose').click( function () {
+		$('#downloadpdf').hide();
+		resetAll();
+	});
+	$('#zipModalClose').click( function () {
+		resetAll();
+	});
 	 //Activating Bootstrap tooltips
-	 $("[rel=tooltip]").tooltip();
-	 
-    
+	$("[rel=leanModal]").tooltip();
+	$("[rel=tooltip]").tooltip();
 
-	
+	//Activating Modal Windows
+	$("a[rel*=leanModal]").leanModal({ top : 200, overlay : 0.4, closeButton: ".modal_close" });
+
+	//Modal window function calls
+	hideDriveButtons();
+	setFileChooseHandlers();
+
+	//Handle Edit Image/Data
+	$('#newDataOk').click(function(){
+		setDataSource();
+		settings.set("numentries",data.length);
+		$('#dataModalClose').click();
+	});
+
+	$('#newImageOk').click(function(){
+		canvas.setBackgroundImage(badgeProps.eventTemplate, function(){
+			canvas.renderAll(true);
+			$('#imgModalClose').click();
+		});
+	});
+
+	$('#changeData').click(function(){
+		$('#dataError').hide();
+		$('#newDataOk').attr('class','btn btn-success okButton');
+	});
+
+	$('#imgModalClose').click(function(){
+		canvas.renderAll(true);
+		change();
+	});
+
+	$('#dataModalClose').click(function(){
+		changeCsv();
+	});
+
+	$('#genZipClose').click(function(){
+		isStopSave = true;
+		resetAll();
+	});
+
+	$('#genPdfClose').click(function(){
+		isStopSave = true;
+		resetAll();
+	});
+
+
+
+	$("#saveToDrive").click(function(){
+		var saveJSON = new Object();
+		saveJSON.settings = badgeProps;
+		saveJSON.canvas = canvas.toDatalessJSON();
+		jsonString = JSON.stringify(saveJSON);
+		var blob = new Blob([jsonString], {type: 'text/plain'});
+		blob.fileName = badgeProps.projectName + '.badgeit';
+		insertFile(blob, insertFileCallback);
+	});
+
+
+	function insertFile(fileData, callback) {
+	  const boundary = '-------314159265358979323846';
+	  const delimiter = "\r\n--" + boundary + "\r\n";
+	  const close_delim = "\r\n--" + boundary + "--";
+
+	  var config = {
+          'client_id': '434888942442.apps.googleusercontent.com',
+          'scope': 'https://www.googleapis.com/auth/drive',
+	      'immediate':false
+        };
+
+	  var reader = new FileReader();
+	  reader.readAsBinaryString(fileData);
+	  reader.onload = function(e) {
+	    var contentType = fileData.type || 'application/octet-stream';
+	    var metadata = {
+	      'title': fileData.fileName,
+	      'mimeType': contentType
+	    };
+
+	    var base64Data = btoa(reader.result);
+	    var request;
+	    var multipartRequestBody =
+	        delimiter +
+	        'Content-Type: application/json\r\n\r\n' +
+	        JSON.stringify(metadata) +
+	        delimiter +
+	        'Content-Type: ' + contentType + '\r\n' +
+	        'Content-Transfer-Encoding: base64\r\n' +
+	        '\r\n' +
+	        base64Data +
+	        close_delim;
+	        gapi.auth.authorize(config, function(authresult) {
+	        	if(authresult && !authresult.error)	{
+	    			request = gapi.client.request({
+	        		'path': '/upload/drive/v2/files',
+			        'method': 'POST',
+			        'params': {'uploadType': 'multipart'},
+			        'headers': {
+			          'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+			        },
+			        'body': multipartRequestBody});    		
+
+			        if (!callback) {
+	      				callback = function(file) {
+	      				};
+	   				}
+				    request.execute(callback);
+
+			        }
+	        });
+	  }
+}
+
+
+var insertFileCallback = function(file) {
+		$('#waitModalContent').html("<h3>Successfully saved to Google Drive.</h3>");
+    };
+});
+
+
+	function resetAll(){
+		for(var i=0;i<indexes.length;i++)
+        {
+            labellayer[i].set('text',data[0][indexes[i]]);
+        }
+        canvas.renderAll(true);
+		$("#comp-select").show();
+		$("#customize").show();
+		$("#ziplink").hide();
+		$("#zipprogress").hide();
+		zipthis.getBlobURL(function(blobURL, revokeBlobURL) {
+			console.log('Zip revoked');
+		});
+		boundRect = [];
+		maxwidth = [];
+	};
+
 	function save()
 	{
 		canvas.deactivateAll();
@@ -515,8 +701,14 @@ $(document).ready(function () {
 			yfactor[index_j] = labellayer[index_j].scaleY;
 		});
 		index_i=1;
-		$("span#genimages > progress#gen").attr('max',data.length);
-		$("span#genimages > progress#gen").show();
+		if(saveMechanism === 'zip') {
+			$("#zipGen").attr('max',data.length);
+			$("#zipGen").show();
+		}
+	 	else if (saveMechanism === 'pdf') {
+	 		$("#pdfGen").attr('max',data.length);
+			$("#pdfGen").show();	
+	 	}
 		window.requestFileSystem(window.TEMPORARY, 1024*1024*10, function(fs) {
   			fs.root.getDirectory('badges', {create: true}, function(dirEntry) {
     				
@@ -554,7 +746,7 @@ $(document).ready(function () {
 					
 				}
 				else if(alignment[index_j]==='right')
-				{
+				{	
 					labellayer[index_j].set('left', actualright[index_j]-labellayer[index_j].getWidth()/2);
 				
 				}
@@ -562,7 +754,7 @@ $(document).ready(function () {
 				
 			});
 		}
-		if(isqrcode==='true')
+		if(isqrcode)
 		{
 			var qrdata="";
 			for(var k = 0; k < qr_indexes.length; k++)
@@ -579,7 +771,7 @@ $(document).ready(function () {
 				qrdataurl = $('#qrcode > canvas')[0].toDataURL('image/png');
 				qrlayer.getElement().src = qrdataurl;	
 				canvas.renderAll(true);
-				writefile(fs);}
+				writefile(fs);}	
 			});
 		}
 		else
@@ -608,40 +800,59 @@ $(document).ready(function () {
 				fileWriter.write(current_blob);
 				if(isStopSave === true)
 				{
-					$("span#genimages > button#save").html('Next');
-					$("span#genimages > button#save").attr({'title':'Click to create all badges','class':'btn btn-primary'});
-					$("span#genimages > progress#gen").hide();
+					if(saveMechanism === 'zip') {
+						$("#zipGen").hide();
+						$("#zipProgressMsg").html('');
+					}
+					else if(saveMechanism === 'pdf') {
+						$("#pdfGen").hide();	
+						$("#pdfProgressMsg").html('');
+					}
 					index_i = 1;
 					isStopSave = false;
+					resetAll();
 					return;
 				}	
 				if(++index_i<data.length)
 				{
-					$("span#genimages > progress#gen").attr('value',index_i);
+					if(saveMechanism === 'zip') {
+						$("#zipGen").attr('value',index_i);
+						$('#zipProgressMsg').html('<p>'+index_i+'/'+data.length+' badges created.</p>');
+					}
+					else if(saveMechanism === 'pdf') {
+						$("#pdfGen").attr('value',index_i);
+						$('#pdfProgressMsg').html('<p>'+index_i+'/'+data.length+' badges created.</p>');
+					}
+					
 						saveImages(fs);	
 				}
 				else{
-					$("span#genimages > progress#gen").attr('value',data.length);
-					$("span#genimages > progress#gen").hide();
-					_gaq.push(['_trackEvent', 'Badge', 'Created', badgeProps.projectName, data.length]);
-					$("#comp-select").hide();
-					$("#customize").hide();
-					$("#genimages").hide();
-					$("#zip").show();
-					$("#print").css('display','inline-block');
-					$("#back").show();
-					$("#finish").show();
-					$("#finish").css('margin-top','10px');
 					
+					_gaq.push(['_trackEvent', 'Badge', 'Created', badgeProps.projectName, data.length]);
+					if(saveMechanism === 'zip')
+					{
+						$("#zipGen").attr('value',data.length);
+						$("#zipGen").hide();
+						$('#zipProgressMsg').html('');
+						//$("#genZipClose").click();
+						$("#generateAllZip").css("display","none");
+						$("#zipTrigger").click();
+					}
+					else if(saveMechanism === 'pdf')
+					{
+						$("#pdfGen").attr('value',data.length);
+						$("#pdfGen").hide();
+						$('#pdfProgressMsg').html('');
+						//$("#genPdfClose").click();
+						$("#generateAllPdf").css("display","none");
+						$("#pdfTrigger").click();
+					}
 				}						
 			});
 		});
 	};
 
-	
 
-	
-});
 
 
 var zipthis = (function(obj) {
@@ -701,29 +912,29 @@ var zipthis = (function(obj) {
 
 
 function errorHandler(err){
-  		var msg = 'An error occured: ';
- 
-  		switch (err.code) { 
-   	 	case FileError.NOT_FOUND_ERR: 
-      			msg += 'File or directory not found'; 
-      			break;
- 
-    		case FileError.NOT_READABLE_ERR: 
-      			msg += 'File or directory not readable'; 
-      			break;
- 
-    		case FileError.PATH_EXISTS_ERR: 
-      			msg += 'File or directory already exists'; 
-      			break;
- 
-    		case FileError.TYPE_MISMATCH_ERR: 
-      			msg += 'Invalid filetype'; 
-      			break;
- 
-    		default:
-      			msg += 'Unknown Error'; 
-      			break;
-  		};
- 
- 		console.log(msg);
+	var msg = 'An error occured: ';
+
+	switch (err.code) { 
+ 	case FileError.NOT_FOUND_ERR: 
+			msg += 'File or directory not found'; 
+			break;
+
+	case FileError.NOT_READABLE_ERR: 
+			msg += 'File or directory not readable'; 
+			break;
+
+	case FileError.PATH_EXISTS_ERR: 
+			msg += 'File or directory already exists'; 
+			break;
+
+	case FileError.TYPE_MISMATCH_ERR: 
+			msg += 'Invalid filetype'; 
+			break;
+
+	default:
+			msg += 'Unknown Error'; 
+			break;
+	};
+
+	console.log(msg);
 };
